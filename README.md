@@ -14,7 +14,6 @@ Institut für Automation und Kommunikation - Mobata project lead
 - [...]
 
 ## Prerequisites
-- [Visual Studio](https://www.visualstudio.com/vs/community/) (VS 2015 recommended)
 - [Qt](https://www.qt.io/) (Qt LTS 5.12 recommended)
 
 ## Contributing to Mobata
@@ -22,8 +21,7 @@ Please follow these steps to contribute to mobata:
 1. Fork the ifak/mobata repo
 2. Build mobata using latest Qt LTS (Currently 5.12 - https://www.qt.io/)
 3. Run the mobata unit tests (see **Running Unit Tests** below)
-4. Sign the **contributors.txt** if you've not done so before.
-5. Create a pull request including your change
+4. Create a pull request including your change
 
 ## Running Unit Tests
 All Unit Tests in mobata are implemented using [Qt Test framework](https://doc.qt.io/qt-5/qttest-index.html).
