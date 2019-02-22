@@ -27,13 +27,9 @@ Please follow these steps to contribute to mobata:
 
 ## Running Unit Tests
 All Unit Tests in mobata are implemented using [Qt Test framework](https://doc.qt.io/qt-5/qttest-index.html).
-It is recommended to run all units tests using the QtCreator, an IDE developed by Qt. QtCreators gives an overview of all existing unit tests implemented using Qt Test. They can also be run individually by selecting them using the checkbox:
+It is recommended to run all units tests using the QtCreator, an IDE developed by Qt:
 
-![Select Tests](/images/select_tests.jpg)
-
-The test execution can then be started for all unit tests, the selected unit tests or the unit tests of the current file using the respective run button: 
-
-![Run Tests](/images/run_tests.jpg)
+[Running Tests in QtCreator](https://doc.qt.io/qtcreator/creator-autotest.html#building-and-running-tests)
 
 Alternatively, it is possible to run the tests by starting the executable generated for each test script or by running nmake check in the build directory using a console.
 
