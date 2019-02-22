@@ -6,7 +6,7 @@
 - Requirement Models
 - SPENAT - Secure Petri Net with Attributes
 
-The grammars of each modelling language is defined using [ANTLR v4](https://github.com/antlr/antlr4)
+The grammars of each modelling language are defined using [ANTLR v4](https://github.com/antlr/antlr4)
 
 ## Authors and major contributors
 - [ifak] (https://www.ifak.eu)
