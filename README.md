@@ -28,10 +28,9 @@ Please follow these steps to contribute to mobata:
 ## Running Unit Tests
 All Unit Tests in mobata are implemented using [Qt Test framework](https://doc.qt.io/qt-5/qttest-index.html).
 It is recommended to run all units tests using the QtCreator, an IDE developed by Qt:
-
 [Running Tests in QtCreator](https://doc.qt.io/qtcreator/creator-autotest.html#building-and-running-tests)
 
-Alternatively, it is possible to run the tests by starting the executable generated for each test script or by running nmake check in the build directory using a console.
+Alternatively, it is possible to run the tests by starting the executable generated for each test script or by running **nmake check** in the build directory using a console.
 
 ## License
 Mobata is open source software licensed under the [LGPLv3](https://github.com/ifak/mobata/blob/master/LICENSE). Have an overview of the license [here](https://tldrlegal.com/license/gnu-lesser-general-public-license-v3-(lgpl-3))
