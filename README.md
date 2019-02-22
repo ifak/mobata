@@ -1,6 +1,10 @@
 # Mobata 
 
-**Mobata** (Model Based Test Automation) is a library for notation of specification models (requirements, uml statemachines, SPENATS).
+**Mobata** (Model Based Test Automation) is a library of modelling languages for specification models including:
+- [UML Statemachines](https://en.wikipedia.org/wiki/UML_state_machine)
+- [Message Sequence Charts](https://en.wikipedia.org/wiki/Message_sequence_chart)
+- Requirement Models
+- SPENAT - Secure Petri Net with Attributes
 
 ## Authors and major contributors
 - [ifak] (https://www.ifak.eu)
