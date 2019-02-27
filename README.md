@@ -4,9 +4,9 @@
 - [UML Statemachines](https://en.wikipedia.org/wiki/UML_state_machine)
 - [Message Sequence Charts](https://en.wikipedia.org/wiki/Message_sequence_chart)
 - Requirement Models
-- SPENAT - Secure Petri Net with Attributes
+- High-Level Petri Nets like SPENAT - Safe Petri Net with Attributes
 
-The grammars of each modelling language are defined using [ANTLR v4](https://github.com/antlr/antlr4)
+The grammars of each modelling language are defined using [ANTLR v4](https://github.com/antlr/antlr4), which is part of mobata (v.4.7.2)
 
 ## Authors and major contributors
 - [ifak] (https://www.ifak.eu)
