@@ -3,6 +3,19 @@ language: cpp
 
 compiler: gcc
 
+matrix:
+  include:
+    # works on Precise and Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-8
+      env:
+        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+
 before_install:
 # For gcc-8
     - sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1397BC53640DB551
@@ -14,17 +27,9 @@ before_install:
     # sudo apt-get install -qq g++-6 qt57-meta-full
     - sudo apt-get update
     - sudo apt-get install -qq g++-8
-    
-before_script:
-    - export TRAVIS_COMPILER=gcc
-    - export CXX=g++-8
-    - export CXX_FOR_BUILD=g++-8
-    - export CC=gcc-8
-    - export CC_FOR_BUILD=gcc-8
-    - gcc --version
-  - qmake
+    - eval "${MATRIX_EVAL}"
 
 script:
-  - make
+  - qmake
   - make
   - make check
