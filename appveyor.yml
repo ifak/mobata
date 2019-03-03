@@ -1,8 +1,6 @@
 image: Visual Studio 2017
 
 init:
-  - set QTDIR=C:\Qt\5.12.1\msvc2017
-  - set PATH=%PATH%;%QTDIR%\bin;
   - call C:\Qt\5.12.1\msvc2017\bin\qtenv2.bat
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
   
@@ -20,16 +18,7 @@ platform:
 configuration:
   - Release
   #- Debug
-
-environment:
-  MSBUILD_FLAGS: /verbosity:minimal /maxcpucount
-  matrix:
-    - generator: "Visual Studio 16"    
-    #- generator: "MinGW Makefiles"
-
-matrix:
-  fast_finish: true
   
 build_script:
-  - C:\Qt\5.12.1\msvc2017\bin\qmake.exe mobata.pro
+  - qmake mobata.pro
   - nmake
