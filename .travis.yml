@@ -1,5 +1,5 @@
 dist: xenial
-language: cpp
+language: generic
 
 #compiler: gcc
 
@@ -12,8 +12,8 @@ matrix:
           packages: ['g++-8']
       env:
         - CXX=g++-8
-
 #before_install:
+
  #   - eval "${MATRIX_EVAL}"
 # For gcc-8
 #    - sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1397BC53640DB551
