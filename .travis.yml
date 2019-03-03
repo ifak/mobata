@@ -7,7 +7,7 @@ before_install:
  - sudo apt-get update
  - sudo apt-get install qt5-default qtbase5-dev qttools5-dev
 before_script:
-  - qmake
+  - qmake -spec linux-clang
 
 script:
   - make
