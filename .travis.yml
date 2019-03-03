@@ -1,28 +1,17 @@
-dist: trusty
+dist: xenial
 language: cpp
 
-services:
-  - docker
-
-matrix:
-  include:
-    # works on Precise and Trusty
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-      env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+compiler: clang
 
 before_install:
-    - eval "${MATRIX_EVAL}"
-    - docker pull rabits/qt:5.12-desktop
-    - docker run rabits/qt:5.12-desktop
+ - sudo apt-get update
+ - sudo apt-get install qt5-default qtbase5-dev qttools5-dev graphviz-dev libqt5qml5
+libqt5quick5 libqt5quickwidgets5
+
+before_script:
+  - qmake -spec linux-clang
 
 script:
-  - qmake mobata.pro
+  - make
   - make
   - make check
