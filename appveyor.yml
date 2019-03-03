@@ -3,7 +3,7 @@ image:
 #- Ubuntu1804
 
 #clone_depth: 5
-shallow_clone: true
+#shallow_clone: true
 
 init:
   - call C:\Qt\5.12.1\msvc2017\bin\qtenv2.bat
