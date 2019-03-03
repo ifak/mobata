@@ -1,14 +1,22 @@
 dist: xenial
 language: cpp
 
-compiler: clang
+compiler: gcc
 
 before_install:
- - sudo apt-get update
- - sudo apt-get install qt5-default qtbase5-dev qttools5-dev graphviz-dev libqt5qml5 libqt5quick5 libqt5quickwidgets5
+# For gcc-6
+    - sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1397BC53640DB551
+    - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
 
+# For Qt 5.7
+    - sudo add-apt-repository --yes ppa:beineri/opt-qt-5.12.1-xenial
+
+    # sudo apt-get install -qq g++-6 qt57-meta-full
+    - sudo apt-get update
+    - sudo apt-get install -qq g++-7 qt512-meta
+    
 before_script:
-  - qmake -spec linux-clang
+  - qmake
 
 script:
   - make
