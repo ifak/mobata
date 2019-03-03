@@ -1,13 +1,8 @@
-dist: xenial
+image: rabits/qt:5.12-desktop
 language: cpp
 
-compiler: clang
-
-before_install:
- - sudo apt-get update
- - sudo apt-get install qt5-default qtbase5-dev qttools5-dev qml
 before_script:
-  - qmake -spec linux-clang
+  - qmake
 
 script:
   - make
