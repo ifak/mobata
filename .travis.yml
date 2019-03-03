@@ -21,7 +21,7 @@ install:
     - sudo apt-get update
     - sudo apt-get install -qq qt512-meta-minimal
     
-before_script: bash /opt/qt512/bin/qt512-env.sh
+before_script: /opt/qt512/bin/qt512-env.sh
 
 script:
   - $CXX --version
