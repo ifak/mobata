@@ -16,6 +16,12 @@ before_install:
     - sudo apt-get install -qq g++-8
     
 before_script:
+    - export TRAVIS_COMPILER=gcc
+    - export CXX=g++-8
+    - export CXX_FOR_BUILD=g++-8
+    - export CC=gcc-8
+    - export CC_FOR_BUILD=gcc-8
+    - gcc --version
   - qmake
 
 script:
