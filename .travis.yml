@@ -5,7 +5,7 @@ services:
   - docker
   
 before_install:
-- docker pull rabits/qt
+- docker pull rabits/qt:5.12-desktop
 - docker run rabits/qt:5.12-desktop
 
 before_script:
