@@ -20,6 +20,9 @@ install:
     - sudo add-apt-repository --yes ppa:beineri/opt-qt-5.12.1-xenial
     - sudo apt-get update
     - sudo apt-get install -qq qt512-meta-minimal
+    
+before_script:
+    - bash /opt/qt512/bin/qt512-env.sh
 
 script:
   - $CXX --version
