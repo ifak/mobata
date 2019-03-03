@@ -10,8 +10,7 @@ before_install:
 - docker pull rabits/qt:5.12-desktop
 - docker run rabits/qt:5.12-desktop
 
-before_script:
-  - qmake -spec linux-clang
-
 script:
+  - qmake mobata.pro -spec linux-clang
   - make
+  - make check
