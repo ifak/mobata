@@ -5,8 +5,7 @@ compiler: clang
 
 before_install:
  - sudo apt-get update
- - sudo apt-get install qt5-default qtbase5-dev qttools5-dev graphviz-dev libqt5qml5
-libqt5quick5 libqt5quickwidgets5
+ - sudo apt-get install qt5-default qtbase5-dev qttools5-dev graphviz-dev libqt5qml5 libqt5quick5 libqt5quickwidgets5
 
 before_script:
   - qmake -spec linux-clang
