@@ -1,6 +1,8 @@
+image: Visual Studio 2017
+
 install:
   - set QTDIR=C:\Qt\5.12.1\msvc2017
   - set PATH=%PATH%;%QTDIR%\bin;
 build_script:
-  - qmake mobata.pro
+  - %QTDIR%\bin\qmake.exe mobata.pro
   - nmake
