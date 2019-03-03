@@ -12,6 +12,7 @@ matrix:
           packages: ['g++-8']
       env:
         - CXX=g++-8
+        - CC=gcc-8
 #before_install:
 
  #   - eval "${MATRIX_EVAL}"
@@ -27,5 +28,5 @@ matrix:
 script:
   - $CXX --version
   - qmake
-  - make
+  - make CXX=g++-8 CC=gcc-8
   - make check
