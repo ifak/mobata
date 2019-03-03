@@ -1,8 +1,33 @@
 image: Visual Studio 2017
 
-install:
+init:
   - set QTDIR=C:\Qt\5.12.1\msvc2017
   - set PATH=%PATH%;%QTDIR%\bin;
+  
+branches:
+  only:
+  - master
+
+clone_depth: 5
+
+version: '{build}'
+
+platform:
+  - x86
+
+configuration:
+  - Release
+  #- Debug
+
+environment:
+  MSBUILD_FLAGS: /verbosity:minimal /maxcpucount
+  matrix:
+    - generator: "Visual Studio 16"    
+    #- generator: "MinGW Makefiles"
+
+matrix:
+  fast_finish: true
+  
 build_script:
   - C:\Qt\5.12.1\msvc2017\bin\qmake.exe mobata.pro
   - nmake
