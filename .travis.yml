@@ -14,12 +14,12 @@ matrix:
         - CXX=g++-8
         - CC=gcc-8
         
-before_script:
+install:
 
 # For Qt 5.12
     - sudo add-apt-repository --yes ppa:beineri/opt-qt-5.12.1-xenial
     - sudo apt-get update
-    - sudo apt-get install -qq qt512-meta-full
+    - sudo apt-get install -qq qt512-meta-minimal
 
 script:
   - $CXX --version
