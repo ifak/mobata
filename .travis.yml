@@ -4,16 +4,16 @@ language: cpp
 compiler: gcc
 
 before_install:
-# For gcc-6
+# For gcc-8
     - sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1397BC53640DB551
     - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
 
-# For Qt 5.7
+# For Qt 5.12
     - sudo add-apt-repository --yes ppa:beineri/opt-qt-5.12.1-xenial
 
     # sudo apt-get install -qq g++-6 qt57-meta-full
     - sudo apt-get update
-    - sudo apt-get install -qq g++-7 qt512-meta
+    - sudo apt-get install -qq gcc-8 qt512-meta
     
 before_script:
   - qmake
