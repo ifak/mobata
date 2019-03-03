@@ -4,5 +4,5 @@ install:
   - set QTDIR=C:\Qt\5.12.1\msvc2017
   - set PATH=%PATH%;%QTDIR%\bin;
 build_script:
-  - %QTDIR%\bin\qmake.exe mobata.pro
+  - C:\Qt\5.12.1\msvc2017\bin\qmake.exe mobata.pro
   - nmake
