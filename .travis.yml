@@ -5,8 +5,7 @@ compiler: gcc
 
 before_install:
  - sudo apt-get update
- - sudo apt-get install qt5-dev-tools
-
+ - sudo apt-get install qt5-default qtbase5-dev qttools5-dev
 before_script:
   - qmake
 
