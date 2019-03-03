@@ -2,6 +2,9 @@ image:
 - Visual Studio 2017
 #- Ubuntu1804
 
+#clone_depth: 5
+shallow_clone: true
+
 init:
   - call C:\Qt\5.12.1\msvc2017\bin\qtenv2.bat
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
