@@ -1,0 +1,14 @@
+dist: xenial
+language: cpp
+
+compiler: gcc
+
+before_install:
+ - sudo apt-get update -qq
+ - sudo apt-get install -qq sqlite3 qt5-dev-tools
+
+before_script:
+  - qmake
+
+script:
+  - make
