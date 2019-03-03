@@ -1,0 +1,11 @@
+Sut{
+    name: RSE_SUT;
+    SutComponent{
+        name: RSE_App;
+        Port pTestSystem,pEvaluation;
+    }
+    SutComponent{
+        name: sut_comp_2;
+        Port ext_port;
+    }
+}

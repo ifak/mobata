@@ -1,0 +1,45 @@
+MODTRACE_VERSION = 0.0.1
+
+
+isEmpty(MODTRACE_LIBRARY_TYPE) {
+    MODTRACE_LIBRARY_TYPE = staticlib
+}
+
+QT += core xml
+
+DEFINES -= QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
+
+MODTRACE_PATH = $${PWD}
+MODTRACE_INCLUDEPATH = $${MODTRACE_PATH}/../
+
+MODTRACE_LIBDIR = $$shadowed($$PWD)
+CONFIG(debug, debug|release) {
+  win*:MODTRACE_LIBDIR = $$MODTRACE_LIBDIR/debug
+}else{
+  win*:MODTRACE_LIBDIR = $$MODTRACE_LIBDIR/release
+}
+
+contains(MODTRACE_LIBRARY_TYPE, staticlib) {
+    DEFINES += MODTRACE_LIBRARY_STATIC
+} else {
+    DEFINES += MODTRACE_LIBRARY
+}
+
+INCLUDEPATH += $${MODTRACE_INCLUDEPATH}
+DEPENDPATH += $${MODTRACE_INCLUDEPATH}
+QMAKE_LIBDIR += $${MODTRACE_LIBDIR}
+
+CONFIG(debug, debug|release) {
+  MODTRACE_NAME = modtraced
+}else{
+  MODTRACE_NAME = modtrace
+}
+
+LIBS += -l$$MODTRACE_NAME
+
+isEmpty(MOBATA_LIB_PATH){
+  MOBATA_LIB_PATH = $$PWD/../../../mobata
+}
+MOBATA_PRIFILE = $${MOBATA_LIB_PATH}/mobata.pri
+requires(exists($${MOBATA_PRIFILE}))
+include($${MOBATA_PRIFILE})

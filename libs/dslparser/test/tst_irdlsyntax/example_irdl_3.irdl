@@ -1,0 +1,11 @@
+import <declaration.decl>
+
+Requirement{
+	Declaration {
+		name: Gutverhalten;
+    description: "Beschreibung des Gutverhaltens";
+    Attribute int retValue = 0;
+	}
+  globalAttribute = 1;
+
+}

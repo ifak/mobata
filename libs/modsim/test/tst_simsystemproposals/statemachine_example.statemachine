@@ -1,0 +1,4 @@
+StateMachine {
+    name: statemachinemodel1;
+    Port defaultPort;
+}

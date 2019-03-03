@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/Examples">
+        <file>spenat_example.spenat</file>
+        <file>statemachine_example.statemachine</file>
+        <file>pingpong.simsystem</file>
+        <file>Ping.statemachine</file>
+        <file>Pong.statemachine</file>
+    </qresource>
+</RCC>

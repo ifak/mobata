@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by ifak (Institut für Automation und Kommunikation e.V) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="DataType.xsd"/>
+	<xs:include schemaLocation="SignalType.xsd"/>
+	<xs:include schemaLocation="PortType.xsd"/>
+	<xs:include schemaLocation="PortSetType.xsd"/>
+	<xs:include schemaLocation="AttributeSetType.xsd"/>
+	<xs:complexType name="SequenceNotationType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="message" type="MessageType"/>
+			<xs:element name="timer">
+				<xs:complexType>
+					<xs:attribute name="value" type="xs:float" use="required"/>
+					<xs:attribute name="port_ID" type="UUID" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="fragment" type="FragmentType"/>
+			<xs:element name="statement">
+				<xs:complexType>
+					<xs:attribute name="value" type="xs:string" use="required"/>
+					<xs:attribute name="port_ID" type="UUID" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="testsuite">
+		<xs:annotation>
+			<xs:documentation>This is a schema of an abstract testsuite description</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="TestsuiteType">
+					<xs:attribute name="name" type="xs:string"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="FragmentType">
+		<xs:sequence>
+			<xs:element name="region" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="SequenceNotationType">
+							<xs:attribute name="condition" type="xs:string"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="operator" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="loop"/>
+					<xs:enumeration value="alt"/>
+					<xs:enumeration value="par"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="MessageType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="parameter">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="name" type="xs:string" use="required"/>
+							<xs:attribute name="value" type="xs:string" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="signal_ID" type="UUID" use="required"/>
+		<xs:attribute name="from_port_ID" type="UUID" use="required"/>
+		<xs:attribute name="to_port_ID" type="UUID" use="required"/>
+		<xs:attribute name="reference" type="UUID" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="ComponentType">
+		<xs:sequence>
+			<xs:element name="port" type="PortType" maxOccurs="unbounded"/>
+			<xs:element name="attributes" type="AttributeSetType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="uuid" type="UUID" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TestgroupType">
+		<xs:sequence>
+			<xs:element name="testsystem" type="TestSystemType"/>
+			<xs:element name="testcases" type="TestCasesType"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TestsuiteType">
+		<xs:sequence>
+			<xs:element name="types" type="DataTypes" minOccurs="0"/>
+			<xs:element name="signals" type="SignalsType" minOccurs="0"/>
+			<xs:element name="attributes" type="AttributeSetType" minOccurs="0"/>
+			<xs:element name="sut" type="SutType"/>
+			<xs:choice>
+				<xs:sequence>
+					<xs:element name="testcases" type="TestCasesType"/>
+					<xs:element name="testsystem" type="TestSystemType"/>
+				</xs:sequence>
+				<xs:element name="testgroups" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="testgroup" type="TestgroupType" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ComponentsType">
+		<xs:sequence>
+			<xs:element name="component" type="ComponentType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TestCasesType">
+		<xs:sequence>
+			<xs:element name="testcase" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="SequenceNotationType">
+							<xs:attribute name="name" type="xs:string" use="required"/>
+							<xs:attribute name="uuid" type="UUID" use="optional"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TestSystemType">
+		<xs:sequence>
+			<xs:element name="components" type="ComponentsType"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="SutType">
+		<xs:sequence>
+			<xs:element name="components" type="ComponentsType"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+</xs:schema>

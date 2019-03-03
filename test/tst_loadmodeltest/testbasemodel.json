@@ -1,0 +1,53 @@
+{
+  "attributes": [
+    {
+      "dataType": "int",
+      "initValue": "10",
+      "name": "intAttribute",
+      "uuid": "{5cf96db6-9aa5-4c17-a8d6-a6eee4aeefd9}"
+    },
+    {
+      "dataType": "real",
+      "initValue": "1.2",
+      "name": "y",
+      "uuid": "{b268c1cc-61ef-4628-952e-136922ca4bf7}"
+    }
+  ],
+  "dataTypes": [
+    {
+      "name": "int",
+      "uuid": "{aff791a7-29e1-442c-9c31-a2727ee49e06}"
+    },
+    {
+      "name": "real",
+      "uuid": "{82207392-63eb-4662-9cdb-7efefb325fd4}"
+    },
+    {
+      "name": "myEnum",
+      "uuid": "{18a032d8-dff8-4d40-8dae-cca5dc7e0bf1}"
+    }
+  ],
+  "name": "testBaseModel",
+  "signals": [
+    {
+      "name": "emptySignal",
+      "uuid": "{6b661671-08bf-42e9-8779-33e0377dd4f8}"
+    },
+    {
+      "name": "complexSignal",
+      "params": [
+        {
+          "dataType": "int",
+          "name": "x",
+          "uuid": "{a0f3498c-9799-44b3-b5fe-3df88c5efa97}"
+        },
+        {
+          "dataType": "real",
+          "name": "y",
+          "uuid": "{d2e1494d-d4bf-4f17-a847-68cb65970baa}"
+        }
+      ],
+      "uuid": "{94ba7c68-fe5e-4d08-bc9e-9736f51a0769}"
+    }
+  ]
+}

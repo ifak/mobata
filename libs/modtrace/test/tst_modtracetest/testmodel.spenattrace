@@ -1,0 +1,93 @@
+{
+    "iteration": 5,
+    "places": [
+        {
+            "name": "AUF",
+            "req_changed": true,
+            "requirements": [
+                "Req_AufBetrieb"
+            ]
+        },
+        {
+            "name": "ZU",
+            "req_changed": true,
+            "requirements": [
+                "Req_ZuBetrieb",
+                "Req_AufBetrieb"
+            ]
+        },
+        {
+            "name": "init",
+            "req_changed": false,
+            "requirements": [
+                "Req_BetriebsmodusFeldbus",
+                "Req_Betriebsmodus"
+            ]
+        },
+        {
+            "name": "S1",
+            "req_changed": false,
+            "requirements": [
+                "Req_Betriebsmodus"
+            ]
+        }
+    ],
+    "transitions": [
+        {
+            "name": "StellbefehlAufZu_T1",
+            "req_changed": false,
+            "requirements": [
+                "Req_ZuBetrieb"
+            ]
+        },
+        {
+            "name": "StellbefehlAufZu_T2",
+            "req_changed": true,
+            "requirements": [
+                "Req_AufBetrieb"
+            ]
+        },
+        {
+            "name": "StellbefehlAufZu_T3",
+            "req_changed": true,
+            "requirements": [
+                "Req_AufBetrieb"
+            ]
+        },
+        {
+            "name": "setzeModus_T4",
+            "req_changed": false,
+            "requirements": [
+                "Req_BetriebsmodusFeldbus"
+            ]
+        },
+        {
+            "name": "setzeModus_T5",
+            "req_changed": false,
+            "requirements": [
+                "Req_Betriebsmodus"
+            ]
+        },
+        {
+            "name": "setzeModus_T6",
+            "req_changed": false,
+            "requirements": [
+                "Req_Betriebsmodus"
+            ]
+        },
+        {
+            "name": "setzeModus_T7",
+            "req_changed": false,
+            "requirements": [
+                "Req_Betriebsmodus"
+            ]
+        },
+        {
+            "name": "noTrigger_T8",
+            "req_changed": false,
+            "requirements": [
+                "Req_Betriebsmodus"
+            ]
+        }
+    ]
+}

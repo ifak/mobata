@@ -1,0 +1,13 @@
+
+Sut{
+  name: sutName;
+  
+  Signal input(int x);
+  
+  SutComponent {
+    name: sutComp_1;
+    
+    Port p_in;
+    Port p_out;
+  }
+}

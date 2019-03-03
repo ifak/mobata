@@ -1,0 +1,25 @@
+import <declaration.decl> as decl
+import <irdlDeclaration.irdldecl> as irdlDecl
+
+Requirement{
+  Declaration {
+    name: Gutverhalten;
+                description: "Beschreibung des Gutverhaltens";
+                Attribute int retValue = 0;
+
+    Actor{
+      name: user;
+      description: "Nutzer der Anlage";
+    }
+
+    Component{
+                        name: system1;
+      description: "Produktionsanlage";
+      Attribute bool initialized = false;
+    }
+                use system1 as system;
+  }
+
+        State "Init" at system;
+        Message(user->system): decl.setButtonFM(true);
+        Check(system->user): 	decl.

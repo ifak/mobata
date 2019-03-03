@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Jan Krause (Institut für Automation und Kommunikation e.V) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="DataType.xsd"/>
+	<xs:include schemaLocation="SignalType.xsd"/>
+	<xs:include schemaLocation="PortType.xsd"/>
+	<xs:complexType name="SequenceNotationType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="message" type="MessageType"/>
+			<xs:element name="timer">
+				<xs:complexType>
+					<xs:attribute name="value" type="xs:float" use="required"/>
+					<xs:attribute name="component_ID" type="UUID" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="fragment" type="FragmentType"/>
+			<xs:element name="stateInvariant">
+				<xs:complexType>
+					<xs:attribute name="text" type="xs:string"/>
+					<xs:attribute name="component_port" type="UUID" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="msc" type="MscType">
+		<xs:annotation>
+			<xs:documentation>This is a schema of a message sequence chart</xs:documentation>
+		</xs:annotation>
+		<xs:key name="componentPortID">
+			<xs:selector xpath="components/component/port"/>
+			<xs:field xpath="@id"/>
+		</xs:key>
+		<xs:key name="eventIDKey">
+			<xs:selector xpath="signals/signal"/>
+			<xs:field xpath="@id"/>
+		</xs:key>
+		<xs:keyref name="timer_componentRefID" refer="componentPortID">
+			<xs:selector xpath=".//timer"/>
+			<xs:field xpath="@component_ID"/>
+		</xs:keyref>
+		<xs:keyref name="stateInvariant_componentRefID" refer="componentPortID">
+			<xs:selector xpath=".//stateInvariant"/>
+			<xs:field xpath="@component_port"/>
+		</xs:keyref>
+		<xs:keyref name="toRefID" refer="componentPortID">
+			<xs:selector xpath=".//message"/>
+			<xs:field xpath="@to_port_ID"/>
+		</xs:keyref>
+		<xs:keyref name="fromRefID" refer="componentPortID">
+			<xs:selector xpath=".//message"/>
+			<xs:field xpath="@from_port_ID"/>
+		</xs:keyref>
+		<xs:keyref name="messageeventIDref" refer="eventIDKey">
+			<xs:selector xpath=".//message"/>
+			<xs:field xpath="@signal_ID"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:complexType name="FragmentType">
+		<xs:sequence>
+			<xs:element name="operand" type="SequenceNotationType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="operator" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="loop"/>
+					<xs:enumeration value="alt"/>
+					<xs:enumeration value="par"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="value" type="xs:positiveInteger" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="MessageType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="parameter">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="name" type="xs:string" use="required"/>
+							<xs:attribute name="value" type="xs:string" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="signal_ID" type="UUID" use="required"/>
+		<xs:attribute name="from_port_ID" type="UUID" use="required"/>
+		<xs:attribute name="to_port_ID" type="UUID" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ComponentType">
+		<xs:sequence>
+			<xs:element name="port" type="PortType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="id" type="xs:unsignedInt" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ComponentsType">
+		<xs:sequence>
+			<xs:element name="component" type="ComponentType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MscType">
+		<xs:sequence>
+			<xs:element name="types" type="DataTypes" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="signals" type="SignalsType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="components" type="ComponentsType"/>
+			<xs:element name="sequences">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="sequence" type="SequenceNotationType" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

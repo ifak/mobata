@@ -1,0 +1,542 @@
+StateMachine {
+  name: FSMasterDriver;
+  Port defaultPort;
+  Type bool S_Boolean_type;
+  Type bool S_Fault;
+  Type int(0..8) S_Count_type;
+  Type int(0..26) S_Length_type;
+  Type int(1..65535) S_WdTime_type;
+  Type int(0..1) S_Crc_type;
+  Type int S_PData_type;
+  Type int(1..255) S_PortNum_type;
+
+  Attribute S_Fault mTimeout = false;
+  Attribute S_Fault mCommErr = false;
+  Attribute S_Fault dTimeout = false;
+  Attribute S_Fault dCommErr = false;
+  Attribute S_Boolean_type ChFAck_C_e = false;
+  Attribute S_PData_type PDin = 0;
+  Attribute S_Boolean_type SDset = false;
+  Attribute S_Count_type DCount = 0;
+  Attribute S_Length_type PDin_Length = 0;
+  Attribute S_Length_type PDout_Length = 0;
+  Attribute S_WdTime_type MTime = 0;
+  Attribute S_Boolean_type ChFAckReq = false;
+  Attribute S_Boolean_type setSD = false;
+  Attribute S_Count_type MCount = 0;
+  Attribute S_PData_type PDout = 0;
+  Attribute S_Boolean_type ChFAck_C = false;
+  Attribute S_Boolean_type ChFAckReq_S = false;
+  Attribute S_PData_type PDin_M = 0;
+  Attribute S_PData_type PDout_M = 0;
+  Attribute S_Boolean_type SDset_S = false;
+  Attribute S_Boolean_type setSD_C = false;
+  Attribute S_Crc_type CRCin;
+  Attribute S_Crc_type CRCout;
+  Attribute S_Count_type old_MCount;
+  Attribute S_PortNum_type PortNum;
+  Attribute S_PortNum_type ReceivedPortNum;
+  
+  Signal evSendSPDU ( S_PData_type evFsPdOut, S_PortNum_type evPortNum, S_Count_type evMCount, S_Boolean_type evSetSD, S_Boolean_type evChFAckReq, S_Crc_type evCrc);
+  Signal evSPDUReceived ( S_PData_type evFsPdOut, S_PortNum_type evPortNum, S_Count_type evMCount, S_Boolean_type evSetSD, S_Boolean_type evChFAckReq, S_Crc_type evCrc);
+  Signal evSendResponse ( S_PData_type evFsPdIn, S_PortNum_type evPortNum, S_Count_type evDCount, S_Boolean_type evSDset, S_Boolean_type evDCommErr, S_Boolean_type evDTimeout, S_Crc_type evCrc);
+  Signal evResponseReceived ( S_PData_type evFsPdIn, S_PortNum_type evPortNum, S_Count_type evDCount, S_Boolean_type evSDset, S_Boolean_type evDCommErr, S_Boolean_type evDTimeout, S_Crc_type evCrc);
+  Signal evMTimerExpired;
+  Signal evRestartMTimer ( S_WdTime_type evMTime);
+  Signal evDTimerExpired;
+  Signal evRestartDTimer ( S_WdTime_type evDTime);
+  Signal evMasterApp ( S_PData_type evPDout_M, S_Boolean_type evSetSD_C, S_Boolean_type evChFAck_C);
+  Signal evDeviceApp ( S_PData_type evPDin_D, S_Boolean_type evSDset_DS);
+  
+  Function void UsePDin()
+  {   PDin_M = PDin;
+  }
+  
+  Function void UsePDout()
+  {   PDout = PDout_M;
+  }
+  
+  Function void UseSD()
+  {   UseSDin();
+   UseSDout();
+  }
+  
+  Function void UseSDin()
+  {   PDin_M = 0;
+  }
+  
+  Function void UseSDout()
+  {   PDout = 0;
+  }
+  
+  Function void BuildSPDU()
+  {   CRCout = 0;
+  }
+  
+  Function void CheckResponse(S_Fault mCommErr ,S_Fault mTimeout)
+  {   mTimeout = 0;
+   if ( ( CRCin == 0 ) &&
+   ( PortNum == ReceivedPortNum ) &&
+   ( MCount == Inverse(DCount) ) )
+   {
+   mCommErr = 0;
+   } /* if */
+   else
+   {
+   mCommErr = 1;
+   } /* else */
+  }
+  
+  Function void Initialize(S_Length_type pdInLength, S_Length_type pdOutLength, S_PortNum_type portNum, S_WdTime_type wdTime)
+  {   /* Configuration ok */
+   PDin_Length = pdInLength;
+   PDout_Length = pdOutLength;
+   PortNum = portNum;
+   /* Parameter ok */
+   MTime = wdTime;
+   /* todo: Initial values = 0 */
+   ChFAck_C_e = 0;
+   ChFAckReq_S = 0;
+   ChFAckReq = 0;
+  }
+  
+  Function S_Count_type Inverse(S_Count_type value)
+  {   S_Count_type inverseValue;
+   
+   switch (value)
+   {
+   case 0: inverseValue = 7; break;
+   case 1: inverseValue = 6; break;
+   case 2: inverseValue = 5; break;
+   case 3: inverseValue = 4; break;
+   case 4: inverseValue = 3; break;
+   case 5: inverseValue = 2; break;
+   case 6: inverseValue = 1; break;
+   case 7: inverseValue = 0; break;
+   default: inverseValue = 7; break; /* tbd */
+   } /* switch */
+   
+   return inverseValue;
+   
+  }
+  
+  initState: defaultInit;
+  
+  SimpleState defaultInit;
+  
+  SimpleState {
+    name: PrepareSPDU_1;
+    entry: BuildSPDU();
+  }
+  
+  SimpleState WaitOnResponse_2;
+  
+  SimpleState {
+    name: CheckSPDU_3;
+    entry: CheckResponse(mCommErr , mTimeout);
+  }
+  
+  SimpleState {
+    name: PrepareSPDU_4;
+    entry: BuildSPDU();
+  }
+  
+  SimpleState WaitOnResponse_5;
+  
+  SimpleState {
+    name: PrepareSPDU_6;
+    entry: BuildSPDU();
+  }
+  
+  SimpleState WaitOnResponse_7;
+  
+  SimpleState {
+    name: CheckSPDU_8;
+    entry: CheckResponse(mCommErr , mTimeout);
+  }
+  
+  SimpleState SetSD_IncrMCount;
+  
+  SimpleState IncrMCount;
+  
+  SimpleState SetPD;
+  
+  SimpleState CheckChFAck_C_e;
+  
+  JunctionState {
+    name: condition_22;
+    JunctionTransition {
+      name: transition_condition_22_to_PrepareSPDU_6;
+      guard: MCount == 8;
+      action: {
+        
+        MCount = 1;
+      }
+      target: PrepareSPDU_6;
+    }
+    JunctionTransition {
+      name: transition_condition_22_to_PrepareSPDU_6_2;
+      guard: else;
+      target: PrepareSPDU_6;
+    }
+  }
+  
+  JunctionState {
+    name: condition_31;
+    JunctionTransition {
+      name: transition_condition_31_to_PrepareSPDU_4;
+      guard: MCount == 8;
+      action: {
+        
+        MCount = 1;
+      }
+      target: PrepareSPDU_4;
+    }
+    JunctionTransition {
+      name: transition_condition_31_to_PrepareSPDU_4_2;
+      guard: else;
+      target: PrepareSPDU_4;
+    }
+  }
+  
+  JunctionState {
+    name: condition_39;
+    JunctionTransition {
+      name: transition_condition_39_to_IncrMCount;
+      guard: setSD_C == 1;
+      action: {
+        
+        UseSDin();
+        SDset_S = 1;
+        UseSDout();
+        setSD = 1;
+      }
+      target: IncrMCount;
+    }
+    JunctionTransition {
+      name: transition_condition_39_to_IncrMCount_2;
+      guard: {
+        ( setSD_C == 0 )
+        && ( SDset == 1 )
+      }
+      action: {
+        
+        UseSDin();
+        SDset_S = 1;
+        UsePDout();
+        setSD = 0;
+      }
+      target: IncrMCount;
+    }
+    JunctionTransition {
+      name: transition_condition_39_to_IncrMCount_3;
+      guard: else;
+      action: {
+        
+        UsePDin();
+        SDset_S = 0;
+        UsePDout();
+        setSD = 0;
+      }
+      target: IncrMCount;
+    }
+  }
+  
+  JunctionState {
+    name: condition_47;
+    JunctionTransition {
+      name: transition_condition_47_to_SetSD_IncrMCount;
+      guard: ChFAck_C == 0;
+      action: {
+        
+        ChFAck_C_e = 1;
+      }
+      target: SetSD_IncrMCount;
+    }
+    JunctionTransition {
+      name: transition_condition_47_to_SetSD_IncrMCount_2;
+      guard: else;
+      target: SetSD_IncrMCount;
+    }
+  }
+  
+  SignalTransition {
+    name: transition_defaultInit_to_PrepareSPDU_1;
+    action: {
+      Initialize(PDin_Length, PDout_Length, PortNum, MTime);
+      UseSD();
+      setSD = 1;
+      SDset_S = 1;
+      old_MCount = 0;
+      MCount = 0;
+    }
+    source: defaultInit;
+    target: PrepareSPDU_1;
+  }
+  
+  SignalTransition {
+    name: transition_PrepareSPDU_1_to_WaitOnResponse_2;
+    action: {
+      
+      //itsIOLinkChannel->GEN(
+      evSendSPDU(
+      PDout, PortNum, MCount, setSD, ChFAckReq, CRCout ) /*)*/;
+    }
+    source: PrepareSPDU_1;
+    target: WaitOnResponse_2;
+  }
+  
+  SignalTransition {
+    name: transition_WaitOnResponse_2_to_CheckSPDU_3;
+    signal: evResponseReceived;
+    port: defaultPort;
+    action: {
+      
+      PDin   = msg.evFsPdIn;
+      ReceivedPortNum = msg.evPortNum;
+      DCount = msg.evDCount;
+      SDset  = msg.evSDset;
+      dCommErr = msg.evDCommErr;
+      dTimeout = msg.evDTimeout;
+      CRCin  = msg.evCrc;
+    }
+    source: WaitOnResponse_2;
+    target: CheckSPDU_3;
+  }
+  
+  SignalTransition {
+    name: transition_WaitOnResponse_2_to_WaitOnResponse_2;
+    signal: evMasterApp;
+    port: defaultPort;
+    action: {
+      
+      PDout_M  = msg.evPDout_M;
+      setSD_C  = msg.evSetSD_C;
+      ChFAck_C = msg.evChFAck_C;
+    }
+    source: WaitOnResponse_2;
+    target: WaitOnResponse_2;
+  }
+  
+  SignalTransition {
+    name: transition_CheckSPDU_3_to_SetPD;
+    guard: ! (mTimeout or mCommErr or dTimeout or dCommErr);
+    source: CheckSPDU_3;
+    target: SetPD;
+  }
+  
+  SignalTransition {
+    name: transition_CheckSPDU_3_to_SetSD_IncrMCount;
+    guard: (mTimeout or mCommErr or dTimeout or dCommErr);
+    source: CheckSPDU_3;
+    target: SetSD_IncrMCount;
+  }
+  
+  SignalTransition {
+    name: transition_WaitOnResponse_5_to_CheckSPDU_3;
+    signal: evResponseReceived;
+    port: defaultPort;
+    guard: old_MCount != Inverse(msg.evDCount);
+    action: {
+      
+      PDin   = msg.evFsPdIn;
+      ReceivedPortNum = msg.evPortNum;
+      DCount = msg.evDCount;
+      SDset  = msg.evSDset;
+      dCommErr = msg.evDCommErr;
+      dTimeout = msg.evDTimeout;
+      CRCin  = msg.evCrc;
+    }
+    source: WaitOnResponse_5;
+    target: CheckSPDU_3;
+  }
+  
+  SignalTransition {
+    name: transition_PrepareSPDU_4_to_WaitOnResponse_5;
+    action: {
+      //itsIOLinkChannel->GEN(
+      evSendSPDU(
+      PDout, PortNum, MCount, setSD, ChFAckReq, CRCout ) /*)*/;
+      //itsMTimer->GEN(
+      evRestartMTimer(MTime)/*)*/;
+    }
+    source: PrepareSPDU_4;
+    target: WaitOnResponse_5;
+  }
+  
+  SignalTransition {
+    name: transition_WaitOnResponse_5_to_PrepareSPDU_6;
+    signal: evMTimerExpired;
+    port: defaultPort;
+    action: {
+      
+      mTimeout = 1;
+      UseSD();
+      setSD = 1;
+      SDset_S = 1;
+      MCount = 0;
+    }
+    source: WaitOnResponse_5;
+    target: PrepareSPDU_6;
+  }
+  
+  SignalTransition {
+    name: transition_WaitOnResponse_5_to_WaitOnResponse_5;
+    signal: evMasterApp;
+    port: defaultPort;
+    action: {
+      
+      PDout_M  = msg.evPDout_M;
+      setSD_C  = msg.evSetSD_C;
+      ChFAck_C = msg.evChFAck_C;
+    }
+    source: WaitOnResponse_5;
+    target: WaitOnResponse_5;
+  }
+  
+  SignalTransition {
+    name: transition_PrepareSPDU_6_to_WaitOnResponse_7;
+    action: {
+      //itsIOLinkChannel->GEN(
+      evSendSPDU(
+      PDout, PortNum, MCount, setSD, ChFAckReq, CRCout ) /*)*/;
+      //itsMTimer->GEN(
+      evRestartMTimer(MTime)/*)*/;
+    }
+    source: PrepareSPDU_6;
+    target: WaitOnResponse_7;
+  }
+  
+  SignalTransition {
+    name: transition_WaitOnResponse_7_to_PrepareSPDU_6;
+    signal: evMTimerExpired;
+    port: defaultPort;
+    action: {
+      
+      mTimeout = 1;
+      ChFAckReq = 0;
+      ChFAckReq_S = 0;
+      ChFAck_C_e = 0;
+      UseSD();
+      setSD = 1;
+      SDset_S = 1;
+      MCount = 0;
+    }
+    source: WaitOnResponse_7;
+    target: PrepareSPDU_6;
+  }
+  
+  SignalTransition {
+    name: transition_WaitOnResponse_7_to_CheckSPDU_8;
+    signal: evResponseReceived;
+    port: defaultPort;
+    guard: MCount == Inverse(msg.evDCount);
+    action: {
+      
+      PDin   = msg.evFsPdIn;
+      ReceivedPortNum = msg.evPortNum;
+      DCount = msg.evDCount;
+      SDset  = msg.evSDset;
+      dCommErr = msg.evDCommErr;
+      dTimeout = msg.evDTimeout;
+      CRCin  = msg.evCrc;
+    }
+    source: WaitOnResponse_7;
+    target: CheckSPDU_8;
+  }
+  
+  SignalTransition {
+    name: transition_WaitOnResponse_7_to_WaitOnResponse_7;
+    signal: evMasterApp;
+    port: defaultPort;
+    action: {
+      
+      PDout_M  = msg.evPDout_M;
+      setSD_C  = msg.evSetSD_C;
+      ChFAck_C = msg.evChFAck_C;
+    }
+    source: WaitOnResponse_7;
+    target: WaitOnResponse_7;
+  }
+  
+  SignalTransition {
+    name: transition_CheckSPDU_8_to_SetPD;
+    guard: {
+      ( ! (mTimeout or mCommErr or dTimeout or dCommErr)) && (
+      ChFAck_C == 1 ) &&
+      ( ChFAck_C_e == 1 )
+    }
+    action: {
+      
+      ChFAckReq = 0;
+      ChFAckReq_S = 0;
+      ChFAck_C_e = 0;
+    }
+    source: CheckSPDU_8;
+    target: SetPD;
+  }
+  
+  SignalTransition {
+    name: transition_CheckSPDU_8_to_SetSD_IncrMCount;
+    guard: (mTimeout or mCommErr or dTimeout or dCommErr);
+    action: {
+      
+      ChFAckReq = 0;
+      ChFAckReq_S = 0;
+      ChFAck_C_e = 0;
+    }
+    source: CheckSPDU_8;
+    target: SetSD_IncrMCount;
+  }
+  
+  SignalTransition {
+    name: transition_CheckSPDU_8_to_CheckChFAck_C_e;
+    guard: {
+      ( ! (mTimeout or mCommErr or dTimeout or dCommErr)) &&
+      ( ( ChFAck_C == 0 ) ||
+      ( ChFAck_C_e == 0 ) )
+    }
+    action: {
+      
+      ChFAckReq = 1;
+      ChFAckReq_S = 1;
+    }
+    source: CheckSPDU_8;
+    target: CheckChFAck_C_e;
+  }
+  
+  SignalTransition {
+    name: transition_SetSD_IncrMCount_to_condition_22;
+    action: {
+      UseSD();
+      setSD = 1;
+      SDset_S = 1;
+      old_MCount = MCount;
+      MCount = MCount + 1;
+    }
+    source: SetSD_IncrMCount;
+    target: condition_22;
+  }
+  
+  SignalTransition {
+    name: transition_IncrMCount_to_condition_31;
+    action: {
+      old_MCount = MCount;
+      MCount = MCount + 1;
+    }
+    source: IncrMCount;
+    target: condition_31;
+  }
+  
+  SignalTransition {
+    name: transition_SetPD_to_condition_39;
+    source: SetPD;
+    target: condition_39;
+  }
+  
+  SignalTransition {
+    name: transition_CheckChFAck_C_e_to_condition_47;
+    source: CheckChFAck_C_e;
+    target: condition_47;
+  }
+}

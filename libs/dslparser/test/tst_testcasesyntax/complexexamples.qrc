@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/Examples">
+        <file>example1.testsystem</file>
+        <file>sutExample.sut</file>
+        <file>example_testcase_4.testcase</file>
+        <file>declaration.decl</file>
+        <file>example_testcase_5.testcase</file>
+        <file>example_testcase_6.testcase</file>
+        <file>example_testcase_7.testcase</file>
+        <file>example_testcase_8.testcase</file>
+        <file>example_testcase_9.testcase</file>
+        <file>example_testcase_10.testcase</file>
+        <file>example_testcase_11.testcase</file>
+        <file>example_testcase_12.testcase</file>
+        <file>example_testcase_13.testcase</file>
+    </qresource>
+</RCC>

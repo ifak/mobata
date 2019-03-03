@@ -1,0 +1,49 @@
+GRAPHLAYOUT_VERSION = 0.8.0
+
+QT += quick quickwidgets gui core
+
+isEmpty(GRAPHLAYOUT_LIBRARY_TYPE) {
+    GRAPHLAYOUT_LIBRARY_TYPE = staticlib
+}
+
+DEFINES -= QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
+
+GRAPHLAYOUT_PATH = $${PWD}
+GRAPHLAYOUT_INCLUDEPATH = $${GRAPHLAYOUT_PATH}
+GRAPHLAYOUT_LIBDIR = $$shadowed($$PWD/graphlayout)
+
+CONFIG(debug, debug|release) {
+  win*:GRAPHLAYOUT_LIBDIR = $$GRAPHLAYOUT_LIBDIR/debug
+}else{
+  win*:GRAPHLAYOUT_LIBDIR = $$GRAPHLAYOUT_LIBDIR/release
+}
+
+contains(GRAPHLAYOUT_LIBRARY_TYPE, staticlib) {
+    DEFINES += GRAPHLAYOUT_LIBRARY_STATIC
+} else {
+    DEFINES += GRAPHLAYOUT_LIBRARY
+}
+
+INCLUDEPATH += $${GRAPHLAYOUT_INCLUDEPATH}
+DEPENDPATH += $${GRAPHLAYOUT_INCLUDEPATH}
+QMAKE_LIBDIR += $${GRAPHLAYOUT_LIBDIR}
+
+CONFIG(debug, debug|release) {
+  GRAPHLAYOUT_NAME = graphlayoutd
+}else{
+  GRAPHLAYOUT_NAME = graphlayout
+}
+
+LIBS += -l$$GRAPHLAYOUT_NAME
+
+isEmpty(MOBATA_LIB_PATH){
+  MOBATA_LIB_PATH = $$PWD/../../mobata
+}
+MOBATA_PRIFILE = $${MOBATA_LIB_PATH}/mobata.pri
+requires(exists($${MOBATA_PRIFILE}))
+include($${MOBATA_PRIFILE})
+
+isEmpty(ANTLR_HOME) {
+  ANTLR_HOME = $$PWD/../../3rd/antlr4-cpp
+}
+include($$ANTLR_HOME/antlr4-cpp.pri)

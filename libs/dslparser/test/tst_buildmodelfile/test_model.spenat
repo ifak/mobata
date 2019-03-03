@@ -1,0 +1,59 @@
+Spenat {
+  name: testSpenat;
+  Port in_port, out_port;
+
+  Attribute int attr_1 = 0;
+  Attribute int attr_2 = 0;
+
+  Signal input ( int in);
+  Signal output ( int out);
+
+  Place {
+    name: p1;
+    initial: true;
+  }
+
+  Place {
+    name: p2;
+  }
+
+  Place {
+    name: p3;
+  }
+
+  Place {
+    name: p4;
+  }
+
+  SignalTransition {
+    name: t1;
+    signal: input;
+    port: in_port;
+    guard: msg.in<10;
+    action: this.attr_1=msg.in;
+    pre: p1;
+    post: p2,p3;
+  }
+
+  SignalTransition {
+    name: t2;
+    signal: input;
+    port: in_port;
+    guard: msg.in>20;
+    action: {
+      this.attr_2=msg.in;
+      send output(this.attr_2) to out_port;
+    }
+    pre: p2,p3;
+    post: p4;
+  }
+
+  TimeoutTransition {
+    name: t3;
+    value: 10.0;
+    guard: this.attr_1 > 0;
+    action: send output(this.attr_1) to out_port;
+    pre: p4;
+    post: p1;
+  }
+}

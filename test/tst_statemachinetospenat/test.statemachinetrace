@@ -1,0 +1,29 @@
+{
+   "iteration":1,
+   "states":[
+      {
+         "name":"s1",
+         "req_changed":true,
+         "requirements":[
+            "Req_Test1"
+         ]
+      },
+      {
+         "name":"s2",
+         "req_changed":true,
+         "requirements":[
+            "Req_Test2"
+         ]
+      }
+   ],
+   "transitions":[
+      {
+         "name":"t1",
+         "req_changed":true,
+         "requirements":[
+            "Req_Test1",
+            "Req_Test2"
+         ]
+      }
+   ]
+}

@@ -1,0 +1,29 @@
+{
+    "iteration": 5,
+    "places": [
+        {
+            "name": "AUF",
+            "req_changed": true,
+            "requirements": [
+                "Req_AufBetrieb"
+            ]
+        },
+        {
+            "name": "ZU",
+            "req_changed": true,
+            "requirements": [
+                "Req_ZuBetrieb",
+                "Req_AufBetrieb"
+            ]
+        },
+        {
+            "name": "init",
+            "req_changed": false,
+            "requirements": [
+                "Req_BetriebsmodusFeldbus",
+                "Req_Betriebsmodus"
+            ]
+        },
+        {
+            "name": "S1",
+

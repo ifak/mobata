@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/Examples">
+        <file>example1.components</file>
+        <file>sutExample.sut</file>
+        <file>testpath/sutExample2.sut</file>
+        <file>testpath/sutExample3.sut</file>
+        <file>testpath/sutExample4.sut</file>
+        <file>denm_cancelation.components</file>
+        <file>denm_cancelation.signals</file>
+        <file>example_diagnosis_1.rule</file>
+        <file>example_diagnosis_2.rule</file>
+        <file>testpath/example2.testcase</file>
+        <file>testpath/example3.testcase</file>
+        <file>testpath/example4.testcase</file>
+        <file>testpath/example5.testcase</file>
+        <file>example_diagnosis_5.rule</file>
+        <file>example_testcase_4.testcase</file>
+        <file>example_testcase_5.testcase</file>
+        <file>example_testcase_6.testcase</file>
+        <file>example_testcase_7.testcase</file>
+        <file>example_testcase_8.testcase</file>
+        <file>example_testcase_9.testcase</file>
+        <file>example_diagnosis_3.rule</file>
+        <file>example_diagnosis_4.rule</file>
+    </qresource>
+</RCC>

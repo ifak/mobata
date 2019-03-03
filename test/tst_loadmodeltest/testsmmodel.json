@@ -1,0 +1,221 @@
+{
+    "attributes": [
+        {
+            "dataType": "int",
+            "initValue": "10",
+            "name": "intAttribute",
+            "uuid": "{1441d7cd-a182-4dc2-9528-b98cac98e138}"
+        },
+        {
+            "dataType": "real",
+            "initValue": "1.2",
+            "name": "y",
+            "uuid": "{7fa6e3fb-fa4b-47d1-9f01-4de172933695}"
+        }
+    ],
+    "dataTypes": [
+        {
+            "name": "int",
+            "uuid": "{9cf51baa-232f-4a00-9183-1ac556e5fb1f}"
+        },
+        {
+            "name": "real",
+            "uuid": "{95338b1e-a179-48aa-ba54-e751ae660c93}"
+        },
+        {
+            "name": "MyEnumType",
+            "uuid": "{854f1089-cddf-4d11-bb32-255234b94db0}"
+        },
+        {
+            "name": "string",
+            "uuid": "{bf88a372-f1b2-48b8-9815-340e9de8aa73}"
+        }
+    ],
+    "name": "testSMModel",
+    "ports": [
+        {
+            "name": "defaultPort",
+            "uuid": "{435a48f8-591e-4d56-92f8-7ed1ce30526c}"
+        }
+    ],
+    "signals": [
+        {
+            "name": "signal",
+            "params": [
+                {
+                    "dataType": "MyEnumType",
+                    "name": "param",
+                    "uuid": "{1f6b1284-517c-48a0-9f75-31ba00d17801}"
+                }
+            ],
+            "uuid": "{e16f9964-12a2-4355-b455-d4f26f748937}"
+        }
+    ],
+    "states": [
+        {
+            "name": "initState",
+            "type": "Simple",
+            "entryAction": "",
+            "exitAction": "",
+            "uuid": "{a1464e19-136b-43be-88c9-f95c05e74a6e}",
+            "initState": "true"
+        },
+        {
+            "entryAction": "entry",
+            "exitAction": "exit",
+            "name": "simpleState",
+            "type": "Simple",
+            "uuid": "{9a74fbbc-6240-446e-bcfb-c5fa84078c0b}",
+            "initState": "false"
+        },
+        {
+            "name": "choiceState",
+            "type": "Choice",
+            "uuid": "{614d48f1-6c12-46ad-b4aa-dd143297ff74}"
+        },
+        {
+            "name": "junctionState",
+            "type": "Junction",
+            "uuid": "{692f7045-6df9-4820-8a4b-30867794f893}",
+            "junctionTransitions:": [
+                {
+                    "action": "junctionTrans",
+                    "guard": "",
+                    "port": "port",
+                    "targetState": "{10c4f309-1f48-4754-b068-4edddd50036b}",
+                    "uuid": "{1ecb6f54-f148-4ee0-b81b-07263afbe8ef}"
+                },
+                {
+                    "action": "junctionTrans2",
+                    "guard": "",
+                    "targetState": "{10c4f309-1f48-4754-b068-4edddd50036b}",
+                    "uuid": "{59fed152-a159-4b7f-bc73-7d4540b5d8b5}"
+                }
+            ]
+        },
+        {
+            "name": "finalState",
+            "type": "Final",
+            "uuid": "{10c4f309-1f48-4754-b068-4edddd50036b}"
+        },
+        {
+            "entryAction": "",
+            "exitAction": "",
+            "name": "compositeState",
+            "subStates": [
+                {
+                    "entryAction": "comEntry",
+                    "exitAction": "comExit",
+                    "name": "comSimpleState",
+                    "type": "Simple",
+                    "uuid": "{89d12163-92c6-4995-86eb-885d151dd500}",
+                    "initState": "true"
+                }
+            ],
+            "type": "Composite",
+            "uuid": "{7fd628d6-b5dc-41db-a7ee-5f97e385d59b}",
+            "initState": "false"
+        },
+        {
+            "entryAction": "",
+            "exitAction": "",
+            "name": "concurrent",
+            "regions": [
+                {
+                    "name": "region0",
+                    "regionStates": [
+                        {
+                            "name": "regionInitState",
+                            "type": "Simple",
+                            "uuid": "{01719c7e-e76b-406e-8175-8dbf8052722e}",
+                            "entryAction": "",
+                            "exitAction": "",
+                            "initState": "true"
+                        },
+                        {
+                            "entryAction": "regionEntry",
+                            "exitAction": "regionExit",
+                            "name": "regionSimpleState",
+                            "type": "Simple",
+                            "uuid": "{0eced251-2b8b-412d-803f-43c3c4753c93}",
+                            "initState": "false"
+                        },
+                        {
+                            "entryAction": "",
+                            "exitAction": "",
+                            "name": "regionCompositeState",
+                            "subStates": [
+                                {
+                                    "entryAction": "regionComSimpleEntry",
+                                    "exitAction": "regionComSimpleExit",
+                                    "name": "regionComSimpleState",
+                                    "type": "Simple",
+                                    "uuid": "{001877c0-ef2a-40e7-8b59-c11c7cc437a1}",
+                                    "initState": "true"
+                                }
+                            ],
+                            "type": "Composite",
+                            "uuid": "{3f972bdc-d6d2-40a7-83bd-0e50d9e4f0c1}",
+                            "initState": "false"
+                        },
+                        {
+                            "name": "finalState",
+                            "type": "Final",
+                            "uuid": "{004ee4ad-399c-4a45-9630-a3c23fdd2bc5}"
+                        }
+                    ],
+                    "uuid": "{6a0e6084-060c-4c4a-b7b3-cea0d6584660}"
+                },
+                {
+                    "name": "region1",
+                    "uuid": "{02d47ca4-db48-422b-ada4-1ed56a7b61ad}"
+                }
+            ],
+            "type": "Concurrent",
+            "uuid": "{1a5328ff-f0a7-4081-83c4-8546d4dba53d}",
+            "initState": "false"
+
+        }
+    ],
+    "transitions": [
+        {
+            "action": "initTrans",
+            "guard": "",
+            "name": "t0",
+            "port": "435a48f8-591e-4d56-92f8-7ed1ce30526c",
+            "signal": "{e16f9964-12a2-4355-b455-d4f26f748937}",
+            "sourceState": "{a1464e19-136b-43be-88c9-f95c05e74a6e}",
+            "targetState": "{9a74fbbc-6240-446e-bcfb-c5fa84078c0b}",
+            "uuid": "{2ecb6f54-f148-4ee0-b81b-07263afbe8eb}"
+        },
+        {
+            "action": "simpleTrans",
+            "guard": "",
+            "name": "t1",
+            "port": "435a48f8-591e-4d56-92f8-7ed1ce30526c",
+            "signal": "{e16f9964-12a2-4355-b455-d4f26f748937}",
+            "sourceState": "{9a74fbbc-6240-446e-bcfb-c5fa84078c0b}",
+            "targetState": "{89d12163-92c6-4995-86eb-885d151dd500}",
+            "uuid": "{99fed152-a159-4b7f-bc73-7d4540b5d8b1}"
+        },
+        {
+            "action": "regionTrans",
+            "guard": "",
+            "name": "t2",
+            "port": "435a48f8-591e-4d56-92f8-7ed1ce30526c",
+            "signal": "{e16f9964-12a2-4355-b455-d4f26f748937}",
+            "sourceState": "{9a74fbbc-6240-446e-bcfb-c5fa84078c0b}",
+            "targetState": "{01719c7e-e76b-406e-8175-8dbf8052722e}",
+            "uuid": "{48a423e8-0d75-4405-ac8b-31b1367eb00a}"
+        },
+        {
+            "action": "regionComTrans",
+            "guard": "",
+            "name": "t3",
+            "value": "2.2",
+            "sourceState": "{01719c7e-e76b-406e-8175-8dbf8052722e}",
+            "targetState": "{001877c0-ef2a-40e7-8b59-c11c7cc437a1}",
+            "uuid": "{c7f924e2-08c5-4acf-85ee-b38866108635}"
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/Examples">
+        <file>statemachine_example.statemachine</file>
+        <file>spenat_example1.spenat</file>
+        <file>spenat_example2.spenat</file>
+    </qresource>
+    <qresource prefix="/"/>
+</RCC>

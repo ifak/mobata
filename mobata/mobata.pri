@@ -1,0 +1,39 @@
+MOBATA_VERSION = 0.8.0
+
+isEmpty(MOBATA_LIBRARY_TYPE) {
+    MOBATA_LIBRARY_TYPE = staticlib
+}
+
+QT += core gui qml xml
+
+DEFINES -= QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
+
+*msvc*:DEFINES+=NOMINMAX
+
+MOBATA_PATH = $${PWD}
+MOBATA_INCLUDEPATH = $${MOBATA_PATH}/../
+
+MOBATA_LIBDIR = $$shadowed($$PWD)
+CONFIG(debug, debug|release) {
+  win*:MOBATA_LIBDIR = $$MOBATA_LIBDIR/debug
+}else{
+  win*:MOBATA_LIBDIR = $$MOBATA_LIBDIR/release
+}
+
+contains(MOBATA_LIBRARY_TYPE, staticlib) {
+    DEFINES += MOBATA_LIBRARY_STATIC
+} else {
+    DEFINES += MOBATA_LIBRARY
+}
+
+INCLUDEPATH += $${MOBATA_INCLUDEPATH}
+DEPENDPATH += $${MOBATA_INCLUDEPATH}
+QMAKE_LIBDIR += $${MOBATA_LIBDIR}
+
+CONFIG(debug, debug|release) {
+  MOBATA_NAME = mobatad
+}else{
+  MOBATA_NAME = mobata
+}
+
+LIBS += -l$$MOBATA_NAME
