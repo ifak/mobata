@@ -13,7 +13,7 @@ before_install:
 
     # sudo apt-get install -qq g++-6 qt57-meta-full
     - sudo apt-get update
-    - sudo apt-get install -qq gcc-8 qt512-meta
+    - sudo apt-get install -qq g++-8
     
 before_script:
   - qmake
