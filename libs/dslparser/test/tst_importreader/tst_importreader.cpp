@@ -60,7 +60,7 @@ void ImportReaderTest::simpleImportReaderTest_2()
 {
   QString docText("\nimport <sut_example.sut> as sut\n");
 
-  dslparser::importreader::ComBuildImportReaderModel command(docText, QDir::currentPath());
+  dslparser::importreader::ComBuildImportReaderModel command(docText, QStringLiteral("/"));
 
   QString errorString;
   bool result = command.execute(&errorString);
