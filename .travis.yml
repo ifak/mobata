@@ -19,7 +19,7 @@ install:
 # For Qt 5.12
     - sudo add-apt-repository --yes ppa:beineri/opt-qt-5.12.1-xenial
     - sudo apt-get update
-    - sudo apt-get install -qq qt512-meta-minimal libglu1-mesa-dev 
+    - sudo apt-get install -qq qt512-meta-minimal qt512scxml libglu1-mesa-dev 
     
 before_script: source /opt/qt512/bin/qt512-env.sh
 
