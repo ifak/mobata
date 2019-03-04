@@ -1,0 +1,65 @@
+StateMachine {
+    name: statemachinemodel2;
+    Port port01;
+    Signal input (int something, int somethingelse);
+    initState: s1;
+    SimpleState s1;
+    CompositeState{
+        name: s2;
+        entry: somethingelse = 10; // will be saved as just a QString"
+        exit: somethingelse = 11;
+        initState: s21;
+        SimpleState {
+            name: s21;
+            entry: somethingelse = 12;
+            exit: somethingelse = 13;
+        }
+        SimpleState {
+            name: s22;
+            entry: somethingelse = 14;
+            exit: somethingelse = 15;
+        }
+        FinalState{
+            name: s23;
+        }
+    }
+
+    JunctionState {
+        name: s3;
+        JunctionTransition {
+            name: jt0;
+            guard: test;
+            action: testAction=2;
+            target: s2;
+        }
+        JunctionTransition {
+            name: jt1;
+            guard: test2;
+            action: testAction2=3;
+            target: s2;
+        }
+    }
+    FinalState {
+        name: s5;
+    }
+
+
+    SignalTransition {
+        name: t1;
+        signal: input;
+        port: port01;
+        guard: something;
+        action: somethingelse=20;
+        source: s1;
+        target: s2;
+    }
+
+    TimeoutTransition {
+        name: t2;
+        value: 2.2;
+        guard: something2;
+        action: somethingelse=21;
+        source: s1;
+        target: s2;
+    }
+}

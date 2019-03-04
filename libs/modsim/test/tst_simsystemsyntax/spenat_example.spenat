@@ -1,0 +1,4 @@
+Spenat{
+  name: mySpenat;
+  Port defaultPort;
+}

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/importreader">
+        <file>sut_example.sut</file>
+    </qresource>
+</RCC>

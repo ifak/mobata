@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/Examples">
+        <file>example1.testsystem</file>
+        <file>sutExample.sut</file>
+        <file>testpath/example2.testsystem</file>
+        <file>testpath/sutExample2.sut</file>
+        <file>testpath/example3.testsystem</file>
+        <file>testpath/example4.testsystem</file>
+        <file>testpath/sutExample3.sut</file>
+        <file>testpath/sutExample4.sut</file>
+        <file>testpath/example5.testsystem</file>
+        <file>example1_2.testsystem</file>
+        <file>example1_3.testsystem</file>
+    </qresource>
+</RCC>

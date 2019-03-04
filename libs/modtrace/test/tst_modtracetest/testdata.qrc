@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/testdata"/>
+    <qresource prefix="/">
+        <file>testmodel.spenattrace</file>
+        <file>testmodel.ats</file>
+        <file>testmodel_invalid.spenattrace</file>
+        <file>testmodel_invalid.ats</file>
+    </qresource>
+</RCC>

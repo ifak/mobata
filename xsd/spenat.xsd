@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Jan Krause (Institut für Automation und Kommunikation e.V) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="UUID.xsd"/>
+	<xs:include schemaLocation="DataType.xsd"/>
+	<xs:include schemaLocation="AttributeSetType.xsd"/>
+	<xs:include schemaLocation="SignalType.xsd"/>
+	<xs:include schemaLocation="StatementType.xsd"/>
+	<xs:include schemaLocation="PortSetType.xsd"/>
+	<xs:include schemaLocation="TransitionType.xsd"/>
+	<xs:element name="spenat">
+		<xs:annotation>
+			<xs:documentation>safe petri net with attributes (spenat)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="types" type="DataTypes" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>data types of a spenat-system</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="signals" type="SignalsType" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>external events of a spenat-system</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="attributes" type="AttributeSetType"/>
+				<xs:element name="ports" type="PortSetType"/>
+				<xs:element name="net">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="place" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>place of an SPENAT</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="graphics" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="position">
+														<xs:complexType>
+															<xs:attribute name="x" type="xs:int" use="required"/>
+															<xs:attribute name="y" type="xs:int" use="required"/>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="name" type="xs:string" use="required"/>
+									<xs:attribute name="id" type="UUID" use="required"/>
+									<xs:attribute name="initialMarking" type="xs:boolean" use="required"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="transition" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>transition of a SPENAT</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:complexContent>
+										<xs:extension base="TransitionType">
+											<xs:sequence>
+												<xs:element name="graphics" minOccurs="0">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="position">
+																<xs:complexType>
+																	<xs:attribute name="x" type="xs:int" use="required"/>
+																	<xs:attribute name="y" type="xs:int" use="required"/>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:extension>
+									</xs:complexContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="arc" minOccurs="2" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>arc desribes a connection between a place and a transition</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="graphics" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="position" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:attribute name="x" type="xs:int" use="required"/>
+															<xs:attribute name="y" type="xs:int" use="required"/>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="source_id" type="UUID" use="required"/>
+									<xs:attribute name="target_id" type="UUID" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+					<xs:key name="nodeKeyID">
+						<xs:selector xpath="place | transition"/>
+						<xs:field xpath="@id"/>
+					</xs:key>
+					<xs:keyref name="sourceNodeKeyrefID" refer="nodeKeyID">
+						<xs:selector xpath="arc"/>
+						<xs:field xpath="@source_id"/>
+					</xs:keyref>
+					<xs:keyref name="targetNodeKeyrefID" refer="nodeKeyID">
+						<xs:selector xpath="arc"/>
+						<xs:field xpath="@target_id"/>
+					</xs:keyref>
+					<xs:unique name="arcUniqueID">
+						<xs:selector xpath="arc"/>
+						<xs:field xpath="@source_id"/>
+						<xs:field xpath="@target_id"/>
+					</xs:unique>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="uuid" type="UUID" use="required"/>
+		</xs:complexType>
+		<xs:key name="typeNameKey">
+			<xs:selector xpath="types/*"/>
+			<xs:field xpath="@name"/>
+		</xs:key>
+		<xs:key name="portKeyName">
+			<xs:selector xpath="ports/port"/>
+			<xs:field xpath="@name"/>
+		</xs:key>
+		<xs:key name="attributeKeyName">
+			<xs:selector xpath="attributes/attribute"/>
+			<xs:field xpath="@name"/>
+		</xs:key>
+		<xs:key name="signalsUUID">
+			<xs:selector xpath="signals/signal"/>
+			<xs:field xpath="@uuid"/>
+		</xs:key>
+	</xs:element>
+</xs:schema>

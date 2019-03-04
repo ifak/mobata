@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Jan Krause (Institut für Automation und Kommunikation e.V) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="DataType.xsd"/>
+	<xs:include schemaLocation="AttributeType.xsd"/>
+	<xs:include schemaLocation="SignalType.xsd"/>
+	<xs:include schemaLocation="StatementType.xsd"/>
+	<xs:include schemaLocation="PortType.xsd"/>
+	<xs:include schemaLocation="TransitionType.xsd"/>
+	<xs:complexType name="ComponentType">
+		<xs:sequence>
+			<xs:element name="attribute" type="AttributeType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="port" type="PortType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="statemachine" type="StatemachineType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="RegionType">
+		<xs:sequence>
+			<xs:element name="state" type="StateType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="transition" type="UmlTransitionType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="StateType">
+		<xs:sequence>
+			<xs:element name="entry" type="StatementType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="exit" type="StatementType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="internTransition" type="TransitionType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="region" type="RegionType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="normal"/>
+					<xs:enumeration value="composite"/>
+					<xs:enumeration value="concurrent"/>
+					<xs:enumeration value="submachine"/>
+					<xs:enumeration value="flatHistory"/>
+					<xs:enumeration value="deepHistory"/>
+					<xs:enumeration value="init"/>
+					<xs:enumeration value="final"/>
+					<xs:enumeration value="termination"/>
+					<xs:enumeration value="fork"/>
+					<xs:enumeration value="join"/>
+					<xs:enumeration value="branch"/>
+					<xs:enumeration value="choice"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="id" type="UUID" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="UmlTransitionType">
+		<xs:complexContent>
+			<xs:extension base="TransitionType">
+				<xs:attribute name="source_id" type="UUID" use="required"/>
+				<xs:attribute name="target_id" type="UUID" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StatemachineType">
+		<xs:sequence>
+			<xs:element name="region" type="RegionType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="umlspec">
+		<xs:annotation>
+			<xs:documentation>uml specification of the system</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="types" type="DataTypes"/>
+				<xs:element name="signals" type="SignalsType"/>
+				<xs:element name="component" type="ComponentType" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>component within an uml specification.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="queue" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>queue for message exchange </xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="id" type="UUID" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="link" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>link for (port-) connection between components</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="sourcePort_id" type="UUID" use="required"/>
+						<xs:attribute name="targetPort_id" type="UUID" use="required"/>
+						<xs:attribute name="queue_id" type="UUID" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

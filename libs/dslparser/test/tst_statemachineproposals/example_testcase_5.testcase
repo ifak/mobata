@@ -1,0 +1,21 @@
+import <example1.testsystem> as testsystem
+
+TestCase{
+  Declaration {
+    name:     testcase_4;
+    enabled:  false;
+    
+    Component testsystem.car2X.pRseApp as device_1;
+    
+    Signal stimuli (int x, int y);
+    Signal winmodVar(string value);
+    Signal response (bool res, int value);
+
+    Check check1{
+      from: sut.RSE_App.pEvaluation;
+      to:   device_1;
+      result: response(res==true and
+                      (value >=10)
+                      and value<=20
+                      and (value<=15
+                            or value>=12)

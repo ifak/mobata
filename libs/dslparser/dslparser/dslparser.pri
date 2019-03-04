@@ -1,0 +1,49 @@
+DSLPARSER_VERSION = 0.8.0
+
+isEmpty(DSLPARSER_LIBRARY_TYPE) {
+    DSLPARSER_LIBRARY_TYPE = staticlib
+}
+
+QT += core
+
+DEFINES -= QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
+
+DSLPARSER_PATH = $${PWD}
+DSLPARSER_INCLUDEPATH = $${DSLPARSER_PATH}/../
+
+DSLPARSER_LIBDIR = $$shadowed($$PWD)
+CONFIG(debug, debug|release) {
+  win*:DSLPARSER_LIBDIR = $$DSLPARSER_LIBDIR/debug
+}else{
+  win*:DSLPARSER_LIBDIR = $$DSLPARSER_LIBDIR/release
+}
+
+contains(DSLPARSER_LIBRARY_TYPE, staticlib) {
+    DEFINES += DSLPARSER_LIBRARY_STATIC
+} else {
+    DEFINES += DSLPARSER_LIBRARY
+}
+
+INCLUDEPATH += $${DSLPARSER_INCLUDEPATH}
+DEPENDPATH += $${DSLPARSER_INCLUDEPATH}
+QMAKE_LIBDIR += $${DSLPARSER_LIBDIR}
+
+CONFIG(debug, debug|release) {
+  DSLPARSER_NAME = dslparserd
+}else{
+  DSLPARSER_NAME = dslparser
+}
+
+LIBS += -l$$DSLPARSER_NAME
+
+isEmpty(MOBATA_LIB_PATH){
+  MOBATA_LIB_PATH = $$PWD/../../../mobata
+}
+MOBATA_PRIFILE = $${MOBATA_LIB_PATH}/mobata.pri
+requires(exists($${MOBATA_PRIFILE}))
+include($${MOBATA_PRIFILE})
+
+isEmpty(ANTLR_HOME) {
+  ANTLR_HOME = $$PWD/../../../3rd/antlr4-cpp
+}
+include($$ANTLR_HOME/antlr4-cpp.pri)

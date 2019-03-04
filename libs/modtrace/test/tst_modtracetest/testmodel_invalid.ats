@@ -1,0 +1,120 @@
+
+<testsuite name="requirements_model">
+
+  <types>
+    <base_type name="int" uuid="cd30795e-9cc1-4c3d-b317-b417b2b41fc5"/>
+    <base_type name="real" uuid="487cf321-5e79-41b5-b787-b6359fff7baa"/>
+    <base_type name="bool" uuid="6eda6cb4-386b-4f90-a9cb-015551bd1516"/>
+    <base_type name="string" uuid="e5b32258-6aa8-490e-a3a3-e1e7fcc59b40"/>
+  </types>
+
+  <signals>
+    <signal name="EndlageAuf" uuid="4cee5bb3-ee5b-4c01-80f0-6acc33bf0946">
+      <parameter name="zustand" type="bool"/>
+    </signal>
+    <signal name="EndlageZu" uuid="9364df20-21ec-419f-a569-1c46627e48b3">
+      <parameter name="zustand" type="bool"/>
+    </signal>
+    <signal name="StellbefehlAufZu" uuid="6bece64b-17ca-4bdc-afae-48306be00e16">
+      <parameter name="modus" type="int"/>
+      <parameter name="auf" type="bool"/>
+      <parameter name="zu" type="bool"/>
+    </signal>
+    <signal name="ModusGesetzt" uuid="389d8808-0289-4f02-9859-bd954429da81">
+      <parameter name="modus" type="int"/>
+    </signal>
+    <signal name="setzeModus" uuid="100b940c-985a-46c4-ba7f-50b2a4d42256">
+      <parameter name="modus" type="int"/>
+    </signal>
+  </signals>
+
+  <sut name="requirements_model_sut">
+    <components>
+      <component name="requirements_model_sut" uuid="0ded4b32-b17a-4d22-b7ae-cf731370ba2b">
+        <ports>
+          <port name="env" uuid="aca738e2-916c-4af0-8b26-f0cc5568175e"/>
+          <port name="user" uuid="82c8077f-a562-4885-89b0-c41c09a24a9b"/>
+        </ports>
+      </component>
+    </components>
+  </sut>
+
+  <testsystem name="requirements_model_testsystem">
+    <components>
+      <component name="requirements_model_mtc" uuid="76f51004-c8ce-4eee-b34d-9da98ee373c5">
+        <ports>
+          <port name="env" uuid="267fa4ef-c744-4e32-85fe-92da3bad39a9"/>
+          <port name="user" uuid="6df1bfc4-b238-444c-bccc-9107bfefd183"/>
+        </ports>
+      </component>
+    </components>
+  </testsystem>
+
+  <testcases>
+    <testcase name="tc_1" uuid="8a671e5c-4493-4aaa-a3f1-823c1ff1193d">
+      <message from_port_ID="6df1bfc4-b238-444c-bccc-9107bfefd183" reference="367b31d5-6ea1-47b7-b19b-dba6aa2896c2" signal_ID="100b940c-985a-46c4-ba7f-50b2a4d42256" to_port_ID="82c8077f-a562-4885-89b0-c41c09a24a9b">
+        <parameter>
+          <param name="modus" value="2"/>
+        </parameter>
+        <coverages>
+          <coverageItem name="setzeModus_T6" type="TransitionCoverageItem" uuid="367b31d5-6ea1-47b7-b19b-dba6aa2896c2"/>
+          <coverageItem name="init" type="PlaceCoverageItem" uuid="66b34099-2f1f-4340-b9ce-2c01d2dbeba2"/>
+          <coverageItem name="S1" type="PlaceCoverageItem" uuid="615a2f9d-7c79-4e6c-a604-85af84a7497d"/>
+        </coverages>
+      </message>
+      <message from_port_ID="82c8077f-a562-4885-89b0-c41c09a24a9b" reference="367b31d5-6ea1-47b7-b19b-dba6aa2896c2" signal_ID="389d8808-0289-4f02-9859-bd954429da81" to_port_ID="6df1bfc4-b238-444c-bccc-9107bfefd183">
+        <parameter>
+          <param name="modus" value="2"/>
+        </parameter>
+        <coverages>
+          <coverageItem name="noTrigger_T8" type="TransitionCoverageItem" uuid="2b676091-b89f-4c98-a2b5-257ccfbb8106"/>
+          <coverageItem name="S1" type="PlaceCoverageItem" uuid="615a2f9d-7c79-4e6c-a604-85af84a7497d"/>
+          <coverageItem name="init" type="PlaceCoverageItem" uuid="66b34099-2f1f-4340-b9ce-2c01d2dbeba2"/>
+        </coverages>
+      </message>
+      <message from_port_ID="6df1bfc4-b238-444c-bccc-9107bfefd183" reference="984a1723-5d00-49b3-9a85-e98b479a4d94" signal_ID="6bece64b-17ca-4bdc-afae-48306be00e16" to_port_ID="82c8077f-a562-4885-89b0-c41c09a24a9b">
+        <parameter>
+          <param name="modus" value="2"/>
+          <param name="auf" value="false"/>
+          <param name="zu" value="true"/>
+        </parameter>
+        <coverages>
+          <coverageItem name="StellbefehlAufZu_T2" type="TransitionCoverageItem" uuid="984a1723-5d00-49b3-9a85-e98b479a4d94"/>
+          <coverageItem name="init" type="PlaceCoverageItem" uuid="66b34099-2f1f-4340-b9ce-2c01d2dbeba2"/>
+          <coverageItem name="ZU" type="PlaceCoverageItem" uuid="4b717466-e383-4b38-8907-71d3ef0e91ec"/>
+        </coverages>
+      </message>
+      <message from_port_ID="82c8077f-a562-4885-89b0-c41c09a24a9b" reference="984a1723-5d00-49b3-9a85-e98b479a4d94" signal_ID="4cee5bb3-ee5b-4c01-80f0-6acc33bf0946" to_port_ID="6df1bfc4-b238-444c-bccc-9107bfefd183">
+        <parameter>
+          <param name="zustand" value="false"/>
+        </parameter>
+      </message>
+      <message from_port_ID="82c8077f-a562-4885-89b0-c41c09a24a9b" reference="984a1723-5d00-49b3-9a85-e98b479a4d94" signal_ID="9364df20-21ec-419f-a569-1c46627e48b3" to_port_ID="6df1bfc4-b238-444c-bccc-9107bfefd183">
+        <parameter>
+          <param name="zustand" value="true"/>
+        </parameter>
+      </message>
+      <message from_port_ID="6df1bfc4-b238-444c-bccc-9107bfefd183" reference="18300843-2539-423e-8d88-629e761625a3" signal_ID="6bece64b-17ca-4bdc-afae-48306be00e16" to_port_ID="82c8077f-a562-4885-89b0-c41c09a24a9b">
+        <parameter>
+          <param name="modus" value="2"/>
+          <param name="auf" value="true"/>
+          <param name="zu" value="false"/>
+        </parameter>
+        <coverages>
+          <coverageItem name="StellbefehlAufZu_T3" type="TransitionCoverageItem" uuid="18300843-2539-423e-8d88-629e761625a3"/>
+          <coverageItem name="ZU" type="PlaceCoverageItem" uuid="4b717466-e383-4b38-8907-71d3ef0e91ec"/>
+          <coverageItem name="AUF" type="PlaceCoverageItem" uuid="bcc2f3c1-d2c5-42c9-8a17-665838d0acd5"/>
+        </coverages>
+      </message>
+      <message from_port_ID="82c8077f-a562-4885-89b0-c41c09a24a9b" reference="18300843-2539-423e-8d88-629e761625a3" signal_ID="4cee5bb3-ee5b-4c01-80f0-6acc33bf0946" to_port_ID="6df1bfc4-b238-444c-bccc-9107bfefd183">
+        <parameter>
+          <param name="zustand" value="true"/>
+        </parameter>
+      </message>
+      <message from_port_ID="82c8077f-a562-4885-89b0-c41c09a24a9b" reference="18300843-2539-423e-8d88-629e761625a3" signal_ID="9364df20-21ec-419f-a569-1c46627e48b3" to_port_ID="6df1bfc4-b238-444c-bccc-9107bfefd183">
+        <parameter>
+          <param name="zustand" value="false"/>
+        </parameter>
+      </message>
+      <message from_port_ID="6df1bfc4-b238-444c-bccc-9107bfefd183" reference="8e02f49a-3df8-4114-ba05-56427fdd7a73" signal_ID="6bece64b-17ca-4bdc-afae-48306be00e16" to_port_ID="82c8077f-a562-4885-89b0-c41c09a24a9b">
+        <parameter>

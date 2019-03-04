@@ -1,0 +1,15 @@
+import <declaration.decl> as decl
+import <irdlDeclaration.irdldecl> as irdLDecl
+
+Requirement{
+  Declaration {
+    name: Gutverhalten;
+                description: "Beschreibung des Gutverhaltens";
+                Attribute int retValue = 0;
+
+  }
+
+        State "Init" at irdLDecl.system;
+        Message(irdLDecl.user->irdLDecl.system): decl.setButtonFM(true);
+        Check(
+

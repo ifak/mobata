@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/tst_simruntime">
+        <file>tst_ping.statemachine</file>
+        <file>tst_pong.statemachine</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,18 @@
+Attribute int decl_attr_1 = 0;
+Attribute int decl_attr_2 = 0;
+
+//Signal decl_input(int in);
+//Signal decl_output(int out);
+
+Signal setButtonFM(bool Gesamtanlage_Start);
+
+Actor{
+        name: user;
+        description: "Nutzer der Anlage";
+}
+
+Component{
+        name: system;
+        description: "Produktionsanlage";
+        Attribute bool initialized = false;
+}

@@ -1,0 +1,10 @@
+Signal setButtonFM(bool Gesamtanlage_Start);
+Signal setButton(string name, bool bValue);
+Signal setStop(bool bValue);
+Signal confirmation(bool bValue);
+Signal setStart(bool bValue);
+Signal checkByteValue_ActiveStep(int _Active, int timer);
+Signal sendResponse(int retValue);
+Signal sendResponseBool(string name, bool bValue);
+
+Attribute int globalAttribute = 0;

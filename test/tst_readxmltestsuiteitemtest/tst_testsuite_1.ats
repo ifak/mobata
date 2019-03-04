@@ -1,0 +1,244 @@
+
+<testsuite name="tst_testsuite_1">
+
+  <types>
+    <base_type name="int" uuid="bb513d88-6532-43da-ae78-ce487906b923"/>
+    <base_type name="real" uuid="9924fa29-18e0-4a9c-be60-0b0ac5038a43"/>
+    <base_type name="bool" uuid="d281ba47-943e-445f-a943-df92fdf9ab07"/>
+    <base_type name="string" uuid="82a06442-422c-4b3c-bfd4-ec378b3bc655"/>
+  </types>
+
+  <signals>
+    <signal name="init" uuid="6e0d9b8a-07b8-42fb-ae6d-7eb9b9e6ef12"/>
+    <signal name="setMode" uuid="f0779827-48f3-4b60-ad71-e1c0785b2c6d">
+      <parameter name="mode" type="int"/>
+    </signal>
+    <signal name="checkPLC" uuid="3259a207-765e-431a-83c1-546cdcc8a230">
+      <parameter name="robot_finished" type="int"/>
+    </signal>
+    <signal name="checkValue" uuid="0f3e70fd-21b3-4502-8e48-3d20f4e55083">
+      <parameter name="zylinder_ausgefahren" type="int"/>
+    </signal>
+    <signal name="setStopValue" uuid="099fcc15-b22e-44b8-80d0-d9441e19cf19">
+      <parameter name="stop" type="int"/>
+    </signal>
+    <signal name="checkStopValue" uuid="adce265e-3671-4f30-896f-f7cc6c910cba">
+      <parameter name="process_stop" type="int"/>
+    </signal>
+    <signal name="checkRobotPosPLC" uuid="6575b0f8-42f7-4a29-920d-58fcee8881b4">
+      <parameter name="robot_position" type="int"/>
+    </signal>
+    <signal name="setStartValue" uuid="79302d1d-9810-412a-ab89-9b80c8e15540">
+      <parameter name="Gesamtstart" type="int"/>
+    </signal>
+    <signal name="setWartungValue" uuid="92bad321-556e-497d-8056-703c4c0d0187">
+      <parameter name="Wartung" type="int"/>
+    </signal>
+    <signal name="checkWartungValue" uuid="6aabdf2d-5f23-4bd7-a1bc-afc7bc9bea28">
+      <parameter name="state_wartung" type="int"/>
+    </signal>
+    <signal name="setReinigungValue" uuid="d11dafc1-8f36-442b-8952-d67ecf716d75">
+      <parameter name="Reinigung" type="int"/>
+    </signal>
+    <signal name="checkReinigungValue" uuid="9c712a75-b65b-487a-b47f-543367d54bf4">
+      <parameter name="state_reinigung" type="int"/>
+    </signal>
+  </signals>
+
+  <sut name="tst_testsuite_1_sut">
+    <components>
+      <component name="sut_component" uuid="fe17b6ea-0754-4fc8-9545-286316647bb2">
+        <ports>
+          <port name="env" uuid="8a7500fb-8ee2-493d-a70a-08ab4cab79b9"/>
+          <port name="p" uuid="620a1959-52f9-4210-8f14-c9472183f1df"/>
+        </ports>
+      </component>
+    </components>
+  </sut>
+
+  <testsystem name="tst_testsuite_1_testsystem">
+    <components>
+      <component name="test_component" uuid="a691f03b-0d79-4f0c-b5cd-37cf630133e9">
+        <ports>
+          <port name="env" uuid="4bf7f566-bab1-4474-9b1c-e69dc06acfae"/>
+          <port name="p" uuid="1eded86a-739b-4b9a-8a57-5aadfcc8e183"/>
+        </ports>
+      </component>
+    </components>
+  </testsystem>
+
+  <testcases>
+    <testcase name="tc_0" uuid="1f26f975-4dca-4f8c-897e-18a551546102">
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="5a54310e-d218-4ba1-bdee-8fd77b04ff34" signal_ID="6e0d9b8a-07b8-42fb-ae6d-7eb9b9e6ef12" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df"/>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="b63b2011-3c92-4f41-a02c-c77e7c49b86d" signal_ID="f0779827-48f3-4b60-ad71-e1c0785b2c6d" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="mode" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="4fd5521d-a4e7-4dee-bf8d-b32ca0586cdf" signal_ID="f0779827-48f3-4b60-ad71-e1c0785b2c6d" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="mode" value="2"/>
+        </parameter>
+      </message>
+    </testcase>
+    <testcase name="tc_1" uuid="9a3d0b5f-ce18-40ec-9538-f27a9d8ff26f">
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="5a54310e-d218-4ba1-bdee-8fd77b04ff34" signal_ID="6e0d9b8a-07b8-42fb-ae6d-7eb9b9e6ef12" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df"/>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="b63b2011-3c92-4f41-a02c-c77e7c49b86d" signal_ID="f0779827-48f3-4b60-ad71-e1c0785b2c6d" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="mode" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="5e329977-b3a3-4ce8-b3a2-88061dd71c34" signal_ID="92bad321-556e-497d-8056-703c4c0d0187" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="Wartung" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="9afe06ad-c929-4025-b6a5-58ba6cd13b1a" signal_ID="6575b0f8-42f7-4a29-920d-58fcee8881b4" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="robot_position" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="22bd2dc4-6b35-417c-bfc6-c427c022715f" signal_ID="79302d1d-9810-412a-ab89-9b80c8e15540" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="Gesamtstart" value="1"/>
+        </parameter>
+      </message>
+    </testcase>
+    <testcase name="tc_2" uuid="5ba301ad-72cc-4027-9b53-89e46f58df82">
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="5a54310e-d218-4ba1-bdee-8fd77b04ff34" signal_ID="6e0d9b8a-07b8-42fb-ae6d-7eb9b9e6ef12" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df"/>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="b63b2011-3c92-4f41-a02c-c77e7c49b86d" signal_ID="f0779827-48f3-4b60-ad71-e1c0785b2c6d" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="mode" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="6b0a90c6-fa92-4670-aef2-1a225c4a9ee9" signal_ID="3259a207-765e-431a-83c1-546cdcc8a230" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="robot_finished" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="37f88a94-cfe1-418f-bab7-28440e1a0ad5" signal_ID="0f3e70fd-21b3-4502-8e48-3d20f4e55083" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="zylinder_ausgefahren" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="78c86c79-642c-4ac6-bffc-451b2329291e" signal_ID="3259a207-765e-431a-83c1-546cdcc8a230" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="robot_finished" value="2"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="ab8cf749-b97b-4f32-bbea-a86087e3f98e" signal_ID="0f3e70fd-21b3-4502-8e48-3d20f4e55083" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="zylinder_ausgefahren" value="2"/>
+        </parameter>
+      </message>
+    </testcase>
+    <testcase name="tc_3" uuid="f1ded7ab-54ba-4163-9b5e-c077183ea7f4">
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="5a54310e-d218-4ba1-bdee-8fd77b04ff34" signal_ID="6e0d9b8a-07b8-42fb-ae6d-7eb9b9e6ef12" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df"/>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="b63b2011-3c92-4f41-a02c-c77e7c49b86d" signal_ID="f0779827-48f3-4b60-ad71-e1c0785b2c6d" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="mode" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="86f16d93-e5af-444f-8dbe-6126ae4ebe5b" signal_ID="d11dafc1-8f36-442b-8952-d67ecf716d75" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="Reinigung" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="dec5fd69-a921-4d2e-8436-9afed4209b74" signal_ID="6575b0f8-42f7-4a29-920d-58fcee8881b4" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="robot_position" value="1"/>
+        </parameter>
+      </message>
+    </testcase>
+    <testcase name="tc_4" uuid="7f69ea18-153a-4eac-9cd2-bc2e79f59218">
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="5a54310e-d218-4ba1-bdee-8fd77b04ff34" signal_ID="6e0d9b8a-07b8-42fb-ae6d-7eb9b9e6ef12" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df"/>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="b63b2011-3c92-4f41-a02c-c77e7c49b86d" signal_ID="f0779827-48f3-4b60-ad71-e1c0785b2c6d" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="mode" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="a9740b41-8ac1-4f8a-ba7d-859434827d44" signal_ID="099fcc15-b22e-44b8-80d0-d9441e19cf19" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="stop" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="a8875847-b0ac-4797-a4b0-7024bf8234c0" signal_ID="adce265e-3671-4f30-896f-f7cc6c910cba" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="process_stop" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="88889d77-9907-4abb-bcf8-03b424d9a2b3" signal_ID="6575b0f8-42f7-4a29-920d-58fcee8881b4" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="robot_position" value="1"/>
+        </parameter>
+      </message>
+    </testcase>
+    <testcase name="tc_5" uuid="a558a289-b10b-4a43-b7ec-e4c681425992">
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="5a54310e-d218-4ba1-bdee-8fd77b04ff34" signal_ID="6e0d9b8a-07b8-42fb-ae6d-7eb9b9e6ef12" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df"/>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="b63b2011-3c92-4f41-a02c-c77e7c49b86d" signal_ID="f0779827-48f3-4b60-ad71-e1c0785b2c6d" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="mode" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="5e329977-b3a3-4ce8-b3a2-88061dd71c34" signal_ID="92bad321-556e-497d-8056-703c4c0d0187" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="Wartung" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="9afe06ad-c929-4025-b6a5-58ba6cd13b1a" signal_ID="6575b0f8-42f7-4a29-920d-58fcee8881b4" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="robot_position" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="68b5b1fd-b1f5-4932-94ed-c9ac3bc1429f" signal_ID="3259a207-765e-431a-83c1-546cdcc8a230" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="robot_finished" value="3"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="81a3cfa0-3386-425e-b166-fe7c8e978e93" signal_ID="6aabdf2d-5f23-4bd7-a1bc-afc7bc9bea28" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="state_wartung" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="04232a0a-366c-4d29-aeae-d9eaadf95449" signal_ID="79302d1d-9810-412a-ab89-9b80c8e15540" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="Gesamtstart" value="1"/>
+        </parameter>
+      </message>
+    </testcase>
+    <testcase name="tc_6" uuid="f6d81d44-33a6-47fc-92fd-6aa2861f0f53">
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="5a54310e-d218-4ba1-bdee-8fd77b04ff34" signal_ID="6e0d9b8a-07b8-42fb-ae6d-7eb9b9e6ef12" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df"/>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="b63b2011-3c92-4f41-a02c-c77e7c49b86d" signal_ID="f0779827-48f3-4b60-ad71-e1c0785b2c6d" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="mode" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="5e329977-b3a3-4ce8-b3a2-88061dd71c34" signal_ID="92bad321-556e-497d-8056-703c4c0d0187" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="Wartung" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="9afe06ad-c929-4025-b6a5-58ba6cd13b1a" signal_ID="6575b0f8-42f7-4a29-920d-58fcee8881b4" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="robot_position" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="658db931-02ad-4b69-8cc7-8732e6351b84" signal_ID="3259a207-765e-431a-83c1-546cdcc8a230" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="robot_finished" value="4"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="91b2f7f1-48e7-4e0e-81c1-423fea3939dd" signal_ID="9c712a75-b65b-487a-b47f-543367d54bf4" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="state_reinigung" value="1"/>
+        </parameter>
+      </message>
+      <message from_port_ID="1eded86a-739b-4b9a-8a57-5aadfcc8e183" reference="7c9399b5-0523-4a3f-b9b2-5adf6b16bd8b" signal_ID="79302d1d-9810-412a-ab89-9b80c8e15540" to_port_ID="620a1959-52f9-4210-8f14-c9472183f1df">
+        <parameter>
+          <param name="Gesamtstart" value="1"/>
+        </parameter>
+      </message>
+    </testcase>
+  </testcases>
+
+</testsuite>

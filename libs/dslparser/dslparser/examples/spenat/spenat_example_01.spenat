@@ -1,0 +1,66 @@
+import spenatdsl 1.0
+
+Spenat{
+  Attribute int attr_1 = 0;
+  Attribute int attr_2 = 0;
+
+  signal input(int in);
+  signal output(int out);
+
+  Port{name: in_port}
+  Port{name: out_port}
+
+  Place{name: p1; initial: true;}
+  Place{name: p2;}
+  Place{name: p3;}
+  Place{name: p4;}
+
+  SignalTransition{
+    name: t1;
+
+    signal: input;
+    port: in_port;
+    guard: input.in<10
+    action:
+    {
+      this.attr1=input.in;
+    }
+
+    pre: p1;
+    post: p2, p3;
+  }
+
+  SignalTransition{
+    name: t2;
+
+    signal: input;
+    port: in_port;
+
+    guard:  input.in>20;
+    action:{
+      this.attr2=input.in;
+      send output(this.attr2) to out_port;
+    }
+
+    pre: p2, p3;
+    post: p4;
+  }
+
+  TimeoutTransition{
+    name: t3;
+
+    value: 10;
+    guard: {
+      this.attr1 > 0;
+    }
+
+    action:{
+      send output(this.attr1) to out_port;
+    }
+
+    pre: p4;
+    post: p1;
+  }
+}
+
+

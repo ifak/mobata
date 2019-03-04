@@ -1,0 +1,146 @@
+StateMachine {
+  name: statemachinemodel2;
+
+  Port defaulPort;
+
+  Attribute int something = 0;
+  Attribute int somethingelse = 0;
+
+  Signal input ( int something, int somethingelse);
+
+  initState: s1;
+
+  SimpleState {
+    name: s1;
+    entry: something = 10;
+    exit: something = 15;
+  }
+
+  CompositeState {
+    name: s2;
+    entry: something = 10;
+    initState: s21;
+    SimpleState {
+      name: s21;
+      entry: something = 10;
+    }
+    SimpleState {
+      name: s22;
+      exit: something = 15;
+    }
+    FinalState s23;
+  }
+
+  ConcurrentState {
+    name: s4;
+    Region {
+      name: region1;
+      initState: s41;
+      SimpleState {
+        name: s41;
+        entry: console.log("s2 entered");
+      }
+      SimpleState {
+        name: s42;
+        exit: console.log("s2 exited");
+      }
+      FinalState s43;
+    }
+    Region {
+      name: region2;
+      initState: s44;
+      SimpleState {
+        name: s44;
+        entry: {
+          console.log("s2 entered");
+          console.log("test started");
+        }
+      }
+      SimpleState {
+        name: s45;
+        exit: {
+          console.log("s2 exited");
+          console.log("test stopped");
+        }
+      }
+      FinalState s46;
+    }
+  }
+
+  FinalState s5;
+
+  JunctionState {
+    name: s3;
+    JunctionTransition {
+      name: jt0;
+      guard: something == 0;
+      action: something = 1;
+      target: s5;
+    }
+  }
+
+  SignalTransition {
+    name: t1;
+    signal: input;
+    port: defaulPort;
+    guard: something;
+    action: somethingelse = 15;
+    source: s1;
+    target: s2;
+  }
+
+  SignalTransition {
+    name: t2;
+    signal: input;
+    port: defaulPort;
+    guard: something == somethingelse;
+    action: something = somethingelse;
+    source: s2;
+    target: s3;
+  }
+
+  SignalTransition {
+    name: t5;
+    signal: input;
+    port: defaulPort;
+    guard: somethingelse;
+    action: something = 0;
+    source: s2.s21;
+    target: s2.s22;
+  }
+
+  SignalTransition {
+    name: t6;
+    signal: input;
+    port: defaulPort;
+    guard: something;
+    action: something = 99;
+    source: s2.s22;
+    target: s2.s23;
+  }
+
+  SignalTransition {
+    name: t7;
+    signal: input;
+    port: defaulPort;
+    guard: something;
+    action: {
+      something = 10;
+      somethingelse = something;
+    }
+    source: s4.region1.s41;
+    target: s4.region1.s42;
+  }
+
+  TimeoutTransition {
+    name: t8;
+    value: 1.50;
+    guard: something == somethingelse;
+    action: {
+      something = 10;
+      somethingelse = 15;
+    }
+    source: s4.region1.s43;
+    target: s4.region2.s44;
+  }
+}

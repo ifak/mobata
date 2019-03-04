@@ -1,0 +1,45 @@
+MODSIM_VERSION = 0.0.1
+
+
+isEmpty(MODSIM_LIBRARY_TYPE) {
+    MODSIM_LIBRARY_TYPE = staticlib
+}
+
+QT += core xml scxml
+
+DEFINES -= QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII
+
+MODSIM_PATH = $${PWD}
+MODSIM_INCLUDEPATH = $${MODSIM_PATH}/../
+
+MODSIM_LIBDIR = $$shadowed($$PWD)
+CONFIG(debug, debug|release) {
+  win*:MODSIM_LIBDIR = $$MODSIM_LIBDIR/debug
+}else{
+  win*:MODSIM_LIBDIR = $$MODSIM_LIBDIR/release
+}
+
+contains(MODSIM_LIBRARY_TYPE, staticlib) {
+    DEFINES += MODSIM_LIBRARY_STATIC
+} else {
+    DEFINES += MODSIM_LIBRARY
+}
+
+INCLUDEPATH += $${MODSIM_INCLUDEPATH}
+DEPENDPATH += $${MODSIM_INCLUDEPATH}
+QMAKE_LIBDIR += $${MODSIM_LIBDIR}
+
+CONFIG(debug, debug|release) {
+  MODSIM_NAME = modsimd
+}else{
+  MODSIM_NAME = modsim
+}
+
+LIBS += -l$$MODSIM_NAME
+
+isEmpty(DSLPARSER_LIB_PATH){
+  DSLPARSER_LIB_PATH = $$PWD/../../dslparser/dslparser
+}
+DSLPARSER_PRIFILE = $${DSLPARSER_LIB_PATH}/dslparser.pri
+requires(exists($${DSLPARSER_PRIFILE}))
+include($${DSLPARSER_PRIFILE})

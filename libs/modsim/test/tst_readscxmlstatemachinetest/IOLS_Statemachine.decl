@@ -1,0 +1,5 @@
+Attribute int decl_attr_1 = 0;
+Attribute int decl_attr_2 = 0;
+
+Signal decl_input(int in);
+Signal decl_output(int out);

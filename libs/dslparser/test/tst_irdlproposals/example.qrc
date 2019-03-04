@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/Examples">
+        <file>irdlDeclaration.irdldecl</file>
+        <file>testpath/sutExample2.sut</file>
+        <file>testpath/sutExample3.sut</file>
+        <file>testpath/sutExample4.sut</file>
+        <file>example_irdl_1.irdl</file>
+        <file>declaration.decl</file>
+        <file>example_irdl_2.irdl</file>
+        <file>example_irdl_3.irdl</file>
+        <file>example_irdl_4.irdl</file>
+        <file>example_irdl_5.irdl</file>
+        <file>example_irdl_6.irdl</file>
+        <file>example_irdl_7.irdl</file>
+        <file>example_irdl_8.irdl</file>
+        <file>example_irdl_9.irdl</file>
+        <file>example_irdl_10.irdl</file>
+        <file>example_irdl_11.irdl</file>
+        <file>testpath/example2.irdl</file>
+        <file>testpath/example3.irdl</file>
+        <file>testpath/example4.irdl</file>
+        <file>testpath/example5.irdl</file>
+    </qresource>
+</RCC>

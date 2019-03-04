@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/testdata">
+        <file>testbasemodel.json</file>
+        <file>testmscmodel.json</file>
+        <file>testsmmodel.json</file>
+    </qresource>
+</RCC>
