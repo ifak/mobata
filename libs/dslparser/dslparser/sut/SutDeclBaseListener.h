@@ -1,5 +1,5 @@
 
-// Generated from C:/Users/j05kraus/Private/SWDevelop/mbtcreator/3rd/jkra_mobata_oss/libs/dslparser/dslparser/grammars/SutDecl.g4 by ANTLR 4.7.2
+// Generated from C:/Users/j05kraus/Private/SWDevelop/mobata_oss_dev/libs/dslparser/dslparser/grammars/SutDecl.g4 by ANTLR 4.7.2
 
 #pragma once
 

@@ -21,23 +21,23 @@ win64-msvc*:QMAKE_CXXFLAGS += -wd4267
 # next lines should only be un-commented if antlr-grammars are changed
 # variable ANTLR_HOME has to be set!
 
-win*{
-  ANTLR_JAR = $$ANTLR_HOME\bin\antlr-4.7.2-complete.jar
-}else{
-  ANTLR_JAR = $$ANTLR_HOME/bin/antlr-4.7.2-complete.jar
-}
+#win*{
+#  ANTLR_JAR = $$ANTLR_HOME\bin\antlr-4.7.2-complete.jar
+#}else{
+#  ANTLR_JAR = $$ANTLR_HOME/bin/antlr-4.7.2-complete.jar
+#}
 
-ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/CommonLexer.g4 -o $$PWD/common)
-ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/CommonDecl.g4 -o $$PWD/common)
-ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/Spenat.g4 -o $$PWD/spenat)
-ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/SutDecl.g4 -o $$PWD/sut)
-ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/TestSystemDecl.g4 -o $$PWD/testsystem)
-ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/TestCaseDecl.g4 -o $$PWD/testcase)
-ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/ImportReader.g4 -o $$PWD/importreader)
-ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/StateMachine.g4 -o $$PWD/statemachine)
-ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/Irdl.g4 -o $$PWD/irdl)
-ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/IrdlCommonDecl.g4 -o $$PWD/irdldecl)
-ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/SimSystemDecl.g4 -o $$PWD/simsystem)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/CommonLexer.g4 -o $$PWD/common)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/CommonDecl.g4 -o $$PWD/common)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/Spenat.g4 -o $$PWD/spenat)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/SutDecl.g4 -o $$PWD/sut)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/TestSystemDecl.g4 -o $$PWD/testsystem)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/TestCaseDecl.g4 -o $$PWD/testcase)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/ImportReader.g4 -o $$PWD/importreader)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/StateMachine.g4 -o $$PWD/statemachine)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/Irdl.g4 -o $$PWD/irdl)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/IrdlCommonDecl.g4 -o $$PWD/irdldecl)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/SimSystemDecl.g4 -o $$PWD/simsystem)
 
 DISTFILES += \
     grammars/CommonLexer.g4 \
