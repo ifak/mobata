@@ -46,7 +46,7 @@ pipeline {
 						string(name: 'REPOSITORY', value: "${env.LINREPO}"),
 						string(name:'BRANCH_NAME', value: "${env.BRANCH_NAME}"),
 						string(name:'AUTHORS', value: currentBuild.changeSets[0].collect { it.author }.unique().join(", "))]
-				}}
+				}},
 				'Win64': { node('Win10(x64)') {
 					build job: 'mobata-win_x64', parameters: [
 						string(name: 'REPOSITORY', value: "${env.WINREPO}"),
