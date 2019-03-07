@@ -13,7 +13,7 @@ pipeline {
 		//the following windows path variables have to be defined using a double backwards slash "\\"
 		QTIFWIN = "C:\\Qt\\Tools\\QtInstallerFramework\\3.0"
 		QTDIRWIN64 = "C:\\Qt\\5.9.6\\msvc2015_64"
-		VCPATH = '"C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC"'directory
+		VCPATH = '"C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC"'
 		
 		//the following windows path variables have to be defined using a single forward slash "/"
 		WINREPO = "F:\\Jenkins\\workspace\\mobata-repository-${env.BRANCH_NAME}"
