@@ -1,5 +1,7 @@
 dist: xenial
 language: generic
+services:
+  - xvfb
 
 #compiler: gcc
 
@@ -27,4 +29,4 @@ script:
   - $CXX --version
   - qmake
   - make CXX=g++-8 CC=gcc-8
-  - make check
+  - xvfb-run make check
