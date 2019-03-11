@@ -20,4 +20,4 @@ configuration:
 build_script:
   - qmake mobata.pro
   - nmake
- # - nmake check
+  - nmake check
