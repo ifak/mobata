@@ -1,5 +1,6 @@
 dist: xenial
 language: generic
+services: xvfb
 
 #compiler: gcc
 
@@ -13,9 +14,6 @@ matrix:
       env:
         - CXX=g++-8
         - CC=gcc-8
-
-before_install:
-    - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x24"
 
 install:
 # For Qt 5.12

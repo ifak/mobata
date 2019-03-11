@@ -17,10 +17,9 @@ configuration:
   - Release
   #- Debug
 
-before_build:
-  - ps: Set-ScreenResolution 1280 1024
-
 build_script:
   - qmake mobata.pro
   - nmake
+
+test_script:
   - nmake check

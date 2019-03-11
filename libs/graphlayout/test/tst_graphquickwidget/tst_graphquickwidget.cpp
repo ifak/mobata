@@ -63,7 +63,7 @@ void GraphQuickWidgetTest::GraphTest()
 
   graphlayout::GraphQuickWidget* widget = new graphlayout::GraphQuickWidget(graph1,
                                                                             graphlayout::Dot);
-  widget->resize(QSize(500,500));
+  widget->resize(QSize(400,400));
   QString error;
   widget->layout(&error);
 
@@ -165,7 +165,7 @@ void GraphQuickWidgetTest::SubgraphTest()
 
   graphlayout::GraphQuickWidget* widget = new graphlayout::GraphQuickWidget(graph1,
                                                                             graphlayout::Dot);
-  widget->resize(QSize(500,500));
+  widget->resize(QSize(400,400));
   QString errorString;
   widget->layout(&errorString);
 
