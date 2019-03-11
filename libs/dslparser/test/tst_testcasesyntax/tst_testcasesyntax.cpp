@@ -162,22 +162,13 @@ void TestCaseSyntaxTest::complexTestCaseDeclTest(){
   QCOMPARE(check1->targetPort()->name(),QString("pRseApp"));
   QCOMPARE(check1->sourcePort()->name(),QString("pEvaluation"));
 
-  QString expectedGuard("");
-#ifdef Q_OS_WIN
-  expectedGuard=QLatin1String("msg.res==true and\r\n                    "
-                              "(msg.value >=10)\r\n                    "
-                              "and msg.value<=20\r\n                    "
-                              "and (msg.value<=15\r\n                          "
-                              "or msg.value>=12) and (internAttribute < 10)");
-#else
-  expectedGuard=QLatin1String("msg.res==true and\n                    "
-                              "(msg.value >=10)\n                    "
-                              "and msg.value<=20\n                    "
-                              "and (msg.value<=15\n                          "
-                              "or msg.value>=12) and (internAttribute < 10)");
-#endif
+  QString expectedGuard=QLatin1String("msg.res==true and\n"
+                                      "(msg.value >=10)\n"
+                                      "and msg.value<=20\n"
+                                      "and (msg.value<=15\n"
+                                      "or msg.value>=12) and (internAttribute < 10)");
 
-  QCOMPARE(check1->guard(),expectedGuard);
+  QCOMPARE(check1->guard().simplified(),expectedGuard.simplified());
   QCOMPARE(check1->timeout(), 300);
 
   QVERIFY(dynamic_cast<AltItem>((SeqItem)testcaseModel->sequenceItems().at(4)));
