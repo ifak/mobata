@@ -193,6 +193,9 @@ void StatemachineLayoutTest::Seq1Test(){
 void StatemachineLayoutTest::Seq2Test(){
   graphlayout::GraphQuickWidget* graphwidget = new graphlayout::GraphQuickWidget(this->_graph,graphlayout::Fdp);
   QString errorString;
+#if (defined (_WIN32) || defined (_WIN64))
+  widget->setGraphvizPath("C:\\Program Files (x86)\\Graphviz2.38\\bin");
+#endif
   graphwidget->layout(&errorString);
   QCOMPARE(errorString,QString(""));
   QVERIFY(graphwidget->rootObject()->findChild<QObject*>("drawArea"));

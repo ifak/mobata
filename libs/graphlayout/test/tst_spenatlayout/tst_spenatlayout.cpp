@@ -104,6 +104,9 @@ void SpenatLayoutTest::Seq1Test(){
 
 void SpenatLayoutTest::Seq2Test(){
     graphlayout::GraphQuickWidget* graphwidget = new graphlayout::GraphQuickWidget(this->_graph,graphlayout::Fdp);
+#if (defined (_WIN32) || defined (_WIN64))
+  widget->setGraphvizPath("C:\\Program Files (x86)\\Graphviz2.38\\bin");
+#endif
     QString errorString;
     graphwidget->layout(&errorString);
     QCOMPARE(errorString,QString(""));
