@@ -1,5 +1,4 @@
 #include <QtTest>
-#include <QScreen>
 
 #include <graphlayout/layoutgraph.hpp>
 #include <graphlayout/layoutnode.hpp>
@@ -68,24 +67,13 @@ void GraphQuickWidgetTest::GraphTest()
   QString error;
   widget->layout(&error);
 
-  QScreen *screen = QGuiApplication::primaryScreen();
-  QRect  screenGeometry = screen->geometry();
-
-  //skip test if display has no resolution
-  qDebug() << "ResX:" << screenGeometry.width();
-  qDebug() << "ResY:" << screenGeometry.height();
-  if(screenGeometry.height() != 0 && screenGeometry.width() != 0)
-  {
-    for (graphlayout::LayoutNode* node: graph1->allNodes()) {
-      QVERIFY(node->pos().x() != 0 && node->pos().y() != 0);
-    }
-
-    for (graphlayout::LayoutEdge* edge: graph1->edges()) {
-      QVERIFY(edge->points().length()>=2);
-    }
+  for (graphlayout::LayoutNode* node: graph1->allNodes()) {
+    QVERIFY(node->pos().x() != 0 && node->pos().y() != 0);
   }
-  else
-    qWarning() << "Skipping part of test because display resolution is zero.";
+
+  for (graphlayout::LayoutEdge* edge: graph1->edges()) {
+    QVERIFY(edge->points().length()>=2);
+  }
 
   for (graphlayout::LayoutNode* node: graph1->allNodes()) {
     int exist = 0;
@@ -181,24 +169,13 @@ void GraphQuickWidgetTest::SubgraphTest()
   QString errorString;
   widget->layout(&errorString);
 
-  QScreen *screen = QGuiApplication::primaryScreen();
-  QRect  screenGeometry = screen->geometry();
-
-  //skip test if display has no resolution
-  qDebug() << "ResX:" << screenGeometry.width();
-  qDebug() << "ResY:" << screenGeometry.height();
-  if(screenGeometry.height() != 0 && screenGeometry.width() != 0)
-  {
-    for (graphlayout::LayoutNode* node: graph1->allNodes()) {
-      QVERIFY(node->pos().x() != 0 && node->pos().y() != 0);
-    }
-
-    for (graphlayout::LayoutEdge* edge: graph1->edges()) {
-      QVERIFY(edge->points().length()>=2);
-    }
+  for (graphlayout::LayoutNode* node: graph1->allNodes()) {
+    QVERIFY(node->pos().x() != 0 && node->pos().y() != 0);
   }
-  else
-    qWarning() << "Skipping part of test because display resolution is zero.";
+
+  for (graphlayout::LayoutEdge* edge: graph1->edges()) {
+    QVERIFY(edge->points().length()>=2);
+  }
 
   for (graphlayout::LayoutNode* node: graph1->allNodes()) {
     int exist = 0;

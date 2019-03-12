@@ -17,6 +17,9 @@ configuration:
   - Release
   #- Debug
 
+install:
+  - cinst graphviz
+
 build_script:
   - qmake mobata.pro
   - nmake
