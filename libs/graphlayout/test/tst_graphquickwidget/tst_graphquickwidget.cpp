@@ -63,12 +63,19 @@ void GraphQuickWidgetTest::GraphTest()
 
   graphlayout::GraphQuickWidget* widget = new graphlayout::GraphQuickWidget(graph1,
                                                                             graphlayout::Dot);
-  widget->resize(QSize(400,400));
+  widget->resize(QSize(500,500));
   QString error;
   widget->layout(&error);
 
-  for (graphlayout::LayoutNode* node: graph1->allNodes()) {
-    QVERIFY(node->pos().x() != 0 && node->pos().y() != 0);
+  QScreen *screen = QGuiApplication::primaryScreen();
+  QRect  screenGeometry = screen->geometry();
+
+  //skip test if display has no resolution
+  if(screenGeometry.height() != 0 && screenGeometry.width() != 0)
+  {
+    for (graphlayout::LayoutNode* node: graph1->allNodes()) {
+      QVERIFY(node->pos().x() != 0 && node->pos().y() != 0);
+    }
   }
 
   for (graphlayout::LayoutEdge* edge: graph1->edges()) {
@@ -165,12 +172,19 @@ void GraphQuickWidgetTest::SubgraphTest()
 
   graphlayout::GraphQuickWidget* widget = new graphlayout::GraphQuickWidget(graph1,
                                                                             graphlayout::Dot);
-  widget->resize(QSize(400,400));
+  widget->resize(QSize(500,500));
   QString errorString;
   widget->layout(&errorString);
 
-  for (graphlayout::LayoutNode* node: graph1->allNodes()) {
-    QVERIFY(node->pos().x() != 0 && node->pos().y() != 0);
+  QScreen *screen = QGuiApplication::primaryScreen();
+  QRect  screenGeometry = screen->geometry();
+
+  //skip test if display has no resolution
+  if(screenGeometry.height() != 0 && screenGeometry.width() != 0)
+  {
+    for (graphlayout::LayoutNode* node: graph1->allNodes()) {
+      QVERIFY(node->pos().x() != 0 && node->pos().y() != 0);
+    }
   }
 
   for (graphlayout::LayoutEdge* edge: graph1->edges()) {
