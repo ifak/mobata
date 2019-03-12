@@ -65,6 +65,10 @@ void GraphQuickWidgetTest::GraphTest()
                                                                             graphlayout::Dot);
   widget->resize(QSize(500,500));
   QString error;
+
+#if (defined (_WIN32) || defined (_WIN64))
+  widget->setGraphvizPath("C:\\Program Files (x86)\\Graphviz2.38\\bin");
+#endif
   widget->layout(&error);
 
   for (graphlayout::LayoutNode* node: graph1->allNodes()) {
@@ -165,6 +169,9 @@ void GraphQuickWidgetTest::SubgraphTest()
 
   graphlayout::GraphQuickWidget* widget = new graphlayout::GraphQuickWidget(graph1,
                                                                             graphlayout::Dot);
+#if (defined (_WIN32) || defined (_WIN64))
+  widget->setGraphvizPath("C:\\Program Files (x86)\\Graphviz2.38\\bin");
+#endif
   widget->resize(QSize(500,500));
   QString errorString;
   widget->layout(&errorString);
