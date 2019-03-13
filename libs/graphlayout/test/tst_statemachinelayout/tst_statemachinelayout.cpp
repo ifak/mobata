@@ -129,12 +129,12 @@ void StatemachineLayoutTest::initModel(){
   model::base::SignalItem* signal = this->_model->signal(QStringLiteral("signal"));
   model::base::PortItem* port = this->_model->port(QStringLiteral("port"));
   model::base::SignalTriggerItem* trigger1 = new model::base::SignalTriggerItem(signal,
-                                                                                      port);
+                                                                                port);
   model::statemachine::TransitionItem* t1 = new model::statemachine::TransitionItem(trigger1,
                                                                                     this->_model->states()[0],
-                                                                                    this->_model->states()[1],
-                                                                                    "",
-                                                                                    "initTrans");
+      this->_model->states()[1],
+      "",
+      "initTrans");
   result = this->_model->addTransition(t1, &errorString);
   QCOMPARE(result, true);
   QVERIFY(t1);
@@ -142,7 +142,7 @@ void StatemachineLayoutTest::initModel(){
 
   //TransitionItem from state1 to comState1
   model::base::SignalTriggerItem* trigger2 = new model::base::SignalTriggerItem(signal,
-                                                                                      port);
+                                                                                port);
   model::statemachine::TransitionItem* t2 = new model::statemachine::TransitionItem(trigger2,
                                                                                     this->_model->states()[1],
       utils::simple_cast<model::statemachine::CompositeStateItem*>(this->_model->states()[5])->states()[0],
@@ -154,7 +154,7 @@ void StatemachineLayoutTest::initModel(){
 
   //TransitionItem from state1 to regionInit
   model::base::SignalTriggerItem* trigger3 = new model::base::SignalTriggerItem(signal,
-                                                                                      port);
+                                                                                port);
   model::statemachine::TransitionItem* t3 = new model::statemachine::TransitionItem(trigger3,
                                                                                     this->_model->states()[1],
       utils::simple_cast<model::statemachine::ConcurrentStateItem*>(this->_model->states()[6])->regions()[0]->states()[0],
@@ -166,7 +166,7 @@ void StatemachineLayoutTest::initModel(){
 
   //TransitionItem from regionInit to regionInit to regionComState
   model::base::SignalTriggerItem* trigger4 = new model::base::SignalTriggerItem(signal,
-                                                                                      port);
+                                                                                port);
   model::statemachine::TransitionItem* t4 = new model::statemachine::TransitionItem(trigger4,
                                                                                     utils::simple_cast<model::statemachine::ConcurrentStateItem*>(this->_model->states()[6])->regions()[0]->states()[0],
       utils::simple_cast<model::statemachine::CompositeStateItem*>(utils::simple_cast<model::statemachine::ConcurrentStateItem*>(this->_model->states()[6])->regions()[0]->states()[2])->states()[0],
@@ -193,6 +193,9 @@ void StatemachineLayoutTest::Seq1Test(){
 void StatemachineLayoutTest::Seq2Test(){
   graphlayout::GraphQuickWidget* graphwidget = new graphlayout::GraphQuickWidget(this->_graph,graphlayout::Fdp);
   QString errorString;
+#if (defined (_WIN32) || defined (_WIN64))
+  graphwidget->setGraphvizPath("C:\\Program Files (x86)\\Graphviz2.38\\bin");
+#endif
   graphwidget->layout(&errorString);
   QCOMPARE(errorString,QString(""));
   QVERIFY(graphwidget->rootObject()->findChild<QObject*>("drawArea"));

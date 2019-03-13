@@ -1,5 +1,7 @@
 # Mobata 
 
+[![Build Travis-CI Status](https://travis-ci.org/ifak/mobata.svg?branch=master)](https://travis-ci.org/ifak/mobata) [![Build status](https://ci.appveyor.com/api/projects/status/8ntgkv19n4rhgdga?svg=true)](https://ci.appveyor.com/project/mnrdr/mobata) [![License](https://img.shields.io/badge/license-LGPLv3-blue.svg)](https://github.com/ifak/mobata/blob/master/LICENSE)
+
 **Mobata** (Model Based Test Automation) is a library of modelling languages implemented in c++ for specification models including:
 - [UML Statemachines](https://en.wikipedia.org/wiki/UML_state_machine)
 - [Message Sequence Charts](https://en.wikipedia.org/wiki/Message_sequence_chart)
