@@ -245,7 +245,7 @@ void TestCaseSyntaxTest::complexTestCaseDeclTest(){
 
   QCOMPARE(check1->targetPort()->name(),QString("pRseApp"));
   QCOMPARE(check1->sourcePort()->name(),QString("pEvaluation"));
-
+  
   QCOMPARE(check1->paramValues().isEmpty(), false);
   QCOMPARE(check1->paramValues().first()->value(),true);
   QCOMPARE(check1->timeout(), 300);

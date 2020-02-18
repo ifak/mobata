@@ -99,6 +99,11 @@ void SutLayoutTest::LayoutGraphCreationTest()
   //!--------------------------------------------------------------------------
 
   graphlayout::GraphQuickWidget* widget = new graphlayout::GraphQuickWidget(graph,graphlayout::Fdp);
+
+#if (defined (_WIN32) || defined (_WIN64))
+  widget->setGraphvizPath("C:\\Program Files (x86)\\Graphviz2.38\\bin");
+#endif
+
   widget->resize(QSize(500,500));
   QString error;
   widget->layout(&error);
@@ -107,7 +112,7 @@ void SutLayoutTest::LayoutGraphCreationTest()
   //! SUT -> Graph test
   //!--------------------------------------------------------------------------
 
-  foreach (graphlayout::LayoutNode* node, graph->allNodes()) {
+  for (graphlayout::LayoutNode* node: graph->allNodes()) {
     QVERIFY(node->pos().x() != 0 && node->pos().y() != 0);
   }
 
