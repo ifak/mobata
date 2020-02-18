@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #pragma once
 
 #include "../dslparser_global.hpp"
@@ -41,6 +40,7 @@ class DSLPARSERSHARED_EXPORT ComBuildTestCaseModel
 public:
   ComBuildTestCaseModel(const QString& testCaseDocText,
                         model::ts::TestCaseItem* testCaseDeclModel,
+                        model::ts::TestSystemItem* testSystemItem,
                         const QString& praefix = QStringLiteral(""),
                         bool strictErrorHandling = true,
                         QObject* parent = 0);
@@ -53,8 +53,6 @@ public:
   const DslErrorList&       errors() const;
   const TokenTextLocations& keywordTextLocations() const;
   const ModelTextLocations& modelTextLocations() const;
-  const QString&            importedSutFile() const;
-  const QString&            importedTestSystemFile() const;
 
 public:
   const QHash<QString, model::base::ModelItem*>&  testCaseItems();

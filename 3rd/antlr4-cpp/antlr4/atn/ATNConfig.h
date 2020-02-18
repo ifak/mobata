@@ -86,7 +86,7 @@ namespace atn {
     ATNConfig(Ref<ATNConfig> const& c, ATNState *state, Ref<PredictionContext> const& context, Ref<SemanticContext> const& semanticContext);
 
     ATNConfig(ATNConfig const&) = default;
-    virtual ~ATNConfig();
+    virtual ~ATNConfig() = default;
     ATNConfig& operator=(ATNConfig const&) = default;
 
     virtual size_t hashCode() const;

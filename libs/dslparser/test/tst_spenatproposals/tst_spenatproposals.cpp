@@ -5,6 +5,8 @@
 
 #include <mobata/model/spenat/spenatmodel.hpp>
 
+#include <mobata/memory_leak_start.hpp>
+
 using namespace dslparser;
 using namespace dslparser::spenat;
 using namespace model::spenat;

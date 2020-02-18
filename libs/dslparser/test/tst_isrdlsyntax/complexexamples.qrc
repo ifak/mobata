@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/Examples">
+        <file>example_isrdl_1.isrdl</file>
+        <file>example_isrdl_2.isrdl</file>
+        <file>example_isrdl_3.isrdl</file>
+        <file>example_isrdl_4.isrdl</file>
+        <file>example_isrdl_5.isrdl</file>
+        <file>example_isrdl_6.isrdl</file>
+        <file>example_isrdl_7.isrdl</file>
+        <file>example_isrdl_8.isrdl</file>
+        <file>example_isrdl_9.isrdl</file>
+        <file>example_isrdl_10.isrdl</file>
+        <file>example_isrdl_11.isrdl</file>
+        <file>example_isrdl_12.isrdl</file>
+        <file>example_isrdl_13.isrdl</file>
+    </qresource>
+</RCC>

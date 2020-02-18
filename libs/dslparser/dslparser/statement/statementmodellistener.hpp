@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #pragma once
 
 #include "common/CommonDeclBaseListener.h"
@@ -94,7 +93,7 @@ protected:
 
   void exitSendToStatement(CommonDeclParser::SendToStatementContext *ctx) override;
 protected:
-  virtual void visitErrorNode(antlr4::tree::ErrorNode* node);
+  virtual void visitErrorNode(antlr4::tree::ErrorNode* node) override;
 
 private:
 

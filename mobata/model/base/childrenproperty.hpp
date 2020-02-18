@@ -1,8 +1,6 @@
 /*
  * This file is part of mobata.
  *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
  * mobata is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,8 +14,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#pragma once
+#ifndef MODEL_BASE_CHILDRENPROPERTY_HPP
+#define MODEL_BASE_CHILDRENPROPERTY_HPP
 
 #include <QStandardItem>
 
@@ -178,7 +176,7 @@ protected:
     if(!this->_childsItem)
       return;
 
-    for(ChildType* currChild: this->children())
+    foreach(ChildType* currChild, this->children())
     {
       if(currChild->uuid() == childUuid)
         this->_childsItem->removeRow(currChild->row());
@@ -201,7 +199,7 @@ protected:
     if(!this->_childsItem)
       return;
 
-    for(ChildType* currChild: this->children())
+    foreach(ChildType* currChild, this->children())
     {
       if(currChild == child)
         this->_childsItem->removeRow(currChild->row());
@@ -228,3 +226,6 @@ protected:
 
 } // namespace base
 } // namespace model
+
+#endif // MODEL_BASE_CHILDRENPROPERTY_HPP
+

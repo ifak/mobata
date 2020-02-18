@@ -8,7 +8,6 @@
 #include <mobata/model/spenat/spenatdeclmodel.hpp>
 #include <mobata/model/spenat/transitionitem.hpp>
 #include <mobata/model/base/signaltriggeritem.hpp>
-
 #include <QTimer>
 
 #include <QMainWindow>
@@ -40,19 +39,19 @@ int main(int argc, char *argv[])
   Q_ASSERT(place_4);
 
   TransitionItem* trans_1=new TransitionItem(QStringLiteral("start"),
-                                             nullptr,
+                                             0,
                                              QStringLiteral("all zero"),
                                              QStringLiteral("do nothing"));
   decl.addTransition(trans_1);
 
-  TransitionItem* trans_2=new TransitionItem(QStringLiteral("left"), nullptr);
+  TransitionItem* trans_2=new TransitionItem(QStringLiteral("left"), 0);
   decl.addTransition(trans_2);
 
-  TransitionItem* trans_3=new TransitionItem(QStringLiteral("right"), nullptr);
+  TransitionItem* trans_3=new TransitionItem(QStringLiteral("right"), 0);
   decl.addTransition(trans_3);
 
   TransitionItem* trans_4=decl.addSignalTransition(QStringLiteral("reset"),
-                                                   nullptr, nullptr,
+                                                   0, 0,
                                                    QStringLiteral(""),
                                                    QStringLiteral(""));
 

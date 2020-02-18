@@ -1080,27 +1080,29 @@ void StateMachineSyntaxTest::functionAttributeReturnStatementTest()
 void StateMachineSyntaxTest::functionFalseAttributeReturnStatementTest()
 {
   //test1: invalid use of equation symbol
-  QString docText("StateMachine {\n"
-                  "name: statemachinemodel;\n"
-                  "Type int(0..8) intType;\n"
-                  "Type bool boolType;\n"
-                  "Type real realType;\n"
-                  "Attribute realType balance;\n"
-                  "Attribute boolType alive;\n"
-                  "Attribute intType warnings;\n"
-                  "Function boolType testFunction(intType intVar, realType realVar, boolType boolVar) {\n"
-                  "alive = false;\n"
-                  "alive = true;\n"
-                  "balance = 9001;\n"
-                  "warnings == 42;\n"
-                  "warnings = 42 + 1 - 1 / 2 * 3 = -1;\n"
-                  "balance = balance + realVar;\n"
-                  "alive = boolVar;\n"
-                  "return intVar + 5 - balance * warnings /29;\n"
-                  "}\n"
+  QString docText("StateMachine {"
+                  "name: statemachinemodel;"
+                  "Type int(0..8) intType;"
+                  "Type bool boolType;"
+                  "Type real realType;"
+                  "Attribute realType balance;"
+                  "Attribute boolType alive;"
+                  "Attribute intType warnings;"
+                  "Function boolType testFunction(intType intVar, realType realVar, boolType boolVar) {"
+                  "alive = false;"
+                  "alive = true;"
+                  "balance = 9001;"
+                  "warnings == 42;"
+                  "warnings = 42 + 1 - 1 / 2 * 3 = -1;"
+                  "balance = balance + realVar;"
+                  "warnings= warnings = intVar;"
+                  "alive = boolVar;"
+                  "return intVar + 5 - balance * warnings /29;"
+                  "}"
                   "}");
 
   model::statemachine::StateMachineModel statemachineModel;
+  //QVERIFY(statemachineModel);
   dslparser::statemachine::ComBuildStateMachineModel command(docText, &statemachineModel);
 
   QString errorString;

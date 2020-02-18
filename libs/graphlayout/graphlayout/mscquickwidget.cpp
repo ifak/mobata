@@ -1,24 +1,8 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "mscquickwidget.hpp"
 
 #include <mobata/utils/functors.hpp>
 #include <mobata/model/msc/msc.hpp>
+#include "comcheckmsc.hpp"
 
 #include <QtQuick>
 #include <QtWidgets>
@@ -60,6 +44,7 @@ class MscQuickWidget::Private{
   QList<const model::msc::PortItem*>          _portList;
   QList<QList<const QUuid*>>                  _lifeLines;
   int _columnCount;
+  bool _simple = true;
 
   //! DesignSettings
   //! Component
@@ -192,10 +177,22 @@ void MscQuickWidget::reset()
   return;
 }
 
-bool MscQuickWidget::layout(QString* errorString)
+bool MscQuickWidget::layout(QString* errorString, bool simple)
 {
-  if(!this->_d->_mscSeq)
-    return true;
+  this->_d->_simple = simple;
+  if(!this->_d->_mscSeq){
+    return false;
+  }
+  comCheckMsc comCheck(this->_d->_mscSeq);
+  bool ok = comCheck.execute(errorString);
+  if(!ok)
+  {
+    qDebug()<<"\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/";
+    qDebug()<<"MscCheck failed";
+    qDebug()<<*errorString;
+    qDebug()<<"/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\";
+    return false;
+  }
 
   QTime myTimer;
   myTimer.start();
@@ -251,6 +248,19 @@ void MscQuickWidget::connectMouseAreas()
 bool MscQuickWidget::createComponentList(QString *errorString)
 {
   Q_UNUSED(errorString);
+
+  if(this->_d->_simple){
+    QList<const QUuid*> Row_1;
+    QList<const QUuid*> Row_2;
+
+    for(const model::base::ModelItem*  mscComp : this->_d->_compList){
+      Row_1.append(nullptr);
+      Row_2.append(&mscComp->uuid());
+    }
+    this->_d->_lifeLines.append(Row_1);
+    this->_d->_lifeLines.append(Row_2);
+    return true;
+  }
 
   QList<const QUuid*> Row_1;
   QList<const QUuid*> Row_2;
@@ -336,17 +346,17 @@ bool MscQuickWidget::placeComponents(QString *errorString){
       }
       lastuuid = uuid;
 
-      const QString name = nameFromComponent(*uuid);
+      QString name = nameFromComponent(*uuid);
       QVariant checkVariant;
       bool ok = QMetaObject::invokeMethod(drawArea,"createComponent",
-                                Q_RETURN_ARG(QVariant, checkVariant),
-                                Q_ARG(QVariant,name),
-                                Q_ARG(QVariant,*uuid),
-                                Q_ARG(QVariant,spanCounter),
-                                Q_ARG(QVariant,counter),
-                                Q_ARG(QVariant,this->_d->_componentColor),
-                                Q_ARG(QVariant,this->_d->_componentRadius),
-                                Q_ARG(QVariant,this->_d->_componentTextColor));
+                                          Q_RETURN_ARG(QVariant, checkVariant),
+                                          Q_ARG(QVariant,name),
+                                          Q_ARG(QVariant,*uuid),
+                                          Q_ARG(QVariant,spanCounter),
+                                          Q_ARG(QVariant,counter),
+                                          Q_ARG(QVariant,this->_d->_componentColor),
+                                          Q_ARG(QVariant,this->_d->_componentRadius),
+                                          Q_ARG(QVariant,this->_d->_componentTextColor));
       QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
       Q_ASSERT(ok);
       Q_ASSERT(checkObject);
@@ -377,7 +387,14 @@ bool MscQuickWidget::placeComponents(QString *errorString){
       Q_ASSERT(ok);
       Q_ASSERT(checkObject);
     }else{
-      const QString name = nameFromComponent(*uuid);
+      QString name = nameFromComponent(*uuid);
+      if(this->_d->_simple){
+        if(name.contains("sut", Qt::CaseInsensitive)){
+          name = "SUT";
+        }else{
+          name = "TS";
+        }
+      }
       QVariant checkVariant;
       QMetaObject::invokeMethod(drawArea,"createComponent",
                                 Q_RETURN_ARG(QVariant, checkVariant),
@@ -454,6 +471,7 @@ void MscQuickWidget::updateLifeLines(){
       }
     }
   }
+  this->updateRegionLines();
 }
 
 void MscQuickWidget::updateOverlay(){
@@ -465,9 +483,9 @@ void MscQuickWidget::updateOverlay(){
   {
     QObject* comp = drawArea->children()[i];
     bool ok = QMetaObject::invokeMethod(compArea,"setSize",
-                              Q_ARG(QVariant,i-2),
-                              Q_ARG(QVariant,comp->property("height")),
-                              Q_ARG(QVariant,comp->property("width")));
+                                        Q_ARG(QVariant,i-2),
+                                        Q_ARG(QVariant,comp->property("height")),
+                                        Q_ARG(QVariant,comp->property("width")));
     Q_ASSERT(ok);
   }
 
@@ -656,12 +674,12 @@ bool MscQuickWidget::placeItem(const model::msc::MscSequenceItem *seqItem, QStri
         QVariant checkVariant;
         bool ok = QMetaObject::invokeMethod(drawArea,"createStatement",
                                             Q_RETURN_ARG(QVariant, checkVariant),
-                                  Q_ARG(QVariant,statementItem->statement()),
-                                  Q_ARG(QVariant,span),
-                                  Q_ARG(QVariant,this->_d->_statementColor),
-                                  Q_ARG(QVariant,this->_d->_statementRadius),
-                                  Q_ARG(QVariant,this->_d->_statementTextColor),
-                                  Q_ARG(QVariant,statementItem->uuid().toString()));
+                                            Q_ARG(QVariant,statementItem->statement()),
+                                            Q_ARG(QVariant,span),
+                                            Q_ARG(QVariant,this->_d->_statementColor),
+                                            Q_ARG(QVariant,this->_d->_statementRadius),
+                                            Q_ARG(QVariant,this->_d->_statementTextColor),
+                                            Q_ARG(QVariant,statementItem->uuid().toString()));
         QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
         Q_ASSERT(ok);
         Q_ASSERT(checkObject);
@@ -688,12 +706,12 @@ bool MscQuickWidget::placeItem(const model::msc::MscSequenceItem *seqItem, QStri
         QVariant checkVariant;
         bool ok = QMetaObject::invokeMethod(drawArea,"createTimer",
                                             Q_RETURN_ARG(QVariant, checkVariant),
-                                  Q_ARG(QVariant,timerItem->toString()),
-                                  Q_ARG(QVariant,span),
-                                  Q_ARG(QVariant,this->_d->_timerColor),
-                                  Q_ARG(QVariant,this->_d->_timerRadius),
-                                  Q_ARG(QVariant,this->_d->_timerTextColor),
-                                  Q_ARG(QVariant,timerItem->uuid().toString()));
+                                            Q_ARG(QVariant,timerItem->toString()),
+                                            Q_ARG(QVariant,span),
+                                            Q_ARG(QVariant,this->_d->_timerColor),
+                                            Q_ARG(QVariant,this->_d->_timerRadius),
+                                            Q_ARG(QVariant,this->_d->_timerTextColor),
+                                            Q_ARG(QVariant,timerItem->uuid().toString()));
         QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
         Q_ASSERT(ok);
         Q_ASSERT(checkObject);
@@ -720,12 +738,12 @@ bool MscQuickWidget::placeItem(const model::msc::MscSequenceItem *seqItem, QStri
         QVariant checkVariant;
         bool ok = QMetaObject::invokeMethod(drawArea,"createTimer",
                                             Q_RETURN_ARG(QVariant, checkVariant),
-                                  Q_ARG(QVariant,timeoutItem->toString()),
-                                  Q_ARG(QVariant,span),
-                                  Q_ARG(QVariant,this->_d->_timeoutColor),
-                                  Q_ARG(QVariant,this->_d->_timeoutRadius),
-                                  Q_ARG(QVariant,this->_d->_timeoutTextColor),
-                                  Q_ARG(QVariant,timeoutItem->uuid().toString()));
+                                            Q_ARG(QVariant,timeoutItem->toString()),
+                                            Q_ARG(QVariant,span),
+                                            Q_ARG(QVariant,this->_d->_timeoutColor),
+                                            Q_ARG(QVariant,this->_d->_timeoutRadius),
+                                            Q_ARG(QVariant,this->_d->_timeoutTextColor),
+                                            Q_ARG(QVariant,timeoutItem->uuid().toString()));
         QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
         Q_ASSERT(ok);
         Q_ASSERT(checkObject);
@@ -752,12 +770,12 @@ bool MscQuickWidget::placeItem(const model::msc::MscSequenceItem *seqItem, QStri
         QVariant checkVariant;
         bool ok = QMetaObject::invokeMethod(drawArea,"createTimer",
                                             Q_RETURN_ARG(QVariant, checkVariant),
-                                  Q_ARG(QVariant,sleeptimerItem->toString()),
-                                  Q_ARG(QVariant,span),
-                                  Q_ARG(QVariant,this->_d->_sleeptimerColor),
-                                  Q_ARG(QVariant,this->_d->_sleeptimerRadius),
-                                  Q_ARG(QVariant,this->_d->_sleeptimerTextColor),
-                                  Q_ARG(QVariant,sleeptimerItem->uuid().toString()));
+                                            Q_ARG(QVariant,sleeptimerItem->toString()),
+                                            Q_ARG(QVariant,span),
+                                            Q_ARG(QVariant,this->_d->_sleeptimerColor),
+                                            Q_ARG(QVariant,this->_d->_sleeptimerRadius),
+                                            Q_ARG(QVariant,this->_d->_sleeptimerTextColor),
+                                            Q_ARG(QVariant,sleeptimerItem->uuid().toString()));
         QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
         Q_ASSERT(ok);
         Q_ASSERT(checkObject);
@@ -776,89 +794,124 @@ bool MscQuickWidget::placeItem(const model::msc::MscSequenceItem *seqItem, QStri
   //!xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   if(seqItem->stepType()==model::msc::MessageStep){
     const model::msc::MscMessageItem* messageItem = static_cast<const model::msc::MscMessageItem*>(seqItem);
-    const QUuid messageSource = messageItem->sourcePort()->uuid();
-    const QUuid messageTarget = messageItem->targetPort()->uuid();
+    QUuid messageSource = messageItem->sourcePort()->uuid();
+    QUuid messageTarget = messageItem->targetPort()->uuid();
+    if(this->_d->_simple){
+      messageSource = messageItem->sourcePort()->owner()->uuid();
+      messageTarget = messageItem->targetPort()->owner()->uuid();
+    }
     int sourcePlace = columnFromComponent(messageSource);
     int targetPlace = columnFromComponent(messageTarget);
     int spanCount = 0;
     int rightArrow = 2;
     bool finished = false;
     for(int i = 0; i < this->_d->_columnCount; i++){
-      if(i==sourcePlace){
-        if(rightArrow == 2){
-          rightArrow = 1;
-          QVariant checkVariant;
-          bool ok = QMetaObject::invokeMethod(drawArea,"createMessageStart",
-                                              Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,rightArrow),
-                                    Q_ARG(QVariant,this->_d->_messageColor));
-          QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
-          Q_ASSERT(ok);
-          Q_ASSERT(checkObject);
+      if(messageSource != messageTarget){
+        if(i==sourcePlace){
+          if(rightArrow == 2){
+            rightArrow = 1;
+            QVariant checkVariant;
+            bool ok = QMetaObject::invokeMethod(drawArea,"createMessageStart",
+                                                Q_RETURN_ARG(QVariant, checkVariant),
+                                                Q_ARG(QVariant,rightArrow),
+                                                Q_ARG(QVariant,this->_d->_messageColor));
+            QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+          }else{
+            finished = true;
+            QVariant checkVariant;
+            bool ok = QMetaObject::invokeMethod(drawArea,"createMessageArrow",
+                                                Q_RETURN_ARG(QVariant, checkVariant),
+                                                Q_ARG(QVariant,messageItem->toString(true)),
+                                                Q_ARG(QVariant,spanCount),
+                                                Q_ARG(QVariant,rightArrow),
+                                                Q_ARG(QVariant,this->_d->_messageColor),
+                                                Q_ARG(QVariant,this->_d->_messageTextColor),
+                                                Q_ARG(QVariant,messageItem->uuid().toString()));
+            QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+            ok = QMetaObject::invokeMethod(drawArea,"createMessageStart",
+                                           Q_RETURN_ARG(QVariant, checkVariant),
+                                           Q_ARG(QVariant,rightArrow),
+                                           Q_ARG(QVariant,this->_d->_messageColor));
+            checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+          }
+        }else if(i==targetPlace){
+          if(rightArrow == 2){
+            rightArrow = 0;
+            QVariant checkVariant;
+            bool ok = QMetaObject::invokeMethod(drawArea,"createMessageEnd",
+                                                Q_RETURN_ARG(QVariant, checkVariant),
+                                                Q_ARG(QVariant,rightArrow),
+                                                Q_ARG(QVariant,this->_d->_messageColor));
+            QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+          }else{
+            finished = true;
+            QVariant checkVariant;
+            bool ok = QMetaObject::invokeMethod(drawArea,"createMessageArrow",
+                                                Q_RETURN_ARG(QVariant, checkVariant),
+                                                Q_ARG(QVariant,messageItem->toString(true)),
+                                                Q_ARG(QVariant,spanCount),
+                                                Q_ARG(QVariant,rightArrow),
+                                                Q_ARG(QVariant,this->_d->_messageColor),
+                                                Q_ARG(QVariant,this->_d->_messageTextColor),
+                                                Q_ARG(QVariant,messageItem->uuid().toString()));
+            QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+            ok = QMetaObject::invokeMethod(drawArea,"createMessageEnd",
+                                           Q_RETURN_ARG(QVariant, checkVariant),
+                                           Q_ARG(QVariant,rightArrow),
+                                           Q_ARG(QVariant,this->_d->_messageColor));
+            checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+          }
         }else{
-          finished = true;
-          QVariant checkVariant;
-          bool ok = QMetaObject::invokeMethod(drawArea,"createMessageArrow",
-                                              Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,messageItem->toString(true)),
-                                    Q_ARG(QVariant,spanCount),
-                                    Q_ARG(QVariant,rightArrow),
-                                    Q_ARG(QVariant,this->_d->_messageColor),
-                                    Q_ARG(QVariant,this->_d->_messageTextColor),
-                                    Q_ARG(QVariant,messageItem->uuid().toString()));
-          QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
-          Q_ASSERT(ok);
-          Q_ASSERT(checkObject);
-          ok = QMetaObject::invokeMethod(drawArea,"createMessageStart",
-                                              Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,rightArrow),
-                                    Q_ARG(QVariant,this->_d->_messageColor));
-          checkObject = qvariant_cast<QObject*>(checkVariant);
-          Q_ASSERT(ok);
-          Q_ASSERT(checkObject);
+          if(rightArrow == 2 || finished == true){
+            QVariant checkVariant;
+            bool ok = QMetaObject::invokeMethod(drawArea,"createSpacer", Q_RETURN_ARG(QVariant, checkVariant));
+            QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+          }else{
+            spanCount++;
+          }
         }
-      }else if(i==targetPlace){
-        if(rightArrow == 2){
-          rightArrow = 0;
+      }else {
+        if(i==sourcePlace){
           QVariant checkVariant;
-          bool ok = QMetaObject::invokeMethod(drawArea,"createMessageEnd",
+          bool ok = QMetaObject::invokeMethod(drawArea,"createMessageLoop",
                                               Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,rightArrow),
-                                    Q_ARG(QVariant,this->_d->_messageColor));
+                                              Q_ARG(QVariant,this->_d->_messageColor));
           QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
           Q_ASSERT(ok);
           Q_ASSERT(checkObject);
+          if(i < this->_d->_columnCount -1 ){
+            QVariant checkVariant;
+            bool ok = QMetaObject::invokeMethod(drawArea,"createMessageText",
+                                                Q_RETURN_ARG(QVariant, checkVariant),
+                                                Q_ARG(QVariant,messageItem->toString(true)),
+                                                Q_ARG(QVariant,this->_d->_messageTextColor),
+                                                Q_ARG(QVariant,this->_d->_columnCount-1-i));
+            QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+            i = this->_d->_columnCount-1;
+          }
+          finished = true;
         }else{
-          finished = true;
-          QVariant checkVariant;
-          bool ok = QMetaObject::invokeMethod(drawArea,"createMessageArrow",
-                                              Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,messageItem->toString(true)),
-                                    Q_ARG(QVariant,spanCount),
-                                    Q_ARG(QVariant,rightArrow),
-                                    Q_ARG(QVariant,this->_d->_messageColor),
-                                    Q_ARG(QVariant,this->_d->_messageTextColor),
-                                    Q_ARG(QVariant,messageItem->uuid().toString()));
-          QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
-          Q_ASSERT(ok);
-          Q_ASSERT(checkObject);
-          ok = QMetaObject::invokeMethod(drawArea,"createMessageEnd",
-                                              Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,rightArrow),
-                                    Q_ARG(QVariant,this->_d->_messageColor));
-          checkObject = qvariant_cast<QObject*>(checkVariant);
-          Q_ASSERT(ok);
-          Q_ASSERT(checkObject);
-        }
-      }else{
-        if(rightArrow == 2 || finished == true){
           QVariant checkVariant;
           bool ok = QMetaObject::invokeMethod(drawArea,"createSpacer", Q_RETURN_ARG(QVariant, checkVariant));
           QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
           Q_ASSERT(ok);
           Q_ASSERT(checkObject);
-        }else{
-          spanCount++;
         }
       }
     }
@@ -873,89 +926,124 @@ bool MscQuickWidget::placeItem(const model::msc::MscSequenceItem *seqItem, QStri
   //!xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   if(seqItem->stepType()==model::msc::CheckMessageStep){
     const model::msc::MscCheckMessageItem* checkmessageItem = static_cast<const model::msc::MscCheckMessageItem*>(seqItem);
-    const QUuid messageSource = checkmessageItem->sourcePort()->uuid();
-    const QUuid messageTarget = checkmessageItem->targetPort()->uuid();
+    QUuid messageSource = checkmessageItem->sourcePort()->uuid();
+    QUuid messageTarget = checkmessageItem->targetPort()->uuid();
+    if(this->_d->_simple){
+      messageSource = checkmessageItem->sourcePort()->owner()->uuid();
+      messageTarget = checkmessageItem->targetPort()->owner()->uuid();
+    }
     int sourcePlace = columnFromComponent(messageSource);
     int targetPlace = columnFromComponent(messageTarget);
     int spanCount = 0;
     int rightArrow = 2;
     bool finished = false;
     for(int i = 0; i < this->_d->_columnCount; i++){
-      if(i==sourcePlace){
-        if(rightArrow == 2){
-          rightArrow = 1;
-          QVariant checkVariant;
-          bool ok = QMetaObject::invokeMethod(drawArea,"createMessageStart",
-                                              Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,rightArrow),
-                                    Q_ARG(QVariant,this->_d->_checkmessageColor));
-          QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
-          Q_ASSERT(ok);
-          Q_ASSERT(checkObject);
+      if(messageSource != messageTarget){
+        if(i==sourcePlace){
+          if(rightArrow == 2){
+            rightArrow = 1;
+            QVariant checkVariant;
+            bool ok = QMetaObject::invokeMethod(drawArea,"createMessageStart",
+                                                Q_RETURN_ARG(QVariant, checkVariant),
+                                                Q_ARG(QVariant,rightArrow),
+                                                Q_ARG(QVariant,this->_d->_checkmessageColor));
+            QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+          }else{
+            finished = true;
+            QVariant checkVariant;
+            bool ok = QMetaObject::invokeMethod(drawArea,"createMessageArrow",
+                                                Q_RETURN_ARG(QVariant, checkVariant),
+                                                Q_ARG(QVariant,checkmessageItem->toString()),
+                                                Q_ARG(QVariant,spanCount),
+                                                Q_ARG(QVariant,rightArrow),
+                                                Q_ARG(QVariant,this->_d->_checkmessageColor),
+                                                Q_ARG(QVariant,this->_d->_checkmessageTextColor),
+                                                Q_ARG(QVariant,checkmessageItem->uuid().toString()));
+            QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+            ok = QMetaObject::invokeMethod(drawArea,"createMessageStart",
+                                           Q_RETURN_ARG(QVariant, checkVariant),
+                                           Q_ARG(QVariant,rightArrow),
+                                           Q_ARG(QVariant,this->_d->_checkmessageColor));
+            checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+          }
+        }else if(i==targetPlace){
+          if(rightArrow == 2){
+            rightArrow = 0;
+            QVariant checkVariant;
+            bool ok = QMetaObject::invokeMethod(drawArea,"createMessageEnd",
+                                                Q_RETURN_ARG(QVariant, checkVariant),
+                                                Q_ARG(QVariant,rightArrow),
+                                                Q_ARG(QVariant,this->_d->_checkmessageColor));
+            QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+          }else{
+            finished = true;
+            QVariant checkVariant;
+            bool ok = QMetaObject::invokeMethod(drawArea,"createMessageArrow",
+                                                Q_RETURN_ARG(QVariant, checkVariant),
+                                                Q_ARG(QVariant,checkmessageItem->toString()),
+                                                Q_ARG(QVariant,spanCount),
+                                                Q_ARG(QVariant,rightArrow),
+                                                Q_ARG(QVariant,this->_d->_checkmessageColor),
+                                                Q_ARG(QVariant,this->_d->_checkmessageTextColor),
+                                                Q_ARG(QVariant,checkmessageItem->uuid().toString()));
+            QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+            ok = QMetaObject::invokeMethod(drawArea,"createMessageEnd",
+                                           Q_RETURN_ARG(QVariant, checkVariant),
+                                           Q_ARG(QVariant,rightArrow),
+                                           Q_ARG(QVariant,this->_d->_checkmessageColor));
+            checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+          }
         }else{
-          finished = true;
-          QVariant checkVariant;
-          bool ok = QMetaObject::invokeMethod(drawArea,"createMessageArrow",
-                                              Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,checkmessageItem->toString()),
-                                    Q_ARG(QVariant,spanCount),
-                                    Q_ARG(QVariant,rightArrow),
-                                    Q_ARG(QVariant,this->_d->_checkmessageColor),
-                                    Q_ARG(QVariant,this->_d->_checkmessageTextColor),
-                                    Q_ARG(QVariant,checkmessageItem->uuid().toString()));
-          QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
-          Q_ASSERT(ok);
-          Q_ASSERT(checkObject);
-          ok = QMetaObject::invokeMethod(drawArea,"createMessageStart",
-                                              Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,rightArrow),
-                                    Q_ARG(QVariant,this->_d->_checkmessageColor));
-          checkObject = qvariant_cast<QObject*>(checkVariant);
-          Q_ASSERT(ok);
-          Q_ASSERT(checkObject);
+          if(rightArrow == 2 || finished == true){
+            QVariant checkVariant;
+            bool ok = QMetaObject::invokeMethod(drawArea,"createSpacer", Q_RETURN_ARG(QVariant, checkVariant));
+            QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+          }else{
+            spanCount++;
+          }
         }
-      }else if(i==targetPlace){
-        if(rightArrow == 2){
-          rightArrow = 0;
+      }else {
+        if(i==sourcePlace){
           QVariant checkVariant;
-          bool ok = QMetaObject::invokeMethod(drawArea,"createMessageEnd",
+          bool ok = QMetaObject::invokeMethod(drawArea,"createMessageLoop",
                                               Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,rightArrow),
-                                    Q_ARG(QVariant,this->_d->_checkmessageColor));
+                                              Q_ARG(QVariant,this->_d->_checkmessageColor));
           QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
           Q_ASSERT(ok);
           Q_ASSERT(checkObject);
+          if(i < this->_d->_columnCount -1 ){
+            QVariant checkVariant;
+            bool ok = QMetaObject::invokeMethod(drawArea,"createMessageText",
+                                                Q_RETURN_ARG(QVariant, checkVariant),
+                                                Q_ARG(QVariant,checkmessageItem->toString()),
+                                                Q_ARG(QVariant,this->_d->_checkmessageTextColor),
+                                                Q_ARG(QVariant,this->_d->_columnCount-1-i));
+            QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
+            Q_ASSERT(ok);
+            Q_ASSERT(checkObject);
+            i = this->_d->_columnCount-1;
+          }
+          finished = true;
         }else{
-          finished = true;
-          QVariant checkVariant;
-          bool ok = QMetaObject::invokeMethod(drawArea,"createMessageArrow",
-                                              Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,checkmessageItem->toString()),
-                                    Q_ARG(QVariant,spanCount),
-                                    Q_ARG(QVariant,rightArrow),
-                                    Q_ARG(QVariant,this->_d->_checkmessageColor),
-                                    Q_ARG(QVariant,this->_d->_checkmessageTextColor),
-                                    Q_ARG(QVariant,checkmessageItem->uuid().toString()));
-          QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
-          Q_ASSERT(ok);
-          Q_ASSERT(checkObject);
-          ok = QMetaObject::invokeMethod(drawArea,"createMessageEnd",
-                                              Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,rightArrow),
-                                    Q_ARG(QVariant,this->_d->_checkmessageColor));
-          checkObject = qvariant_cast<QObject*>(checkVariant);
-          Q_ASSERT(ok);
-          Q_ASSERT(checkObject);
-        }
-      }else{
-        if(rightArrow == 2 || finished == true){
           QVariant checkVariant;
           bool ok = QMetaObject::invokeMethod(drawArea,"createSpacer", Q_RETURN_ARG(QVariant, checkVariant));
           QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
           Q_ASSERT(ok);
           Q_ASSERT(checkObject);
-        }else{
-          spanCount++;
         }
       }
     }
@@ -1001,9 +1089,9 @@ bool MscQuickWidget::placeItem(const model::msc::MscSequenceItem *seqItem, QStri
         QVariant checkVariant;
         bool ok = QMetaObject::invokeMethod(drawArea,"createFragmentStart",
                                             Q_RETURN_ARG(QVariant, checkVariant),
-                                  Q_ARG(QVariant,
-                                        fragmentItem->uuid().toString()),
-                                  Q_ARG(QVariant,FragmentLabel));
+                                            Q_ARG(QVariant,
+                                                  fragmentItem->uuid().toString()),
+                                            Q_ARG(QVariant,FragmentLabel));
         QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
         Q_ASSERT(ok);
         Q_ASSERT(checkObject);
@@ -1019,9 +1107,9 @@ bool MscQuickWidget::placeItem(const model::msc::MscSequenceItem *seqItem, QStri
           QVariant checkVariant;
           bool ok = QMetaObject::invokeMethod(drawArea,"createFragment",
                                               Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,"[" + QString::number(duration) + " ms]"),
-                                    Q_ARG(QVariant,this->_d->_columnCount-2),
-                                    Q_ARG(QVariant,this->_d->_regionTextColor));
+                                              Q_ARG(QVariant,"[" + QString::number(duration) + " ms]"),
+                                              Q_ARG(QVariant,this->_d->_columnCount-2),
+                                              Q_ARG(QVariant,this->_d->_regionTextColor));
           QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
           Q_ASSERT(ok);
           Q_ASSERT(checkObject);
@@ -1030,9 +1118,9 @@ bool MscQuickWidget::placeItem(const model::msc::MscSequenceItem *seqItem, QStri
           QVariant checkVariant;
           bool ok = QMetaObject::invokeMethod(drawArea,"createFragment",
                                               Q_RETURN_ARG(QVariant, checkVariant),
-                                    Q_ARG(QVariant,"[" + fragmentItem->regions().first()->name() + "]"),
-                                    Q_ARG(QVariant,this->_d->_columnCount-2),
-                                    Q_ARG(QVariant,this->_d->_regionTextColor));
+                                              Q_ARG(QVariant,"[" + fragmentItem->regions().first()->name() + "]"),
+                                              Q_ARG(QVariant,this->_d->_columnCount-2),
+                                              Q_ARG(QVariant,this->_d->_regionTextColor));
           QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
           Q_ASSERT(ok);
           Q_ASSERT(checkObject);
@@ -1065,9 +1153,9 @@ bool MscQuickWidget::placeItem(const model::msc::MscSequenceItem *seqItem, QStri
             QVariant checkVariant;
             bool ok = QMetaObject::invokeMethod(drawArea,"createRegion",
                                                 Q_RETURN_ARG(QVariant, checkVariant),
-                                      Q_ARG(QVariant,"[" + region->name() + "]"),
-                                      Q_ARG(QVariant,this->_d->_columnCount-2),
-                                      Q_ARG(QVariant,this->_d->_regionTextColor));
+                                                Q_ARG(QVariant,"[" + region->name() + "]"),
+                                                Q_ARG(QVariant,this->_d->_columnCount-2),
+                                                Q_ARG(QVariant,this->_d->_regionTextColor));
             QObject* checkObject = qvariant_cast<QObject*>(checkVariant);
             Q_ASSERT(ok);
             Q_ASSERT(checkObject);
@@ -1160,128 +1248,6 @@ void MscQuickWidget::countComponents()
   }
 
   return;
-
-//  if(seq == nullptr){
-//    for(const model::msc::MscComponentItem* compItem : this->_d->_mscSeq->componentItems()){
-//      if(compItem){
-//        if(this->_d->_compList.contains(compItem)==false){
-//          this->_d->_compList.append(compItem);
-//        }
-//        for(model::msc::PortItem const* portItem : compItem->ports())
-//        {
-//          if(!this->_d->_portList.contains(portItem))
-//            this->_d->_portList.append(portItem);
-//        }
-//      }
-//    }
-//    for(const model::msc::MscSequenceItem* seqItem : this->_d->_mscSeq->sequenceItems()){
-//      countComponents(seqItem);
-//    }
-//  }else{
-//    if(seq->stepType() == model::msc::MessageStep){
-//      const model::msc::MscMessageItem* messageItem = static_cast<const model::msc::MscMessageItem*>(seq);
-//      if(messageItem){
-//        if(messageItem->sourcePort()){
-//          if(model::msc::MscComponentItem const* compOwner=portOwnerComponent(messageItem->sourcePort())){
-//            if(this->_d->_compList.contains(compOwner)==false){
-//              this->_d->_compList.append(compOwner);
-//            }
-//            if(this->_d->_portList.contains(messageItem->sourcePort())==false){
-//              this->_d->_portList.append(messageItem->sourcePort());
-//            }
-//          }
-//        }
-//        if(messageItem->targetPort()){
-//          if(model::msc::MscComponentItem const* compOwner=portOwnerComponent(messageItem->targetPort())){
-//            if(this->_d->_compList.contains(compOwner)==false){
-//              this->_d->_compList.append(compOwner);
-//            }
-//            if(this->_d->_portList.contains(messageItem->targetPort())==false){
-//              this->_d->_portList.append(messageItem->targetPort());
-//            }
-//          }
-//        }
-//      }
-//    }
-//    if(seq->stepType() == model::msc::CheckMessageStep){
-//      const model::msc::MscCheckMessageItem* checkMessageItem = static_cast<const model::msc::MscCheckMessageItem*>(seq);
-//      if(checkMessageItem){
-//        if(checkMessageItem->sourcePort()){
-//          if(model::msc::MscComponentItem const* compOwner=portOwnerComponent(checkMessageItem->sourcePort())){
-//            if(this->_d->_compList.contains(compOwner)==false)
-//              this->_d->_compList.append(compOwner);
-//          }
-//          this->_d->_portList.append(checkMessageItem->sourcePort());
-//        }
-//        if(checkMessageItem->targetPort()){
-//          if(model::msc::MscComponentItem const* compOwner=portOwnerComponent(checkMessageItem->targetPort())){
-//            if(this->_d->_compList.contains(compOwner)==false)
-//              this->_d->_compList.append(compOwner);
-//          }
-//          this->_d->_portList.append(checkMessageItem->targetPort());
-//        }
-//      }
-//    }
-//    if(seq->stepType() == model::msc::StatementStep){
-//      const model::msc::MscStatementItem* statementItem = static_cast<const model::msc::MscStatementItem*>(seq);
-//      if(statementItem){
-//        if(statementItem->component()){
-//          if(this->_d->_compList.contains(statementItem->component())==false){
-//            this->_d->_compList.append(statementItem->component());
-//          }
-//        }
-//      }
-//    }
-//    if(seq->stepType() == model::msc::TimeoutStep){
-//      const model::msc::MscTimeoutItem* TimeoutItem = static_cast<const model::msc::MscTimeoutItem*>(seq);
-//      if(TimeoutItem){
-//        if(TimeoutItem->component()){
-//          if(this->_d->_compList.contains(TimeoutItem->component())==false){
-//            this->_d->_compList.append(TimeoutItem->component());
-//          }
-//        }
-//      }
-//    }
-//    if(seq->stepType() == model::msc::TimerStep){
-//      const model::msc::MscTimerItem* TimerItem = static_cast<const model::msc::MscTimerItem*>(seq);
-//      if(TimerItem){
-//        if(TimerItem->component()){
-//          if(this->_d->_compList.contains(TimerItem->component())==false){
-//            this->_d->_compList.append(TimerItem->component());
-//          }
-//        }
-//      }
-//    }
-//    if(seq->stepType() == model::msc::SleepTimerStep){
-//      const model::msc::MscSleepTimerItem* SleepTimerItem = static_cast<const model::msc::MscSleepTimerItem*>(seq);
-//      if(SleepTimerItem){
-//        if(SleepTimerItem->component()){
-//          if(this->_d->_compList.contains(SleepTimerItem->component())==false){
-//            this->_d->_compList.append(SleepTimerItem->component());
-//          }
-//        }
-//      }
-//    }
-//    if(seq->stepType() == model::msc::FragmentStep){
-//      const model::msc::MscFragmentItem* item = static_cast<const model::msc::MscFragmentItem*>(seq);
-//      if(item){
-//        for(const model::msc::MscFragmentRegionItem* region : item->regions()){
-//          if(region){
-//            for(const model::msc::MscComponentItem* compItem : region->componentItems()){
-//              if(compItem){
-//                if(this->_d->_compList.contains(compItem)==false){
-//                  this->_d->_compList.append(compItem);
-//                }
-//              }
-//            }
-//            for(const model::msc::MscSequenceItem* newSeq : region->sequenceItems()){
-//              countComponents(newSeq);
-//            }
-//          }
-//        }
-//      }
-//    }
-//  }
 }
 //Zoom
 void MscQuickWidget::zoomIn(){
@@ -1476,9 +1442,9 @@ void MscQuickWidget::highlight(QObject* object, const bool highlight){
 
 //live create
 bool MscQuickWidget::addMessage(const model::msc::PortItem* fromPort,
-                const model::msc::PortItem* toPort,
-                const QString& message,
-                QString* errorString)
+                                const model::msc::PortItem* toPort,
+                                const QString& message,
+                                QString* errorString)
 {
   if(!this->_d->_portList.contains(fromPort)){
     utils::AddPtrString(errorString)<<"SourcePort of message '"<<message<<"' not found";

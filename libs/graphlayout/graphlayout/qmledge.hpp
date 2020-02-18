@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef QMLEDGE_HPP
 #define QMLEDGE_HPP
 
@@ -122,6 +121,8 @@ signals:
     void skaleYChanged();
     void skaleWChanged();
     void skaleHChanged();
+
+    void highlightChanged(QVariant ok);
 
 public slots:
     void repaint(){

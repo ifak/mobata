@@ -94,27 +94,23 @@ void ModtraceTest::modtraceTest()
   QJsonArray jsonReqArray1;
   result = model::base::io::readJsonArray(tcObject1, QStringLiteral("requirements"), &jsonReqArray1, &errorString);
   QVERIFY2(result, errorString.toLatin1());
-  QCOMPARE(jsonReqArray1.size(), 4);
+  QCOMPARE(jsonReqArray1.size(), 3);
   QJsonValue reqValue11 = jsonReqArray1.at(0);
   QCOMPARE(reqValue11.toString(), QStringLiteral("Req_Betriebsmodus"));
-  QJsonValue reqValue12 = jsonReqArray1.at(1);
-  QCOMPARE(reqValue12.toString(), QStringLiteral("Req_BetriebsmodusFeldbus"));
-  QJsonValue reqValue13 = jsonReqArray1.at(2);
+  QJsonValue reqValue13 = jsonReqArray1.at(1);
   QCOMPARE(reqValue13.toString(), QStringLiteral("Req_AufBetrieb"));
-  QJsonValue reqValue14 = jsonReqArray1.at(3);
+  QJsonValue reqValue14 = jsonReqArray1.at(2);
   QCOMPARE(reqValue14.toString(), QStringLiteral("Req_ZuBetrieb"));
 
   QJsonArray placeJsonArray1;
   result = model::base::io::readJsonArray(tcObject1, QStringLiteral("places"), &placeJsonArray1, &errorString);
   QVERIFY2(result, errorString.toLatin1());
-  QCOMPARE(placeJsonArray1.size(), 4);
-  QJsonValue placeValue11 = placeJsonArray1.at(0);
-  QCOMPARE(placeValue11.toString(), QStringLiteral("init"));
-  QJsonValue placeValue12 = placeJsonArray1.at(1);
+  QCOMPARE(placeJsonArray1.size(), 3);
+  QJsonValue placeValue12 = placeJsonArray1.at(0);
   QCOMPARE(placeValue12.toString(), QStringLiteral("S1"));
-  QJsonValue placeValue13 = placeJsonArray1.at(2);
+  QJsonValue placeValue13 = placeJsonArray1.at(1);
   QCOMPARE(placeValue13.toString(), QStringLiteral("ZU"));
-  QJsonValue placeValue14 = placeJsonArray1.at(3);
+  QJsonValue placeValue14 = placeJsonArray1.at(2);
   QCOMPARE(placeValue14.toString(), QStringLiteral("AUF"));
 
   QJsonArray transJsonArray1;
@@ -147,19 +143,15 @@ void ModtraceTest::modtraceTest()
   QJsonArray jsonReqArray2;
   result = model::base::io::readJsonArray(tcObject2, QStringLiteral("requirements"), &jsonReqArray2, &errorString);
   QVERIFY2(result, errorString.toLatin1());
-  QCOMPARE(jsonReqArray2.size(), 2);
+  QCOMPARE(jsonReqArray2.size(), 1);
   QJsonValue reqValue21 = jsonReqArray2.at(0);
   QCOMPARE(reqValue21.toString(), QStringLiteral("Req_Betriebsmodus"));
-  QJsonValue reqValue22 = jsonReqArray2.at(1);
-  QCOMPARE(reqValue22.toString(), QStringLiteral("Req_BetriebsmodusFeldbus"));
 
   QJsonArray placeJsonArray2;
   result = model::base::io::readJsonArray(tcObject2, QStringLiteral("places"), &placeJsonArray2, &errorString);
   QVERIFY2(result, errorString.toLatin1());
-  QCOMPARE(placeJsonArray2.size(), 2);
-  QJsonValue placeValue21 = placeJsonArray2.at(0);
-  QCOMPARE(placeValue21.toString(), QStringLiteral("init"));
-  QJsonValue placeValue22 = placeJsonArray2.at(1);
+  QCOMPARE(placeJsonArray2.size(), 1);
+  QJsonValue placeValue22 = placeJsonArray2.at(0);
   QCOMPARE(placeValue22.toString(), QStringLiteral("S1"));
 
   QJsonArray transJsonArray2;
@@ -197,10 +189,8 @@ void ModtraceTest::modtraceTest()
   QJsonArray placeJsonArray3;
   result = model::base::io::readJsonArray(tcObject3, QStringLiteral("places"), &placeJsonArray3, &errorString);
   QVERIFY2(result, errorString.toLatin1());
-  QCOMPARE(placeJsonArray3.size(), 2);
-  QJsonValue placeValue31 = placeJsonArray3.at(0);
-  QCOMPARE(placeValue31.toString(), QStringLiteral("init"));
-  QJsonValue placeValue32 = placeJsonArray3.at(1);
+  QCOMPARE(placeJsonArray3.size(), 1);
+  QJsonValue placeValue32 = placeJsonArray3.at(0);
   QCOMPARE(placeValue32.toString(), QStringLiteral("S1"));
 
   QJsonArray transJsonArray3;

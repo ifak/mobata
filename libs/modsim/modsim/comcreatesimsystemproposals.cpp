@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "comcreatesimsystemproposals.hpp"
 
 #include "combuildsimsystemmodel.hpp"
@@ -335,7 +318,7 @@ protected:
 
     int sz = curPath.size();
     QStringList list = homeDir.entryList();
-    for (QString option: list) {
+    foreach (QString option, list) {
       QString test = option;
       test.resize(sz);
       if(test == curPath)
@@ -487,7 +470,7 @@ bool ComCreateSimSystemProposals::execute(QString* errorString)
         currentChar=QChar();
     }
   }
-  //  qDebug()<<"lastWordAtEndOfDocText: "<<lastWordAtEndOfDocText;
+//  qDebug()<<"lastWordAtEndOfDocText: "<<lastWordAtEndOfDocText;
 
   int lastWordSize = lastWordAtEndOfDocText.size();
 

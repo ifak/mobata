@@ -1,5 +1,21 @@
+/*
+ * This file is part of mobata.
+ *
+ * mobata is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
 
-// Generated from C:/Users/j05kraus/Private/SWDevelop/mobata_oss_dev/libs/dslparser/dslparser/grammars/TestCaseDecl.g4 by ANTLR 4.7.2
+ * mobata is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+// Generated from C:/Users/s_phs.DESKTOP-9GA53KK/Documents/mobata/libs/dslparser/dslparser/grammars/TestCaseDecl.g4 by ANTLR 4.7
 
 #pragma once
 
@@ -41,14 +57,14 @@ public:
   virtual void enterCheckDecl(TestCaseDeclParser::CheckDeclContext *ctx) = 0;
   virtual void exitCheckDecl(TestCaseDeclParser::CheckDeclContext *ctx) = 0;
 
-  virtual void enterCheckDeclBody(TestCaseDeclParser::CheckDeclBodyContext *ctx) = 0;
-  virtual void exitCheckDeclBody(TestCaseDeclParser::CheckDeclBodyContext *ctx) = 0;
-
   virtual void enterTimerDecl(TestCaseDeclParser::TimerDeclContext *ctx) = 0;
   virtual void exitTimerDecl(TestCaseDeclParser::TimerDeclContext *ctx) = 0;
 
   virtual void enterTimeOutDecl(TestCaseDeclParser::TimeOutDeclContext *ctx) = 0;
   virtual void exitTimeOutDecl(TestCaseDeclParser::TimeOutDeclContext *ctx) = 0;
+
+  virtual void enterAccuracyDecl(TestCaseDeclParser::AccuracyDeclContext *ctx) = 0;
+  virtual void exitAccuracyDecl(TestCaseDeclParser::AccuracyDeclContext *ctx) = 0;
 
   virtual void enterAltDecl(TestCaseDeclParser::AltDeclContext *ctx) = 0;
   virtual void exitAltDecl(TestCaseDeclParser::AltDeclContext *ctx) = 0;
@@ -59,6 +75,9 @@ public:
   virtual void enterAltBodyOptional(TestCaseDeclParser::AltBodyOptionalContext *ctx) = 0;
   virtual void exitAltBodyOptional(TestCaseDeclParser::AltBodyOptionalContext *ctx) = 0;
 
+  virtual void enterUuidDecl(TestCaseDeclParser::UuidDeclContext *ctx) = 0;
+  virtual void exitUuidDecl(TestCaseDeclParser::UuidDeclContext *ctx) = 0;
+
   virtual void enterEnabledDecl(TestCaseDeclParser::EnabledDeclContext *ctx) = 0;
   virtual void exitEnabledDecl(TestCaseDeclParser::EnabledDeclContext *ctx) = 0;
 
@@ -67,6 +86,9 @@ public:
 
   virtual void enterFunctionCall(TestCaseDeclParser::FunctionCallContext *ctx) = 0;
   virtual void exitFunctionCall(TestCaseDeclParser::FunctionCallContext *ctx) = 0;
+
+  virtual void enterFunctionCall2(TestCaseDeclParser::FunctionCall2Context *ctx) = 0;
+  virtual void exitFunctionCall2(TestCaseDeclParser::FunctionCall2Context *ctx) = 0;
 
   virtual void enterComponentIdPath(TestCaseDeclParser::ComponentIdPathContext *ctx) = 0;
   virtual void exitComponentIdPath(TestCaseDeclParser::ComponentIdPathContext *ctx) = 0;

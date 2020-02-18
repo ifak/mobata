@@ -1,8 +1,6 @@
 /*
  * This file is part of mobata.
  *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
  * mobata is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,8 +14,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#pragma once
+#ifndef MODEL_MSC_MSCCOMPONENTSPROPERTY_HPP
+#define MODEL_MSC_MSCCOMPONENTSPROPERTY_HPP
 
 #include "../base/childrenproperty.hpp"
 #include "msccomponentitem.hpp"
@@ -143,8 +141,8 @@ public:
 public:
   ComponentType*  componentFromPort(const QUuid& portUuid)
   {
-    for(ComponentType* component: this->components()){
-      for (PortItem* port: component->ports()) {
+    foreach(ComponentType* component, this->components()){
+      foreach (PortItem* port, component->ports()) {
         if(port->uuid() == portUuid)
           return component;
       }
@@ -155,8 +153,8 @@ public:
 
   ComponentType const*  componentFromPort(const QUuid& portUuid) const
   {
-    for(ComponentType* component: this->components()){
-      for (PortItem* port: component->ports()) {
+    foreach(ComponentType* component, this->components()){
+      foreach (PortItem* port, component->ports()) {
         if(port->uuid() == portUuid)
           return component;
       }
@@ -167,9 +165,9 @@ public:
 
   PortItem*  port(const QUuid& portUuid)
   {
-    for(ComponentType* component: this->components())
+    foreach(ComponentType* component, this->components())
     {
-      for (PortItem* port: component->ports())
+      foreach (PortItem* port, component->ports())
       {
         if(port->uuid() == portUuid)
           return port;
@@ -181,9 +179,9 @@ public:
 
   PortItem const*  port(const QUuid& portUuid) const
   {
-    for(ComponentType const* component: this->components())
+    foreach(ComponentType const* component, this->components())
     {
-      for (PortItem const* port: component->ports())
+      foreach (PortItem const* port, component->ports())
       {
         if(port->uuid() == portUuid)
           return port;
@@ -196,3 +194,5 @@ public:
 
 } // namespace msc
 } // namespace model
+
+#endif // MODEL_MSC_MSCCOMPONENTSPROPERTY_HPP

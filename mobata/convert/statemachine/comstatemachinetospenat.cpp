@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "model/statemachine/concurrentstateitem.hpp"
 #include "model/statemachine/compositestateitem.hpp"
 #include "model/statemachine/junctionstateitem.hpp"
@@ -43,7 +24,7 @@
 
 #include "comstatemachinetospenat.hpp"
 #include "virtualtransition.hpp"
-#include "converttrace.hpp"
+#include "converttrace.h"
 
 #include <QDebug>
 
@@ -164,7 +145,7 @@ bool ComStateMachineToSpenat::convertState(const AbstractStateItem* state,
 {
   Q_ASSERT(state);
 
-  PlaceItem* placeItem;
+  PlaceItem* placeItem = nullptr;
 
   switch(state->stateType())
   {
@@ -215,7 +196,8 @@ bool ComStateMachineToSpenat::convertState(const AbstractStateItem* state,
 
     const SimpleStateItem* simpleState = static_cast<const SimpleStateItem*>(state);
     Q_ASSERT(simpleState);
-    if(simpleState->isInit()){
+    if(simpleState->isInit() && hierarchy == StateMachineRoot)
+    {
       bool result=this->_d->_spenatDeclModel->addInitPlace(placeItem, errorString);
       if(!result)
         return false;
@@ -247,9 +229,11 @@ bool ComStateMachineToSpenat::convertState(const AbstractStateItem* state,
   }
 
   if(this->_d->_traceFileExists)
-    if(!convertTrace->appendPlaceTrace(placeItem->name(), errorString))
-      return false;
-
+    if(placeItem != nullptr){
+      if(!convertTrace->appendPlaceTrace(placeItem->name(), errorString)){
+        return false;
+      }
+    }
   return true;
 }
 
@@ -285,8 +269,10 @@ bool ComStateMachineToSpenat::convertTransition(const model::statemachine::Trans
                                          errorString))
     return false;
 
-  for(VirtualTransition* preTransition : preVirtuals){
-    for(VirtualTransition* postTransition: postVirtuals){
+  for(VirtualTransition* preTransition : preVirtuals)
+  {
+    for(VirtualTransition* postTransition: postVirtuals)
+    {
       const AbstractStateItem* nestedFinal = nullptr;
       if(postTransition->fusedTransition() && smTransition->target()->stateType() == Final)
         nestedFinal = smTransition->target();
@@ -336,7 +322,8 @@ bool ComStateMachineToSpenat::convertTransition(const model::statemachine::Trans
 
       const ATriggerItem* smTrigger = smTransition->trigger();
       ATriggerItem* spenatTrigger = nullptr;
-      if(smTrigger){
+      if(smTrigger)
+      {
         spenatTrigger = this->cloneTrigger(smTrigger, errorString);
         if(!spenatTrigger)
           return false;
@@ -357,7 +344,8 @@ bool ComStateMachineToSpenat::convertTransition(const model::statemachine::Trans
           return false;
 
       PlaceItem* prePlace = this->_d->_spenatDeclModel->place(preTransition->state()->name());
-      if(!prePlace){
+      if(!prePlace)
+      {
         utils::AddPtrString(errorString) << "Place equivalent of state '" + preTransition->state()->name() + "' was not found in spenat model!";
         return false;
       }
@@ -365,7 +353,8 @@ bool ComStateMachineToSpenat::convertTransition(const model::statemachine::Trans
         return false;
 
       PlaceItem* postPlace = this->_d->_spenatDeclModel->place(postTransition->state()->name());
-      if(!postPlace){
+      if(!postPlace)
+      {
         utils::AddPtrString(errorString) << "Place equivalent of state '" + postTransition->state()->name() + "' was not found in spenat model!";
         return false;
       }
@@ -456,13 +445,16 @@ bool ComStateMachineToSpenat::processSourceTypeComposite(VirtualTransitions& vir
   Q_ASSERT(composite);
 
   //if transition with composite source has no trigger and guard, check if composite has final states and add them as prePlaces
-  if(smTransition->trigger() == nullptr && smTransition->guard().isEmpty()){
-    if(composite->finalStates().isEmpty()){
+  if(smTransition->trigger() == nullptr && smTransition->guard().isEmpty())
+  {
+    if(composite->finalStates().isEmpty())
+    {
       utils::AddPtrString(errorString) << "CompositeState '" + composite->name() + "' is defined as source of a statemachine transition, but it has no FinalState!";
       return false;
     }
   }
-  else if(smTransition->trigger() != nullptr){
+  else if(smTransition->trigger() != nullptr)
+{
     //if transition with composite source has a trigger, create transition proposals for each nested region/substatemachine and add nested states as preplaces
     const PropStates* propStates = dynamic_cast<const PropStates*>(composite);
     Q_ASSERT(propStates);
@@ -889,7 +881,8 @@ QString ComStateMachineToSpenat::collectActions(const AbstractStateItem* sourceS
   QString action;
 
   //append exitActions
-  if(nestedFinal){
+  if(nestedFinal)
+  {
     PropStates::ConstStateSet finalStatePathSet;
     if(!statePathStates(this->_d->_stateMachineModel,
                         nestedFinal->uuid(),

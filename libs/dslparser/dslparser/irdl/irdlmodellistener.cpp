@@ -1,30 +1,13 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "irdlmodellistener.hpp"
 #include <mobata/model/base/attributeitem.hpp>
 #include <mobata/model/base/propattributes.hpp>
 #include <dslparser/common/combuildbasemodel.hpp>
 #include <dslparser/irdldecl/combuildirdldeclmodel.hpp>
 
-#include <mobata/model/irdl/requirementsmodel.hpp>
-#include <mobata/model/irdl/requirementitem.hpp>
-#include <mobata/model/irdl/reqactorcomponentitem.hpp>
-#include <mobata/model/irdl/reqcomponentitem.hpp>
+#include <mobata/model/requirement/requirementsmodel.hpp>
+#include <mobata/model/requirement/requirementitem.hpp>
+#include <mobata/model/requirement/reqactorcomponentitem.hpp>
+#include <mobata/model/requirement/reqcomponentitem.hpp>
 #include <mobata/model/msc/msccomponentitem.hpp>
 #include <mobata/model/msc/mscmessageitem.hpp>
 #include <mobata/model/msc/msccheckmessageitem.hpp>
@@ -37,10 +20,20 @@
 
 #include <mobata/model/base/propdatatypes.hpp>
 
+//#include <mobata/model/requirement/transitionitem.hpp>
+//#include <mobata/model/requirement/simplestateitem.hpp>
+//#include <mobata/model/requirement/compositestateitem.hpp>
+//#include <mobata/model/requirement/parallelstateitem.hpp>
+//#include <mobata/model/requirement/junctionstateitem.hpp>
+//#include <mobata/model/requirement/finalstateitem.hpp>
+//#include <mobata/model/requirement/initstateitem.hpp>
+
 #include "combuildirdlmodel.hpp"
 
 #include <QStack>
 #include <QDebug>
+
+#include <mobata/memory_leak_start.hpp>
 
 namespace reg = model::irdl;
 using namespace antlr4;
@@ -599,7 +592,7 @@ void IrdlModelListener::exitTimerNameID(IrdlParser::TimerNameIDContext *ctx)
 void IrdlModelListener::exitAttributeAssignStatement(IrdlParser::AttributeAssignStatementContext *ctx)
 {
   if(!ctx || !ctx->attributeIdPath().size()) return;
-  auto item1 = getAttributeFromPath(ctx->attributeIdPath(0));
+  const model::base::AttributeItem* attributeItem = getAttributeFromPath(ctx->attributeIdPath(0));
   QString errorString("");
   QVariant val;
   if(auto asCtx = ctx->literalValue()){
@@ -652,13 +645,21 @@ void IrdlModelListener::exitAttributeAssignStatement(IrdlParser::AttributeAssign
     //                            val = QString("__IFAK_SIGNALPARAM__") + QString::fromStdString(ctx->attributeIdPath()[ctx->attributeIdPath().size()]->getText());
     val = QString::fromStdString(ctx->signalParamName()->contextID()->getText());
   }
-  else if (ctx->attributeIdPath().size() == 2 && getAttributeFromPath(ctx->attributeIdPath(1))) {
+  else if (ctx->attributeIdPath().size() == 2 && getAttributeFromPath(ctx->attributeIdPath(1)) && !ctx->attributeIdPath(1)->contextID().empty()) {
     //                            val = QString("__IFAK_ATTRIBUTE__") + QString::fromStdString(ctx->attributeIdPath()[ctx->attributeIdPath().size()]->getText());
     val = QString::fromStdString(ctx->attributeIdPath(1)->contextID().back()->getText());
   }
-  if(auto item = dynamic_cast<const model::msc::MscComponentItem*>(_d->_curCompOfAttributeItem)){
-    if(item1){
-      _d->_seqStack.first()->addStatement(item, QString("%0 = %1").arg(item1->name(),val.toString()));
+
+  if(attributeItem)
+  {
+    if(auto item = dynamic_cast<const model::msc::MscComponentItem*>(_d->_curCompOfAttributeItem))
+        _d->_seqStack.first()->addStatement(item, QString("%0 = %1").arg(attributeItem->name(), val.toString()));
+    else
+    {
+      auto component = getSystem();
+      if(component){
+        _d->_seqStack.first()->addStatement(component, QString("%0 = %1").arg(attributeItem->name(), val.toString()));
+      }
     }
   }
   if(errorString != QString("")){
@@ -677,25 +678,52 @@ void IrdlModelListener::enterCheckDeclBody(IrdlParser::CheckDeclBodyContext *ctx
   }
 }
 
+void IrdlModelListener::addCheckAssign(model::msc::MscCheckMessageItem* check, IrdlParser::AttributeAssignContext* ctx)
+{
+  if(!ctx->attributeIdPath())
+    return;
+  if(!ctx->attributeIdPath()->attributeName())
+    return;
+  if(!ctx->signalParamName())
+    return;
+  check->appendAssign(QString::fromStdString(ctx->attributeIdPath()->attributeName()->getText()),
+                      QString::fromStdString(ctx->signalParamName()->getText()));
+
+  if(auto assignCtx = ctx->attributeAssign()){
+    this->addCheckAssign(check, assignCtx);
+  }
+}
+
 void IrdlModelListener::exitCheckDecl(IrdlParser::CheckDeclContext *ctx)
 {
-  if(!ctx                  || ctx->exception ||
-     !ctx->checkDeclBody() || ctx->checkDeclBody()->exception) return;
+  if(!ctx                  || ctx->exception //||
+     /*!ctx->checkDeclBody() || ctx->checkDeclBody()->exception*/) return;
   if(const model::base::PortItem* source = getComponentFromPath(ctx->componentIdPath().at(0))){
     if(const model::base::PortItem*  target = getComponentFromPath(ctx->componentIdPath().at(1))){
       if(const model::base::SignalItem* signal = getSignalFromPath(ctx->signalIdPath())){
         model::msc::MscCheckMessageItem* check = new model::msc::MscCheckMessageItem(source,target);
         check->setSignal(signal);
-        check->setGuard(QString::fromStdString(
-                          ctx->getStart()->getInputStream()->getText(
-                            misc::Interval(ctx->checkDeclBody()->LBRACKET()->getSymbol()->getStartIndex()+1,ctx->checkDeclBody()->RBRACKET()->getSymbol()->getStopIndex()-1))));
-        if(auto timeCtx = ctx->checkDeclBody()->timeOutDecl()){
-          QString value = "";
-          if(timeCtx->REAL()) value = QString::fromStdString(timeCtx->REAL()->getText());
-          else if(timeCtx->INT()) value = QString::fromStdString(timeCtx->INT()->getText());
-          int val = value.toInt();
-          if(timeCtx->SekID()) val *= 1000;
-          check->setTimeout(val);
+        if(ctx->checkDeclBody() && !ctx->checkDeclBody()->exception){
+          check->setGuard(QString::fromStdString(
+                            ctx->getStart()->getInputStream()->getText(
+                              misc::Interval(ctx->checkDeclBody()->LBRACKET()->getSymbol()->getStartIndex()+1,ctx->checkDeclBody()->RBRACKET()->getSymbol()->getStopIndex()-1))));
+          if(auto timeCtx = ctx->checkDeclBody()->timeOutDecl()){
+            QString value = "";
+            if(timeCtx->REAL()) value = QString::fromStdString(timeCtx->REAL()->getText());
+            else if(timeCtx->INT()) value = QString::fromStdString(timeCtx->INT()->getText());
+            else{
+              appendDslError(timeCtx->getStart(),
+                             QString("Timeout declaration has no value!"));
+              return;
+            }
+            int val = value.toInt();
+            if(timeCtx->SekID()) val *= 1000;
+            check->setTimeout(val);
+          }
+
+          if (auto assignCtx = ctx->checkDeclBody()->attributeAssign()){
+            this->addCheckAssign(check, assignCtx);
+          }
         }
         _d->_seqStack.front()->addMessage(check);
         this->_modelTextLocations->insert(check->index(),
@@ -787,11 +815,32 @@ void IrdlModelListener::enterDurationDecl(IrdlParser::DurationDeclContext *ctx)
   _d->_seqStack.push_front(reg);
   _d->_curDurFrag.push_front(fragItem);
 }
+/*
+void IrdlModelListener::enterDurationElseDecl(IrdlParser::DurationElseDeclContext *ctx)
+{
+  if(!ctx || ctx->exception) return;
+  QString value = "";
+  IrdlParser::DurationDeclContext *durCtx = dynamic_cast<IrdlParser::DurationDeclContext *>(ctx->parent);
+  if(durCtx->REAL()) value = QString::fromStdString(durCtx->REAL()->getText());
+  else if(durCtx->INT()) value = QString::fromStdString(durCtx->INT()->getText());
+  uint val = value.toUInt();
+  if(durCtx->SekID()) val *= 1000;
+  model::msc::MscFragmentItem * fragItem = static_cast<model::msc::MscFragmentItem *>(_d->_curDurFrag.front());
+  _d->_seqStack.pop_front();
+  fragItem->setDuration(val);
+  fragItem->regions().front()->setCondition(QString("Duration = %1ms").arg(val));
+
+  model::msc::MscFragmentRegionItem* reg = fragItem->addRegion(QString("DurationElseRegion"));
+  fragItem->setText("DurationElse");
+  _d->_seqStack.push_front(reg);
+}
+*/
 
 void IrdlModelListener::exitDurationDecl(IrdlParser::DurationDeclContext *ctx)
 {
   if(!ctx || ctx->exception) return;
   QString value = "";
+  //IrdlParser::DurationDeclContext *durCtx = dynamic_cast<IrdlParser::DurationDeclContext *>(ctx->parent);
   if(ctx->REAL()) value = QString::fromStdString(ctx->REAL()->getText());
   else if(ctx->INT()) value = QString::fromStdString(ctx->INT()->getText());
   uint val = value.toUInt();
@@ -800,7 +849,7 @@ void IrdlModelListener::exitDurationDecl(IrdlParser::DurationDeclContext *ctx)
   _d->_seqStack.pop_front();
   _d->_curDurFrag.pop_front();
   fragitem->setDuration(val);
-  fragitem->regions().front()->setCondition(QString("Duration = %1ms").arg(val));
+  fragitem->regions().front()->setCondition(QString(""));
 }
 
 void IrdlModelListener::enterImportPathBody(IrdlParser::ImportPathBodyContext *ctx)
@@ -833,7 +882,7 @@ void IrdlModelListener::exitImportPathBody(IrdlParser::ImportPathBodyContext *ct
   QString docText(file.readAll());
   file.close();
 
-  if(path.endsWith(QString(".irdl")))
+  if(path.endsWith(QString(".requirement")))
   {
     QString name;
     if(ctx->importAs() && ctx->importAs()->contextID()){
@@ -853,7 +902,7 @@ void IrdlModelListener::exitImportPathBody(IrdlParser::ImportPathBodyContext *ct
         QString err("");
         _model->addContent(irdlModel,&err);
         if(err != QString("")){
-          appendDslError(ctx->getStart(), err);
+          appendDslError(ctx->getStart(),err);
         }
         return;
       }
@@ -1053,6 +1102,14 @@ void IrdlModelListener::exitSignalIdPath(IrdlParser::SignalIdPathContext *ctx)
   }
 }
 
+void IrdlModelListener::exitDeclarations(IrdlParser::DeclarationsContext *ctx)
+{
+  if(!getSystem()){
+    appendDslError(ctx->stop,
+                 QString("Every Requirementsmodel needs to define a 'system' component!"));
+  }
+}
+
 void IrdlModelListener::visitErrorNode(tree::ErrorNode* node)
 {
   Q_UNUSED(node);
@@ -1062,6 +1119,20 @@ void IrdlModelListener::visitErrorNode(tree::ErrorNode* node)
   //         <<"error node: "<<node->toString().c_str();
 
   return;
+}
+
+const model::msc::MscComponentItem *IrdlModelListener::getSystem()
+{
+  auto component = _model->component("system");
+  if(!component){
+    model::irdl::RequirementsModel* importModel = dynamic_cast<model::irdl::RequirementsModel*>(_model->importedModels().value(QString("this")));
+    if(importModel)
+      component = importModel->component("system");
+  }
+  if(!component){
+    return getAlias("system");
+  }
+  return dynamic_cast<const model::msc::MscComponentItem *>(component);
 }
 
 const model::msc::MscComponentItem *IrdlModelListener::getAlias(QString name)

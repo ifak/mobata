@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "writebasemodel.hpp"
 
 #include "../basemodel.hpp"
@@ -160,8 +141,8 @@ void writeSignal(SignalItem const* signalItem,
   if(signalItem->params().count())
   {
     QJsonArray paramsArray;
-    for(ParamItem const* paramItem:
-        signalItem->params())
+    foreach(ParamItem const* paramItem,
+            signalItem->params())
     {
       QJsonObject paramObject;
       writeParamItem(paramItem, paramObject);
@@ -197,8 +178,8 @@ void writePropAttributes(PropAttributes const* propAttributes,
     return;
   }
 
-  for (AttributeItem const* attributeItem:
-       propAttributes->attributes())
+  foreach (AttributeItem const* attributeItem,
+           propAttributes->attributes())
   {
     QJsonObject attributeObject;
     writeAttribute(attributeItem, attributeObject);
@@ -218,8 +199,8 @@ void writePropComponents(PropComponents const* propComponents,
     return;
 
   QJsonArray componentsArray;
-  for (ComponentItem const* componentItem:
-       propComponents->components())
+  foreach (ComponentItem const* componentItem,
+           propComponents->components())
   {
     QJsonObject componentObject;
     writeComponent(componentItem, componentObject);
@@ -239,8 +220,8 @@ void writePropLinks(PropLinks const* propLinks,
     return;
 
   QJsonArray linksArray;
-  for (LinkItem const* linkItem:
-       propLinks->links())
+  foreach (LinkItem const* linkItem,
+           propLinks->links())
   {
     QJsonObject linkObject;
     writeLink(linkItem, linkObject);
@@ -260,8 +241,8 @@ void writePropPorts(PropPorts const* propPorts,
     return;
 
   QJsonArray portsArray;
-  for (PortItem const* portItem:
-       propPorts->ports())
+  foreach (PortItem const* portItem,
+           propPorts->ports())
   {
     QJsonObject portObject;
     writePort(portItem, portObject);
@@ -281,8 +262,8 @@ void writePropSignals(PropSignals const* propSignals,
     return;
 
   QJsonArray signalsArray;
-  for (SignalItem const* signalItem:
-       propSignals->getSignals())
+  foreach (SignalItem const* signalItem,
+           propSignals->getSignals())
   {
     QJsonObject signalObject;
     writeSignal(signalItem, signalObject);
@@ -305,8 +286,8 @@ void writePropDataTypes(PropDataTypes const* propDataTypes,
     return;
   }
 
-  for (DataTypeItem const* typeItem:
-       propDataTypes->dataTypes())
+  foreach (DataTypeItem const* typeItem,
+           propDataTypes->dataTypes())
   {
     QJsonObject typeObject;
     writeDataType(typeItem, typeObject);

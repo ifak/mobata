@@ -1,23 +1,5 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-#pragma once
+#ifndef MODEL_MSC_IO_READMSCMODEL_INL
+#define MODEL_MSC_IO_READMSCMODEL_INL
 
 #include "../../base/io/readbasemodel.hpp"
 
@@ -53,22 +35,58 @@ bool ReadMscComponent<MscComponentsModel>::operator()(const QJsonObject& jsonObj
 
   QUuid uuid;
   QString name;
-  QUuid defaultPortUuid;
-  bool result = readProperty_3<QUuid,QString, QUuid>(jsonObject,
-                                              QStringLiteral("uuid"),
-                                              &uuid,
-                                              QStringLiteral("name"),
-                                              &name,
-                                              QStringLiteral("defaultPort"),
-                                              &defaultPortUuid,
-                                              errorMessage);
+  bool result = readProperty_2<QUuid,QString>(jsonObject,
+                                                                 QStringLiteral("uuid"),
+                                                                 &uuid,
+                                                                 QStringLiteral("name"),
+                                                                 &name,
+                                                                 errorMessage);
+  if(!result)
+    return false;
+
+  QJsonArray ports;
+  result = readJsonArray(jsonObject,
+                         QStringLiteral("ports"),
+                         &ports,
+                         errorMessage);
+
   if(!result)
     return false;
 
   MscComponentItem* newMscComponent = new MscComponentItem(name);
   newMscComponent->setUuid(uuid);
-  PortItem* portItem = const_cast<PortItem*>(newMscComponent->defaultPort());
-  portItem->setUuid(defaultPortUuid);
+
+  uint pSz = ports.size();
+  for (uint pIndex = 0; pIndex < pSz; ++pIndex) {
+    QUuid pUuid;
+    QString pName;
+    readProperty_2<QUuid,QString>(ports[pIndex].toObject(),
+                                  QStringLiteral("uuid"),
+                                  &pUuid,
+                                  QStringLiteral("name"),
+                                  &pName,
+                                  errorMessage);
+    if(pName == QStringLiteral("_defaultPort")){
+      PortItem* portItem = const_cast<PortItem*>(newMscComponent->defaultPort());
+      portItem->setUuid(pUuid);
+    }
+    else{
+      newMscComponent->addPort(new PortItem(pName,pUuid));
+    }
+  }
+
+  QJsonArray attArr = jsonObject.value("attributes").toArray();
+  for(QJsonValue val : attArr){
+    QJsonObject attObj = val.toObject();
+    if(attObj.isEmpty()){
+      continue;
+    }
+    newMscComponent->addAttribute(attObj.value("name").toString(),
+                                  attObj.value("dataType").toString(),
+                                  attObj.value("initValue").toString(),
+                                  errorMessage);
+  }
+
 
   result = mscComponentsModel->addComponent(newMscComponent, errorMessage);
   if(!result)
@@ -133,7 +151,7 @@ bool ReadMscSequence<MscSequencseModel>::operator()(const QJsonObject& jsonObjec
   {
     if(errorMessage)
       *errorMessage += QObject::tr("sequence '%1' could not be added to model '%2'!")
-                       .arg(name).arg(sequenceModel->name());
+        .arg(name).arg(sequenceModel->name());
     return false;
   }
   newMscSequence->setUuid(uuid);
@@ -237,8 +255,8 @@ bool ReadMscStep<SystemModel,MscStepsModel>::operator()(const QJsonObject& jsonO
   else if(stepType==constants::FragmentStepId)
   {
     result = ReadFragmentStep<SystemModel, MscStepsModel>(this->_systemModel)(jsonObject,
-                                                                           mscStepsModel,
-                                                                           errorMessage);
+                                                                              mscStepsModel,
+                                                                              errorMessage);
     if(!result)
       return false;
   }
@@ -275,7 +293,7 @@ bool ReadMessageStep<SystemModel, MscStepsModel>::operator()(const QJsonObject& 
   {
     if(errorMessage)
       *errorMessage += QObject::tr("source port with id '%1' for message with id '%2' not found!")
-                       .arg(sourcePortUuid.toString()).arg(uuid.toString());
+        .arg(sourcePortUuid.toString()).arg(uuid.toString());
     return false;
   }
 
@@ -284,7 +302,7 @@ bool ReadMessageStep<SystemModel, MscStepsModel>::operator()(const QJsonObject& 
   {
     if(errorMessage)
       *errorMessage += QObject::tr("target port with id '%1' for message with id '%2' not found!")
-                       .arg(targetPortUuid.toString()).arg(uuid.toString());
+        .arg(targetPortUuid.toString()).arg(uuid.toString());
     return false;
   }
 
@@ -310,7 +328,7 @@ bool ReadMessageStep<SystemModel, MscStepsModel>::operator()(const QJsonObject& 
     {
       if(errorMessage)
         *errorMessage += QObject::tr("signal with id '%1' for message with id '%2' not found!")
-                         .arg(signalId.toString()).arg(uuid.toString());
+          .arg(signalId.toString()).arg(uuid.toString());
       return false;
     }
     newMessage->setSignal(messageSignal);
@@ -364,7 +382,7 @@ bool ReadCheckMessageStep<SystemModel, MscStepsModel>::operator()(const QJsonObj
   {
     if(errorMessage)
       *errorMessage += QObject::tr("source port with id '%1' for message with id '%2' not found!")
-                       .arg(sourcePortUuid.toString()).arg(uuid.toString());
+        .arg(sourcePortUuid.toString()).arg(uuid.toString());
     return false;
   }
 
@@ -373,7 +391,7 @@ bool ReadCheckMessageStep<SystemModel, MscStepsModel>::operator()(const QJsonObj
   {
     if(errorMessage)
       *errorMessage += QObject::tr("target port with id '%1' for message with id '%2' not found!")
-                       .arg(targetPortUuid.toString()).arg(uuid.toString());
+        .arg(targetPortUuid.toString()).arg(uuid.toString());
     return false;
   }
 
@@ -394,6 +412,10 @@ bool ReadCheckMessageStep<SystemModel, MscStepsModel>::operator()(const QJsonObj
   if(result)
     newCheckMessage->setReferenceId(referenceId);
 
+  for(QString key : jsonObject.value("assign").toObject().keys()){
+    newCheckMessage->appendAssign(key, jsonObject.value("assign").toObject().value(key).toString());
+  }
+
   ///optional signal + param values///////
   QUuid signalId;
   result=readProperty<QUuid>(jsonObject, QStringLiteral("signal"), &signalId);
@@ -404,7 +426,7 @@ bool ReadCheckMessageStep<SystemModel, MscStepsModel>::operator()(const QJsonObj
     {
       if(errorMessage)
         *errorMessage += QObject::tr("signal with id '%1' for message with id '%2' not found!")
-                         .arg(signalId.toString()).arg(uuid.toString());
+          .arg(signalId.toString()).arg(uuid.toString());
       return false;
     }
     newCheckMessage->setSignal(messageSignal);
@@ -455,7 +477,7 @@ bool ReadStatementStep<SystemModel, MscStepsModel>::operator()(const QJsonObject
   {
     if(errorMessage)
       *errorMessage += QObject::tr("component with id '%1' for statement step with id '%2' not found!")
-                       .arg(componentUuid.toString()).arg(uuid.toString());
+        .arg(componentUuid.toString()).arg(uuid.toString());
     return false;
   }
 
@@ -495,7 +517,7 @@ bool ReadTimeoutStep<SystemModel, MscStepsModel>::operator()(const QJsonObject& 
   {
     if(errorMessage)
       *errorMessage += QObject::tr("component with id '%1' for timeout step with id '%2' not found!")
-                       .arg(componentUuid.toString()).arg(uuid.toString());
+        .arg(componentUuid.toString()).arg(uuid.toString());
     return false;
   }
 
@@ -504,7 +526,7 @@ bool ReadTimeoutStep<SystemModel, MscStepsModel>::operator()(const QJsonObject& 
   {
     if(errorMessage)
       *errorMessage += QObject::tr("timer with id '%1' for timeout step with id '%2' not found!")
-                       .arg(timerUuid.toString()).arg(uuid.toString());
+        .arg(timerUuid.toString()).arg(uuid.toString());
     return false;
   }
 
@@ -548,7 +570,7 @@ bool ReadTimerStep<SystemModel, MscStepsModel>::operator()(const QJsonObject& js
   {
     if(errorMessage)
       *errorMessage += QObject::tr("component with id '%1' for timer step with id '%2' not found!")
-                       .arg(componentUuid.toString()).arg(uuid.toString());
+        .arg(componentUuid.toString()).arg(uuid.toString());
     return false;
   }
 
@@ -564,8 +586,8 @@ bool ReadTimerStep<SystemModel, MscStepsModel>::operator()(const QJsonObject& js
 
 template<class SystemModel, class MscStepsModel>
 bool ReadFragmentStep<SystemModel, MscStepsModel>::operator()(const QJsonObject& jsonObject,
-                                                           MscStepsModel* mscStepsModel,
-                                                           QString* errorMessage)
+                                                              MscStepsModel* mscStepsModel,
+                                                              QString* errorMessage)
 {
   using namespace base::io;
 
@@ -576,13 +598,13 @@ bool ReadFragmentStep<SystemModel, MscStepsModel>::operator()(const QJsonObject&
   QString fragmentType;
   QString duration;
   bool result = readProperty_3<QUuid,QString,QString>(jsonObject,
-                                                           QStringLiteral("uuid"),
-                                                           &uuid,
-                                                           QStringLiteral("fragmentType"),
-                                                           &fragmentType,
-                                                           QStringLiteral("duration"),
-                                                           &duration,
-                                                           errorMessage);
+                                                      QStringLiteral("uuid"),
+                                                      &uuid,
+                                                      QStringLiteral("fragmentType"),
+                                                      &fragmentType,
+                                                      QStringLiteral("duration"),
+                                                      &duration,
+                                                      errorMessage);
   if(!result)
     return false;
 
@@ -590,21 +612,21 @@ bool ReadFragmentStep<SystemModel, MscStepsModel>::operator()(const QJsonObject&
   MscFragmentItem* newFragment = nullptr;
   if(intFragmentType==FragmentType::AlternativeFragment)
   {
-      newFragment = mscStepsModel->addFragment(FragmentType::AlternativeFragment);
-      if(!newFragment)
-        return false;
+    newFragment = mscStepsModel->addFragment(FragmentType::AlternativeFragment);
+    if(!newFragment)
+      return false;
   }
   else if(intFragmentType==FragmentType::DurationFragment)
   {
-      newFragment = mscStepsModel->addFragment(FragmentType::DurationFragment);
-      if(!newFragment)
-        return false;
+    newFragment = mscStepsModel->addFragment(FragmentType::DurationFragment);
+    if(!newFragment)
+      return false;
   }
   else
   {
     if(errorMessage)
       *errorMessage += QObject::tr("fragment '%1' not supported!")
-                       .arg(fragmentType);
+        .arg(fragmentType);
     return false;
   }
 
@@ -623,23 +645,23 @@ bool ReadFragmentStep<SystemModel, MscStepsModel>::operator()(const QJsonObject&
 
 template<class SystemModel, class MscFragmentModel>
 bool readMscRegions(const QJsonObject& jsonObject,
-                  SystemModel* systemModel,
-                  MscFragmentModel* mscFragmentModel,
-                  QString* errorMessage)
+                    SystemModel* systemModel,
+                    MscFragmentModel* mscFragmentModel,
+                    QString* errorMessage)
 {
   Q_ASSERT(mscFragmentModel);
 
   return readMscRegions(jsonObject,
-                      mscFragmentModel,
-                      ReadFragmentRegion<SystemModel, MscFragmentModel>(systemModel),
-                      errorMessage);
+                        mscFragmentModel,
+                        ReadFragmentRegion<SystemModel, MscFragmentModel>(systemModel),
+                        errorMessage);
 }
 
 template<class MscRegionsModel, class ReadMscRegionFunctor>
 bool readMscRegions(const QJsonObject& jsonObject,
-                      MscRegionsModel* mscRegionsModel,
-                      ReadMscRegionFunctor readMscRegionFunctor,
-                      QString* errorMessage)
+                    MscRegionsModel* mscRegionsModel,
+                    ReadMscRegionFunctor readMscRegionFunctor,
+                    QString* errorMessage)
 {
   using namespace base::io;
 
@@ -653,8 +675,8 @@ bool readMscRegions(const QJsonObject& jsonObject,
 
 template<class SystemModel, class MscFragmentModel>
 bool ReadFragmentRegion<SystemModel, MscFragmentModel>::operator()(const QJsonObject& jsonObject,
-                                                    MscFragmentModel* mscFragmentModel,
-                                                    QString* errorMessage)
+                                                                   MscFragmentModel* mscFragmentModel,
+                                                                   QString* errorMessage)
 {
   using namespace base::io;
 
@@ -665,13 +687,13 @@ bool ReadFragmentRegion<SystemModel, MscFragmentModel>::operator()(const QJsonOb
   QString name;
   QString condition;
   bool result = readProperty_3<QUuid,QString, QString>(jsonObject,
-                                              QStringLiteral("uuid"),
-                                              &uuid,
-                                              QStringLiteral("name"),
-                                              &name,
-                                              QStringLiteral("condition"),
-                                              &condition,
-                                              errorMessage);
+                                                       QStringLiteral("uuid"),
+                                                       &uuid,
+                                                       QStringLiteral("name"),
+                                                       &name,
+                                                       QStringLiteral("condition"),
+                                                       &condition,
+                                                       errorMessage);
   if(!result)
     return false;
 
@@ -680,7 +702,7 @@ bool ReadFragmentRegion<SystemModel, MscFragmentModel>::operator()(const QJsonOb
   {
     if(errorMessage)
       *errorMessage += QObject::tr("fragment region '%1' could not be added to fragment '%2'!")
-                       .arg(name).arg(fragmentType2string(mscFragmentModel->fragmentType()));
+        .arg(name).arg(fragmentType2string(mscFragmentModel->fragmentType()));
     return false;
   }
   newMscFragmentRegion->setUuid(uuid);
@@ -699,3 +721,6 @@ bool ReadFragmentRegion<SystemModel, MscFragmentModel>::operator()(const QJsonOb
 } // namespace io
 } // namespace msc
 } // namespace model
+
+
+#endif // MODEL_MSC_IO_READMSCMODEL_INL

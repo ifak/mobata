@@ -1,0 +1,18 @@
+I-Logix-RPY-Archive version 8.5.2 * 1159120
+
+- filesTable = { IRPYRawContainer 
+	- size = 11;
+	- value = "Project.rpy" ""
+	"Project_rpy\\ATestPackage.sbs" "ATestPackage"
+	"Project_rpy\\Default.sbs" "Default"
+	"Project_rpy\\DefaultComponent.cmp" "DefaultComponent"
+	"Project_rpy\\Design.sbs" "Design"
+	"Project_rpy\\Event_Collection.sbs" "Event_Collection"
+	"Project_rpy\\SubPackage.sbs" "Design::SubPackage"
+	"Project_rpy\\package_0.sbs" "Design::package_0"
+	"Project_rpy\\package_4.sbs" "package_4"
+	"Project_rpy\\package_5.sbs" "package_5"
+	"Projects.rpl" ""
+	
+}
+

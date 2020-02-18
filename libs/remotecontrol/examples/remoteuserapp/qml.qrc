@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>RemoteUserPage.qml</file>
+        <file>RemoteUserPageForm.ui.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>SettingsPage.qml</file>
+        <file>SettingsPageForm.ui.qml</file>
+        <file>ClearMessagesButton.ui.qml</file>
+    </qresource>
+</RCC>

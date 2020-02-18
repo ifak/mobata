@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #pragma once
 
 #include "graphlayout_global.hpp"
@@ -39,19 +38,19 @@ public:
                    QWidget* parent = nullptr);
 
     virtual ~MscQuickWidget();
+    void setMscSequence(model::msc::MscSequence const* mscSequence);
 
 private:
     void reset();
 
 protected:
-    void setMscSequence(model::msc::MscSequence const* mscSequence);
     model::msc::MscSequence const* mscSequence() const;
 
 public:
     void addFixMscComponent(model::msc::MscComponentItem const* mscComponent);
 
 public:
-    bool layout(QString* errorString);
+    bool layout(QString* errorString, bool simple = false);
 
 public:
     //Design

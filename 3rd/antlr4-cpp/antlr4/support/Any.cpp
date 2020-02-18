@@ -11,3 +11,6 @@ Any::~Any()
 {
     delete _ptr;
 }
+
+Any::Base::~Base() {
+}

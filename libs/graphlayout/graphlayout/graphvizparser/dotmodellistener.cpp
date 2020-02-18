@@ -1,21 +1,4 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-#include "dotmodellistener.hpp"
+#include "dotmodellistener.h"
 
 #include "layoutnode.hpp"
 #include "layoutedge.hpp"
@@ -53,7 +36,7 @@ void DotModelListener::enterSubgraph(DOTParser::SubgraphContext *ctx) {
   //select node
   int nodeCounter = 0;
   graphlayout::LayoutNode* actualNode=nullptr;
-  for(graphlayout::LayoutNode* node: _graph->allNodes()) {
+  foreach (graphlayout::LayoutNode* node, _graph->allNodes()) {
     if(node->nodes().isEmpty()==false){
       if(nodeCounter==subgraphNumber){
         actualNode=node;
@@ -73,7 +56,7 @@ void DotModelListener::enterSubgraph(DOTParser::SubgraphContext *ctx) {
   tmp = tmp.replace("]","");
   tmplist=tmp.split(",");
 
-  for(QString line: tmplist) {
+  foreach (QString line, tmplist) {
     if(line.split("=").first()=="bb"){
       if(line.split("=").length()>=2){
         int lineIndex = tmplist.indexOf(line);
@@ -113,7 +96,7 @@ void DotModelListener::enterNode_stmt(DOTParser::Node_stmtContext *ctx) {
   int nodeNumber = tmp.toInt();
   int nodeCounter = 0;
   graphlayout::LayoutNode* actualNode=nullptr;
-  for(graphlayout::LayoutNode* node: _graph->allNodes()) {
+  foreach (graphlayout::LayoutNode* node, _graph->allNodes()) {
     if(node->nodes().isEmpty()==true){
       if(nodeCounter==nodeNumber){
         actualNode=node;
@@ -138,7 +121,7 @@ void DotModelListener::enterNode_stmt(DOTParser::Node_stmtContext *ctx) {
   tmp = tmp.replace('\"',"");
   //write data to graph
   QStringList attr = tmp.split(",");
-  for(QString line: attr) {
+  foreach (QString line, attr) {
     tmplist = line.split("=");
     if(tmplist.length()<=2){
       if(tmplist.first()=="height"){
@@ -184,7 +167,7 @@ void DotModelListener::enterEdge_stmt(DOTParser::Edge_stmtContext *ctx) {
   input.replace("[",",");
 
   QStringList tmplist  = input.split(",");
-  for(QString line: tmplist) {
+  foreach (QString line, tmplist) {
     if(line.split("=").first()=="label"){
       if(line.split("=").length()>=2){
         QString tmp = line.split("=")[1];

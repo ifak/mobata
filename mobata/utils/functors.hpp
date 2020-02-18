@@ -1,8 +1,6 @@
 /*
  * This file is part of mobata.
  *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
  * mobata is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #pragma once
 
 #include <limits>
@@ -93,9 +90,11 @@ template<typename PodType> inline bool hasPrev(const PodType currentValue);
 /*!
 Specialized template operation returns whether \a currentValue has a previous int-value.
 */
-template<> inline bool hasPrev<int>(const int currentValue)
+template<> inline bool hasPrev<int>(const int /*currentValue */)
 {
-  return (currentValue > std::numeric_limits<int>::max());
+  //this does not make sense!
+  //comparing the value is already useless after whatever was loaded into the rValue with the name currentValue
+  return false; //(currentValue > std::numeric_limits<int>::max());
 }
 
 /*!
@@ -103,6 +102,8 @@ Specialized template operation returns whether \a currentValue has a previous do
 */
 template<> inline bool hasPrev(const double currentValue)
 {
+  //i am not sure if that makes sense?
+  //something inside a double can't exceed the limits of double
   return (currentValue > std::numeric_limits<double>::max());
 }
 
@@ -273,9 +274,9 @@ bool string2podvalue<int>(const QString& valueString,
 {
   Q_ASSERT(podValue);
 
-  bool error=false;
-  *podValue=valueString.toInt(&error);
-  if(error)
+  bool ok=false;
+  *podValue=valueString.toInt(&ok);
+  if(ok == false)
   {
     if(errorMessage)
       *errorMessage+=QObject::tr("string '%1' could not be converted to a int value!")
@@ -296,12 +297,13 @@ bool string2podvalue<double>(const QString& valueString,
 {
   Q_ASSERT(podValue);
 
-  bool error=false;
-  *podValue=valueString.toDouble(&error);
-  if(error)
+  bool ok=false;
+  //double value;
+  *podValue=valueString.toDouble(&ok);
+  if(ok == false)
   {
     if(errorMessage)
-      *errorMessage+=QObject::tr("string '%1' could not be converted to a double value!")
+      *errorMessage+=QObject::tr("string '%1' could not be converted to a double nor an integer value!")
                      .arg(valueString);
     return false;
   }

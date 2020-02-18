@@ -8,7 +8,7 @@
 #include <mobata/model/msc/msc_types.hpp>
 #include <mobata/model/msc/msccheckmessageitem.hpp>
 #include <mobata/model/msc/msctimeoutitem.hpp>
-#include <mobata/model/irdl/req.hpp>
+#include <mobata/model/requirement/req.hpp>
 
 using namespace dslparser::irdl;
 using namespace dslparser;
@@ -254,15 +254,15 @@ void IrdlProposalsTest::irdlProposalTest_7()
   QCOMPARE((int)Alt, proposal.proposalType);
 
   proposal = command.irdlProposals().at(1);
-  QCOMPARE(QString("Check"), proposal.proposalText);
-  QCOMPARE((int)Check, proposal.proposalType);
-
-  proposal = command.irdlProposals().at(2);
   QCOMPARE(QString("Duration"), proposal.proposalText);
   QCOMPARE((int)Duration, proposal.proposalType);
 
+  proposal = command.irdlProposals().at(2);
+  QCOMPARE(QString("ReceiveMessage"), proposal.proposalText);
+  QCOMPARE((int)Check, proposal.proposalType);
+
   proposal = command.irdlProposals().at(3);
-  QCOMPARE(QString("Message"), proposal.proposalText);
+  QCOMPARE(QString("SendMessage"), proposal.proposalText);
   QCOMPARE((int)Message, proposal.proposalType);
 
   proposal = command.irdlProposals().at(4);
@@ -399,7 +399,7 @@ void IrdlProposalsTest::irdlProposalTest_11()
   QString errorString;
   bool result = command.execute(&errorString);
   QCOMPARE(result, true);
-  QCOMPARE(7, command.irdlProposals().count());
+  QCOMPARE(6, command.irdlProposals().count());
 
   DslProposal proposal = command.irdlProposals().at(0);
   QCOMPARE(QString("decl.globalAttribute"), proposal.proposalText);
@@ -412,20 +412,20 @@ void IrdlProposalsTest::irdlProposalTest_11()
   proposal = command.irdlProposals().at(2);
   QCOMPARE(QString("irdLDecl.system.initialized"), proposal.proposalText);
   QCOMPARE((int)Identifier, proposal.proposalType);
-
+  /*
   proposal = command.irdlProposals().at(3);
   QCOMPARE(QString("msg.retValue"), proposal.proposalText);
   QCOMPARE((int)Identifier, proposal.proposalType);
-
-  proposal = command.irdlProposals().at(4);
+  */
+  proposal = command.irdlProposals().at(3);
   QCOMPARE(QString("retValue"), proposal.proposalText);
   QCOMPARE((int)Identifier, proposal.proposalType);
 
-  proposal = command.irdlProposals().at(5);
+  proposal = command.irdlProposals().at(4);
   QCOMPARE(QString("system.initialized"), proposal.proposalText);
   QCOMPARE((int)Identifier, proposal.proposalType);
 
-  proposal = command.irdlProposals().at(6);
+  proposal = command.irdlProposals().at(5);
   QCOMPARE(QString("system1.initialized"), proposal.proposalText);
   QCOMPARE((int)Identifier, proposal.proposalType);
   return;

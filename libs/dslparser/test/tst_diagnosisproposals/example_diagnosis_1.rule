@@ -1,0 +1,18 @@
+import <example1.components> as testsystem
+
+Rule{
+    name:     rule1;
+    description: "test";
+    enabled:  false;
+    Declaration {
+
+    
+        Component testsystem.car2X.pRseApp as device_1;
+
+        Signal stimuli (int x, int y);
+        Signal winmodVar(string value);
+        Signal response (bool res, int value);
+
+    }
+  Sequence{
+

@@ -1,5 +1,21 @@
+/*
+ * This file is part of mobata.
+ *
+ * mobata is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
 
-// Generated from C:/Users/j05kraus/Private/SWDevelop/mobata_oss_dev/libs/dslparser/dslparser/grammars/TestCaseDecl.g4 by ANTLR 4.7.2
+ * mobata is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+// Generated from C:/Users/s_phs.DESKTOP-9GA53KK/Documents/mobata/libs/dslparser/dslparser/grammars/TestCaseDecl.g4 by ANTLR 4.7
 
 #pragma once
 
@@ -43,14 +59,14 @@ public:
   virtual void enterCheckDecl(TestCaseDeclParser::CheckDeclContext * /*ctx*/) override { }
   virtual void exitCheckDecl(TestCaseDeclParser::CheckDeclContext * /*ctx*/) override { }
 
-  virtual void enterCheckDeclBody(TestCaseDeclParser::CheckDeclBodyContext * /*ctx*/) override { }
-  virtual void exitCheckDeclBody(TestCaseDeclParser::CheckDeclBodyContext * /*ctx*/) override { }
-
   virtual void enterTimerDecl(TestCaseDeclParser::TimerDeclContext * /*ctx*/) override { }
   virtual void exitTimerDecl(TestCaseDeclParser::TimerDeclContext * /*ctx*/) override { }
 
   virtual void enterTimeOutDecl(TestCaseDeclParser::TimeOutDeclContext * /*ctx*/) override { }
   virtual void exitTimeOutDecl(TestCaseDeclParser::TimeOutDeclContext * /*ctx*/) override { }
+
+  virtual void enterAccuracyDecl(TestCaseDeclParser::AccuracyDeclContext * /*ctx*/) override { }
+  virtual void exitAccuracyDecl(TestCaseDeclParser::AccuracyDeclContext * /*ctx*/) override { }
 
   virtual void enterAltDecl(TestCaseDeclParser::AltDeclContext * /*ctx*/) override { }
   virtual void exitAltDecl(TestCaseDeclParser::AltDeclContext * /*ctx*/) override { }
@@ -61,6 +77,9 @@ public:
   virtual void enterAltBodyOptional(TestCaseDeclParser::AltBodyOptionalContext * /*ctx*/) override { }
   virtual void exitAltBodyOptional(TestCaseDeclParser::AltBodyOptionalContext * /*ctx*/) override { }
 
+  virtual void enterUuidDecl(TestCaseDeclParser::UuidDeclContext * /*ctx*/) override { }
+  virtual void exitUuidDecl(TestCaseDeclParser::UuidDeclContext * /*ctx*/) override { }
+
   virtual void enterEnabledDecl(TestCaseDeclParser::EnabledDeclContext * /*ctx*/) override { }
   virtual void exitEnabledDecl(TestCaseDeclParser::EnabledDeclContext * /*ctx*/) override { }
 
@@ -69,6 +88,9 @@ public:
 
   virtual void enterFunctionCall(TestCaseDeclParser::FunctionCallContext * /*ctx*/) override { }
   virtual void exitFunctionCall(TestCaseDeclParser::FunctionCallContext * /*ctx*/) override { }
+
+  virtual void enterFunctionCall2(TestCaseDeclParser::FunctionCall2Context * /*ctx*/) override { }
+  virtual void exitFunctionCall2(TestCaseDeclParser::FunctionCall2Context * /*ctx*/) override { }
 
   virtual void enterComponentIdPath(TestCaseDeclParser::ComponentIdPathContext * /*ctx*/) override { }
   virtual void exitComponentIdPath(TestCaseDeclParser::ComponentIdPathContext * /*ctx*/) override { }

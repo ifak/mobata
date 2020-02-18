@@ -11,7 +11,8 @@ LIBS -= -l$$ANTLR4_NAME
 
 DISTFILES += \
     antlr4/tree/xpath/XPathLexer.g4 \
-    antlr4/tree/xpath/XPathLexer.tokens
+    antlr4/tree/xpath/XPathLexer.tokens \
+    README.txt
 
 HEADERS += \
     antlr4/atn/AbstractPredicateTransition.h \

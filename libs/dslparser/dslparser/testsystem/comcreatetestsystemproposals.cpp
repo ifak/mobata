@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "comcreatetestsystemproposals.hpp"
 
 #include "combuildtestsystemmodel.hpp"
@@ -35,6 +18,8 @@
 #include "TestSystemDeclLexer.h"
 #include "TestSystemDeclBaseListener.h"
 #include "testsystemmodellistener.hpp"
+
+#include <mobata/memory_leak_start.hpp>
 
 using namespace utils;
 using namespace model::ts;
@@ -220,7 +205,7 @@ protected:
     if(i < sz2 && !test) return;
     sz = curPath.size();
     QStringList list = homeDir.entryList();
-    for(QString option: list) {
+    foreach (QString option, list) {
       QString test = option;
       test.resize(sz);
       if(test == curPath)
@@ -235,7 +220,7 @@ protected:
     bool end = false;
     if(!this->_testSystemDeclModel)
       return;
-    ModelItem* model = nullptr;
+    ModelItem* model = 0;
     QString rest = "";
     bool failure = false;
     while(i<t_sz && !end){
@@ -253,7 +238,7 @@ protected:
       for(int j = i;j<t_sz;i++){
         Token* token = tokens->get(i);
         if(token->getType() == TestSystemDeclParser::SEMI){
-          model = nullptr;
+          model = 0;
           j = t_sz;
         }
         else if(token->getType() == TestSystemDeclParser::ID){
@@ -275,7 +260,7 @@ protected:
     int q_sz = rest.size();
     if(failure) return;
     QHash<QString, ModelItem*> models = getComponents(model);
-    for(QString option: models.keys()) {
+    foreach (QString option, models.keys()) {
       QString test = option;
       test.resize(q_sz);
       if(test == rest)
@@ -293,7 +278,7 @@ protected:
   QHash<QString, ModelItem*> getComponents(ModelItem* model){
     QHash<QString, ModelItem*> models;
     if(!model){
-      for(QString m: this->_importItems.keys()) {
+      foreach (QString m, this->_importItems.keys()) {
         models.insert(m,_importItems.value(m));
       }
       model = this->_testSystemDeclModel;

@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "combuildspenatfile.hpp"
 #include "../dslerror.hpp"
 
@@ -158,12 +141,18 @@ void ComBuildSpenatFile::transitionDecl(QString* content, const TransitionItem* 
   Q_ASSERT(model);
 
   const model::base::ATriggerItem* trigger = model->triggerItem();
-  if(trigger){
-    if(trigger->triggerType() == ATriggerItem::EventTrigger){
+  if(trigger == nullptr)
+  {
+    AddPtrString(content) << QStringLiteral("SignalTransition {") + nextLine(tabCount + 2);
+    nameDecl(content, model->name());
+  }
+  else if(trigger->triggerType() == ATriggerItem::EventTrigger)
+  {
+    AddPtrString(content) << QStringLiteral("SignalTransition {") + nextLine(tabCount + 2);
+    nameDecl(content, model->name());
+
       const SignalTriggerItem* signalTrigger = static_cast<const SignalTriggerItem*>(trigger);
       Q_ASSERT(signalTrigger);
-      AddPtrString(content) << QStringLiteral("SignalTransition {") + nextLine(tabCount + 2);
-      nameDecl(content, model->name());
       if(!signalTrigger->triggerSignal()->name().isEmpty())
         AddPtrString(content) << nextLine(tabCount + 2) +
                                  QStringLiteral("signal: ") +
@@ -175,18 +164,18 @@ void ComBuildSpenatFile::transitionDecl(QString* content, const TransitionItem* 
                                  QStringLiteral("port: ") +
                                  signalTrigger->port()->name() +
                                  QStringLiteral(";");
-    }
-    else if(trigger->triggerType() == ATriggerItem::TimeoutTrigger){
-      const TimeoutTriggerItem* timeoutTrigger = static_cast<const TimeoutTriggerItem*>(trigger);
-      Q_ASSERT(timeoutTrigger);
-      AddPtrString(content) << QStringLiteral("TimeoutTransition {") + nextLine(tabCount + 2);
-      nameDecl(content, model->name());
-      AddPtrString(content) << nextLine(tabCount + 2) +
-                               QStringLiteral("value: ") +
-                               QString::number(timeoutTrigger->value(), 'f', 1) +
-                               QStringLiteral(";");
+  }
+  else if(trigger->triggerType() == ATriggerItem::TimeoutTrigger)
+  {
+    const TimeoutTriggerItem* timeoutTrigger = static_cast<const TimeoutTriggerItem*>(trigger);
+    Q_ASSERT(timeoutTrigger);
+    AddPtrString(content) << QStringLiteral("TimeoutTransition {") + nextLine(tabCount + 2);
+    nameDecl(content, model->name());
+    AddPtrString(content) << nextLine(tabCount + 2) +
+                             QStringLiteral("value: ") +
+                             QString::number(timeoutTrigger->value(), 'f', 1) +
+                             QStringLiteral(";");
 
-    }
   }
 
   writeMultiLineString(content,
@@ -199,10 +188,12 @@ void ComBuildSpenatFile::transitionDecl(QString* content, const TransitionItem* 
                        model->actions(),
                        tabCount + 2);
 
-  if(!model->prePlaceArcs().isEmpty()){
+  if(!model->prePlaceArcs().isEmpty())
+  {
     AddPtrString(content) << nextLine(tabCount + 2) +
                              QStringLiteral("pre: ");
-    for(const PrePlaceArc* prePlace : model->prePlaceArcs()){
+    for(const PrePlaceArc* prePlace : model->prePlaceArcs())
+    {
       AddPtrString(content) << prePlace->place()->name();
       if(prePlace != model->prePlaceArcs().back())
         AddPtrString(content) << QStringLiteral(",");
@@ -211,10 +202,12 @@ void ComBuildSpenatFile::transitionDecl(QString* content, const TransitionItem* 
     }
   }
 
-  if(!model->postPlaceArcs().isEmpty()){
+  if(!model->postPlaceArcs().isEmpty())
+  {
     AddPtrString(content) << nextLine(tabCount + 2) +
                              QStringLiteral("post: ");
-    for(const PostPlaceArc* postPlace : model->postPlaceArcs()){
+    for(const PostPlaceArc* postPlace : model->postPlaceArcs())
+    {
       AddPtrString(content) << postPlace->place()->name();
       if(postPlace != model->postPlaceArcs().back())
         AddPtrString(content) << QStringLiteral(",");

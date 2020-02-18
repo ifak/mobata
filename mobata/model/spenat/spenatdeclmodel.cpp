@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "spenatdeclmodel.hpp"
 
 #include "junctionitem.hpp"
@@ -36,6 +17,8 @@
 #include <QJsonObject>
 #include <QDebug>
 
+#include "../../memory_leak_start.hpp"
+
 using namespace utils;
 
 namespace model{
@@ -45,7 +28,7 @@ class SpenatDeclModel::Private
 {
   friend class SpenatDeclModel;
 
-  Private()	:	_junctionsParentItem(nullptr)
+  Private()	:	_junctionsParentItem(0)
   {}
 
 public:
@@ -115,13 +98,13 @@ graph::IGraph::ConstNodeSet SpenatDeclModel::nodes() const
 {
   ConstNodeSet nodes;
 
-  for(PlaceItem const* place: this->places())
+  foreach(PlaceItem const* place, this->places())
     nodes.append(place);
 
-  for(TransitionItem const* transition: this->transitions())
+  foreach(TransitionItem const* transition, this->transitions())
     nodes.append(transition);
 
-  for(JunctionItem const* junction: this->junctions())
+  foreach(JunctionItem const* junction, this->junctions())
     nodes.append(junction);
 
   return nodes;
@@ -132,7 +115,7 @@ ArcItem *SpenatDeclModel::arc(const QUuid &arcUuid)
   if(ArcItem* spenatBaseArc=SpenatBaseModel::arc(arcUuid))
     return spenatBaseArc;
 
-  for (JunctionItem const* junction: this->junctions())
+  foreach (JunctionItem const* junction, this->junctions())
   {
     if(JunctionArc const* junctionSource=junction->sourceArc(arcUuid))
       return const_cast<JunctionArc*>(junctionSource);
@@ -141,28 +124,31 @@ ArcItem *SpenatDeclModel::arc(const QUuid &arcUuid)
       return const_cast<JunctionArc*>(junctionTarget);
   }
 
-  return nullptr;
+  return 0;
 }
 
 graph::IGraph::ConstArcSet SpenatDeclModel::arcs() const
 {
   ConstArcSet arcs;
 
-  for(TransitionItem const* transitionItem: this->transitions())
+  foreach(TransitionItem const* transitionItem,
+          this->transitions())
   {
-    for(PrePlaceArc const* prePlaceArc: transitionItem->prePlaceArcs())
+    foreach(PrePlaceArc const* prePlaceArc, transitionItem->prePlaceArcs())
       arcs.append(prePlaceArc);
 
-    for(PostPlaceArc const* postPlaceArc: transitionItem->postPlaceArcs())
+    foreach(PostPlaceArc const* postPlaceArc,transitionItem->postPlaceArcs())
       arcs.append(postPlaceArc);
   }
 
-  for (JunctionItem const* junction: this->junctions())
+  foreach (JunctionItem const* junction, this->junctions())
   {
-    for(JunctionArc const* junctionSource: junction->sources())
+    foreach(JunctionArc const* junctionSource,
+            junction->sources())
       arcs.append(junctionSource);
 
-    for(JunctionArc const* junctionTarget: junction->targets())
+    foreach(JunctionArc const* junctionTarget,
+            junction->targets())
       arcs.append(junctionTarget);
   }
 
@@ -297,11 +283,11 @@ void serializeJunctions(SpenatDeclModel const* declModel,
                         QJsonObject* json_baseModel)
 {
   QJsonArray json_junctions;
-  for(JunctionItem const* junctionItem: declModel->junctions())
+  foreach(JunctionItem const* junctionItem, declModel->junctions())
   {
     QJsonObject json_junction;
     QJsonArray json_junctionSources;
-    for(JunctionArc const* juncSourceArc : junctionItem->sources())
+    foreach(JunctionArc const* juncSourceArc, junctionItem->sources())
     {
       QJsonObject json_junctionSource;
       json_junctionSource["uuid"]=juncSourceArc->uuid().toString();
@@ -316,7 +302,8 @@ void serializeJunctions(SpenatDeclModel const* declModel,
     json_junction["sources"]=json_junctionSources;
 
     QJsonArray json_junctionTargets;
-    for(JunctionArc const* juncTargetArc: junctionItem->targets())
+    foreach(JunctionArc const* juncTargetArc,
+            junctionItem->targets())
     {
       QJsonObject json_junctionTarget;
 

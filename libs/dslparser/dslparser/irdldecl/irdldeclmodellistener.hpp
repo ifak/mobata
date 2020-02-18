@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #pragma once
 
 #include "IrdlCommonDeclBaseListener.h"
@@ -69,8 +68,8 @@ public:
 
 
 protected:
-  void enterIrdlDecl(IrdlCommonDeclParser::IrdlDeclContext *ctx);
-  void exitIrdlDecl(IrdlCommonDeclParser::IrdlDeclContext *ctx);
+  void enterIrdlDecl(IrdlCommonDeclParser::IrdlDeclContext *ctx) override;
+  void exitIrdlDecl(IrdlCommonDeclParser::IrdlDeclContext *ctx) override;
 
   void enterAliasDef(IrdlCommonDeclParser::AliasDefContext * ctx) override;
   void exitAliasDef(IrdlCommonDeclParser::AliasDefContext * ctx) override;

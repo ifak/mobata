@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "testcasemodellistener.hpp"
 #include "TestCaseDeclLexer.h"
 
@@ -24,12 +7,15 @@
 #include <dslparser/testsystem/combuildtestsystemmodel.hpp>
 #include <mobata/model/msc/msc_types.hpp>
 #include <mobata/model/msc/msctimeoutitem.hpp>
+#include <dslparser/common/combuildbasemodel.hpp>
 
 
 #include <QStack>
 #include <QDebug>
 #include <QFile>
 #include <QFileInfo>
+
+#include <mobata/memory_leak_start.hpp>
 
 using namespace model::ts;
 using namespace model::base;
@@ -44,9 +30,7 @@ class TestCaseModelListener::Private
 {
   friend class TestCaseModelListener;
 
-  //imported files
-  QString*                                    _importedSutFileName;
-  QString*                                    _importedTestSystemFileName;
+  model::ts::TestSystemItem* _testSystemItem;
 
   ///parse data////
   int                                         _errorAtPos;
@@ -55,25 +39,22 @@ class TestCaseModelListener::Private
   QStack<model::msc::MscFragmentRegionItem*>  _currentReg;
   QStack<model::msc::MscFragmentItem*>        _currentAlt;
   ImportModelItem                             _importItems;
+  ImportModelModel                             _importModels;
   QString                                     _praefix;
   bool                                        _isInData = false;
   bool                                        _isInDecl = false;
   QHash<model::base::ModelItem*,QVector<int>> _modelPositionOfCheck;
   QHash<QString,model::base::ModelItem*>      _testCaseItems;
   SutItemPtr                                  _sutItem = nullptr;
-  TestSystemItemPtr                           _testSystemItem = nullptr;
   model::base::ModelItem*                     _currentSignal;
 
-  Private(QString* importedSutFileName,
-          QString* importedTestSystemFileName,
+  Private(model::ts::TestSystemItem* testSystemItem,
           const QString& praefix)
-    : _importedSutFileName(importedSutFileName),
-      _importedTestSystemFileName(importedTestSystemFileName),
-      _currentPathItem(0),
+    : _testSystemItem(testSystemItem),
+      _currentPathItem(nullptr),
       _importItems(),
       _praefix(praefix),
-      _sutItem(new SutItem()),
-      _testSystemItem(new TestSystemItem(this->_sutItem.data()))
+      _sutItem(new SutItem())
   {}
 };
 
@@ -81,13 +62,12 @@ class TestCaseModelListener::Private
 
 TestCaseModelListener::TestCaseModelListener(TestCaseItem* testCaseDeclModel,
                                              DslErrorList* testcaseErrors,
-                                             QString* importedSutFileName,
-                                             QString* importedTestSystemFileName,
+                                             model::ts::TestSystemItem* testSystemItem,
                                              const QString& praefix,
                                              TokenTextLocations* keywordTextLocations,
                                              ModelTextLocations* modelTextLocations)
   : BaseClass(testCaseDeclModel, testcaseErrors, keywordTextLocations, modelTextLocations),
-    _d(new Private(importedSutFileName, importedTestSystemFileName, praefix))
+    _d(new Private(testSystemItem, praefix))
 {}
 
 TestCaseModelListener::~TestCaseModelListener()
@@ -125,8 +105,6 @@ void TestCaseModelListener::enterTestCaseDecl(TestCaseDeclParser::TestCaseDeclCo
 
   return addKeywordLocation<TestCaseDeclParser::TestCaseDeclContext, KeywordFunction, TokenTextLocations>
       (ctx, &TestCaseDeclParser::TestCaseDeclContext::TestCaseID, this->_keywordTextLocations, TestCase);
-
-  return;
 }
 
 void TestCaseModelListener::exitTestCaseDecl(TestCaseDeclParser::TestCaseDeclContext *ctx)
@@ -139,8 +117,8 @@ void TestCaseModelListener::exitTestCaseDecl(TestCaseDeclParser::TestCaseDeclCon
   this->_listenerStates.pop();
 
   this->_modelTextLocations->insert(this->_model->index(),
-                                    TokenTextLocation(ctx->getStart()->getStartIndex(),
-                                                      ctx->getStop()->getStopIndex(),
+                                    TokenTextLocation(static_cast<int>(ctx->getStart()->getStartIndex()),
+                                                      static_cast<int>(ctx->getStop()->getStopIndex()),
                                                       TestCase));
 
 
@@ -202,6 +180,37 @@ void TestCaseModelListener::exitNameDecl(TestCaseDeclParser::NameDeclContext* ct
   return;
 }
 
+void TestCaseModelListener::enterUuidDecl(TestCaseDeclParser::UuidDeclContext* ctx)
+{
+  Q_ASSERT(ctx);
+
+  if(ctx->exception)
+    return;//an error occured! -> but still handled by error listener!
+
+  typedef  tree::TerminalNode* (TestCaseDeclParser::UuidDeclContext::*KeywordFunction)();
+
+  return addKeywordLocation<TestCaseDeclParser::UuidDeclContext, KeywordFunction, TokenTextLocations>
+      (ctx, &TestCaseDeclParser::UuidDeclContext::UuidID, this->_keywordTextLocations, Attribute);
+}
+
+void TestCaseModelListener::exitUuidDecl(TestCaseDeclParser::UuidDeclContext* ctx)
+{
+  Q_ASSERT(ctx);
+
+  if(ctx->exception)
+    return;//an error occured! -> but still handled by error listener!
+
+  Q_ASSERT(ctx->val);
+
+  QString name=QString::fromStdString(ctx->val->getText());
+  name = name.mid(1,name.length()-2);
+
+  Q_ASSERT(this->_model);
+  this->_model->setUuid(name);
+
+  return;
+}
+
 void TestCaseModelListener::enterEnabledDecl(TestCaseDeclParser::EnabledDeclContext *ctx)
 {
   Q_ASSERT(ctx);
@@ -249,69 +258,26 @@ void TestCaseModelListener::exitImportPathBody(TestCaseDeclParser::ImportPathBod
   if(ctx->exception || !ctx->importFileBody())
     return;
 
-  QString path = QString::fromStdString(ctx->importFileBody()->getText());
-  path = _d->_praefix + path;
-  QFile file(path);
-  if(!file.open(QFile::ReadOnly))
-    qDebug()<<"file '"<<path<<"' could not be opened!";
-  QString docText(file.readAll());
-  file.close();
+  if(this->_d->_testSystemItem == nullptr){
+    QString path = QString::fromStdString(ctx->importFileBody()->getText());
+    path = _d->_praefix + path;
+    QFile file(path);
+    if(!file.open(QFile::ReadOnly))
+      qDebug()<<"file '"<<path<<"' could not be opened!";
+    QString docText(file.readAll());
+    file.close();
 
-  /*if(path.endsWith(QString("sut")))
+    if(path.endsWith(QLatin1String("testsystem")))
     {
-        if(this->_d->_importedSutFileName)
-            *this->_d->_importedSutFileName=QFileInfo(path).canonicalFilePath();
-
-        dslparser::sut::ComBuildSutModel command(docText, this->_d->_sutItem.data());
-        QString errorString;
-        bool result = command.execute(&errorString);
-        if(result){
-            QString name;
-            if(ctx->importAs() && ctx->importAs()->contextID()){
-                name = QString::fromStdString(ctx->importAs()->contextID()->getText());
-            }
-            else{
-                name = path;
-            }
-            this->_d->_importItems.insert(name,sutModel);
-        }
-        else
-        {
-            Token* startToken = ctx->getStart();
-            Token* stopToken = ctx->getStop();
-            Q_ASSERT(startToken);
-            Q_ASSERT(stopToken);
-            if(this->_errors){
-                this->_errors->append(DslError(QString("Import File contains errors..."),
-                                               startToken->getLine(),
-                                               startToken->getCharPositionInLine()));
-                this->_errors->append(command.errors());
-            }
-        }
-    }
-    else */if(path.endsWith(QLatin1String("testsystem")))
-  {
-    if(this->_d->_importedTestSystemFileName)
-      *this->_d->_importedTestSystemFileName=QFileInfo(path).canonicalFilePath();
-
-    dslparser::testsystem::ComBuildTestSystemModel command(docText,
-                                                           this->_d->_testSystemItem.data(),
-                                                           this->_d->_praefix);
-    QString errorString;
-    bool result = command.execute(&errorString);
-    if(result)
-    {
-      if(this->_d->_importedSutFileName)
-      {
-        if(!this->_d->_importedSutFileName->isEmpty())
-        {
-          appendDslError(ctx->getStart(),
-                         QStringLiteral("There is only one imported sut file allowed!"));
-        }
-        else
-          *this->_d->_importedSutFileName=command.importedSutFile();
-      }
-
+      this->_d->_testSystemItem = new model::ts::TestSystemItem();
+      this->_d->_testSystemItem->setSutItem(new model::ts::SutItem());
+      this->_model->appendRow(this->_d->_testSystemItem);
+      dslparser::testsystem::ComBuildTestSystemModel command(docText,
+                                                             this->_d->_testSystemItem,
+                                                             this->_d->_praefix);
+      QString errorString;
+      bool result = command.execute(&errorString);
+      Q_UNUSED(result);
       QString name;
       if(ctx->importAs() && ctx->importAs()->contextID())
       {
@@ -321,24 +287,18 @@ void TestCaseModelListener::exitImportPathBody(TestCaseDeclParser::ImportPathBod
       {
         name = path;
       }
-      this->_d->_importItems.insert(name,this->_d->_testSystemItem.data());
+      this->_d->_importItems.insert(name,this->_d->_testSystemItem);
 
       auto importedModelItems = command.importItems();
-      for(const QString& key : importedModelItems.keys())
+      for(const QString& key : importedModelItems.keys()){
         this->_d->_importItems.insert(key,importedModelItems.value(key));
+      }
     }
-    else{
-      appendDslError(ctx->getStart(),
-                     QStringLiteral("Import File contains errors..."));
-      if(this->_errors)
-        this->_errors->append(command.errors());
-    }
-  }
-  else if(path.endsWith(QString("decl"))){
-
+  }else{
+    this->_d->_importItems.insert("testsystem",this->_d->_testSystemItem);
+    this->_d->_importItems.insert("sut",const_cast<model::ts::SutItem*>(this->_d->_testSystemItem->sutItem()));
   }
 }
-
 void TestCaseModelListener::exitAliasDef(TestCaseDeclParser::AliasDefContext *ctx)
 {
   if(ctx->exception)
@@ -359,8 +319,8 @@ void TestCaseModelListener::exitAltDecl(TestCaseDeclParser::AltDeclContext *ctx)
   if(!ctx)
     return;
   this->_modelTextLocations->insert(this->_d->_currentAlt.at(0)->index(),
-                                    TokenTextLocation(ctx->getStart()->getStartIndex(),
-                                                      ctx->getStop()->getStopIndex(),
+                                    TokenTextLocation(static_cast<int>(ctx->getStart()->getStartIndex()),
+                                                      static_cast<int>(ctx->getStop()->getStopIndex()),
                                                       Alt));
   _d->_currentAlt.pop_front();
 
@@ -386,8 +346,8 @@ void TestCaseModelListener::exitAltBody(TestCaseDeclParser::AltBodyContext *ctx)
     return;
   _d->_currentReg.at(0)->setCondition(getExpression(ctx->expression()));
   this->_modelTextLocations->insert(_d->_currentReg.at(0)->index(),
-                                    TokenTextLocation(ctx->getStart()->getStartIndex(),
-                                                      ctx->getStop()->getStopIndex(),
+                                    TokenTextLocation(static_cast<int>(ctx->getStart()->getStartIndex()),
+                                                      static_cast<int>(ctx->getStop()->getStopIndex()),
                                                       Region));
 
   _d->_currentReg.pop_front();
@@ -405,8 +365,8 @@ void TestCaseModelListener::exitTimerDecl(TestCaseDeclParser::TimerDeclContext *
 {
   if(ctx->exception)
     return;
-  model::msc::MscComponentItem* item = 0;
-  TimerItem* timer = 0;
+  model::msc::MscComponentItem* item = nullptr;
+  TimerItem* timer = nullptr;
   if(getItemFromPath(ctx->idPath())){
     if(dynamic_cast<BaseComponentItem*>(this->_d->_currentPathItem)){
       item = dynamic_cast<BaseComponentItem*>(this->_d->_currentPathItem);
@@ -428,7 +388,7 @@ void TestCaseModelListener::exitTimerDecl(TestCaseDeclParser::TimerDeclContext *
           return;
         }
         timer->setValue(value.toDouble());
-        _d->_testCaseItems.insert(name,(ModelItem*)timer);
+        _d->_testCaseItems.insert(name, dynamic_cast<ModelItem*>(timer));
 
       }
       else{
@@ -447,8 +407,8 @@ void TestCaseModelListener::exitTimerDecl(TestCaseDeclParser::TimerDeclContext *
   typedef  tree::TerminalNode* (TestCaseDeclParser::TimerDeclContext::*KeywordFunction)();
 
   this->_modelTextLocations->insert(timer->index(),
-                                    TokenTextLocation(ctx->getStart()->getStartIndex(),
-                                                      ctx->getStop()->getStopIndex(),
+                                    TokenTextLocation(static_cast<int>(ctx->getStart()->getStartIndex()),
+                                                      static_cast<int>(ctx->getStop()->getStopIndex()),
                                                       Timer));
 
   return addKeywordLocation<TestCaseDeclParser::TimerDeclContext, KeywordFunction, TokenTextLocations>
@@ -462,7 +422,7 @@ void TestCaseModelListener::exitMessageDecl(TestCaseDeclParser::MessageDeclConte
   if(getItemFromPath(ctx->idPath().at(0))){
     const PortItem* source;
     if((source = dynamic_cast<PortItem*>(_d->_currentPathItem)));
-    else if(model::msc::MscComponentItem* sourceComp = dynamic_cast<model::msc::MscComponentItem*>(_d->_currentPathItem)){
+    else if( auto sourceComp = dynamic_cast<model::msc::MscComponentItem*>(_d->_currentPathItem)){
       source = sourceComp->defaultPort();
     }
     else {
@@ -488,8 +448,8 @@ void TestCaseModelListener::exitMessageDecl(TestCaseDeclParser::MessageDeclConte
       }
       auto test = testCaseItems().value(QString::fromStdString(ctx->functionCall()->idPath()->contextID().back()->getText()));
       model::base::SignalItem* signal = test ?
-                                          static_cast<model::base::SignalItem*>(test)
-                                        : _model->signal(QString::fromStdString(ctx->functionCall()->idPath()->contextID().back()->getText()));
+            static_cast<model::base::SignalItem*>(test)
+          : _model->signal(QString::fromStdString(ctx->functionCall()->idPath()->contextID().back()->getText()));
       if(signal){
         MessageItem* msg;
         if(_d->_currentReg.size())
@@ -505,7 +465,7 @@ void TestCaseModelListener::exitMessageDecl(TestCaseDeclParser::MessageDeclConte
           bool test = false;
           if(auto asCtx = bdy->literalValue()){
             if(asCtx->TrueID() || asCtx->FalseID()){
-              val = (asCtx->FalseID() == 0);
+              val = (asCtx->FalseID() == nullptr);
             }
             else if(asCtx->REAL()){
               val = (QString::fromStdString(asCtx->REAL()->getText()).toDouble());
@@ -532,8 +492,8 @@ void TestCaseModelListener::exitMessageDecl(TestCaseDeclParser::MessageDeclConte
         }
 
         this->_modelTextLocations->insert(msg->index(),
-                                          TokenTextLocation(ctx->getStart()->getStartIndex(),
-                                                            ctx->getStop()->getStopIndex(),
+                                          TokenTextLocation(static_cast<int>(ctx->getStart()->getStartIndex()),
+                                                            static_cast<int>(ctx->getStop()->getStopIndex()),
                                                             Message));
 
 
@@ -577,66 +537,111 @@ void TestCaseModelListener::exitMessageDecl(TestCaseDeclParser::MessageDeclConte
   }
 }
 
-void TestCaseModelListener::enterCheckDeclBody(TestCaseDeclParser::CheckDeclBodyContext *ctx)
-{
-  TestCaseDeclParser::CheckDeclContext* parentCtx = (TestCaseDeclParser::CheckDeclContext*)ctx->parent;
-  Q_ASSERT(parentCtx);
-  Q_ASSERT(parentCtx->contextID());
-
-  auto test = testCaseItems().value(QString::fromStdString(parentCtx->contextID()->getText()));
-  model::base::SignalItem* signal = test ?
-                                      static_cast<model::base::SignalItem*>(test)
-                                    : _model->signal(QString::fromStdString(parentCtx->contextID()->getText()));
-  _d->_currentSignal = signal;
-  this->_currentMessageSignalItem=signal;
-
-  return;
-}
-
 void TestCaseModelListener::exitCheckDecl(TestCaseDeclParser::CheckDeclContext *ctx)
 {
-  if(!ctx                  || ctx->exception ||
-     !ctx->checkDeclBody() || ctx->checkDeclBody()->exception) return;
+  if(!ctx || !ctx->idPath().size()) return;
   if(getItemFromPath(ctx->idPath().at(0))){
     const PortItem* source;
     if((source = dynamic_cast<PortItem*>(_d->_currentPathItem)));
-    else{
-      source = dynamic_cast<model::msc::MscComponentItem*>(_d->_currentPathItem)->defaultPort();
+    else if( auto sourceComp = dynamic_cast<model::msc::MscComponentItem*>(_d->_currentPathItem)){
+      source = sourceComp->defaultPort();
     }
-    if(getItemFromPath(ctx->idPath().at(1))){
+    else {
+      appendDslError(ctx->getStart(),
+                     QStringLiteral("Unknown error in Message declaration!"));
+      return;
+    }
+    if((ctx->idPath().size() >1) && getItemFromPath(ctx->idPath().at(1))){
       const PortItem* target;
       if((target = dynamic_cast<PortItem*>(_d->_currentPathItem)));
-      else{
-        target = dynamic_cast<model::msc::MscComponentItem*>(_d->_currentPathItem)->defaultPort();
+      else if( auto targetComp = dynamic_cast<model::msc::MscComponentItem*>(_d->_currentPathItem)){
+        target = targetComp->defaultPort();
       }
-      auto test = testCaseItems().value(QString::fromStdString(ctx->contextID()->getText()));
+      else {
+        appendDslError(ctx->getStart(),
+                       QStringLiteral("Unknown error in Message declaration!"));
+        return;
+      }
+      if(!ctx->functionCall2() || ctx->functionCall2()->exception){
+        appendDslError(ctx->getStart(),
+                       QStringLiteral("No Signal for message given!"));
+        return;
+      }
+      auto test = testCaseItems().value(QString::fromStdString(ctx->functionCall2()->idPath()->contextID().back()->getText()));
       model::base::SignalItem* signal = test ?
-                                          static_cast<model::base::SignalItem*>(test)
-                                        : _model->signal(QString::fromStdString(ctx->contextID()->getText()));
+            static_cast<model::base::SignalItem*>(test)
+          : _model->signal(QString::fromStdString(ctx->functionCall2()->idPath()->contextID().back()->getText()));
       if(signal){
-        model::msc::MscCheckMessageItem* check = new model::msc::MscCheckMessageItem(source,target);
-        check->setSignal(signal);
-        check->setGuard(QString::fromStdString(
-                          ctx->getStart()->getInputStream()->getText(
-                            misc::Interval(ctx->checkDeclBody()->LBRACKET()->getSymbol()->getStartIndex()+1,ctx->checkDeclBody()->RBRACKET()->getSymbol()->getStopIndex()-1))));
-        if(auto timeCtx = ctx->checkDeclBody()->timeOutDecl()){
-          QString value = "";
-          if(timeCtx->REAL()) value = QString::fromStdString(timeCtx->REAL()->getText());
-          else if(timeCtx->INT()) value = QString::fromStdString(timeCtx->INT()->getText());
-          int val = value.toInt();
-          if(timeCtx->SekID()) val *= 1000;
-          check->setTimeout(val);
-        }
+        CheckMessageItem* msg;
         if(_d->_currentReg.size())
-          _d->_currentReg.at(0)->addMessage(check);
+          msg = _d->_currentReg.at(0)->addCheck(source,target,"");
         else
-          _model->addMessage(check);
-        this->_modelTextLocations->insert(check->index(),
-                                          TokenTextLocation(ctx->getStart()->getStartIndex(),
-                                                            ctx->getStop()->getStopIndex(),
-                                                            Check));
+          msg = _model->addCheck(source,target,"");
+        msg->setSignal(signal);
+        QListIterator<model::base::ParamItem*> paramIt(signal->params());
+        auto bdy = ctx->functionCall2()->functionCallBody();
+        while(bdy){
+          auto param = paramIt.next();
+          QVariant val;
+          bool test = false;
+          if(auto asCtx = bdy->literalValue()){
+            if(asCtx->TrueID() || asCtx->FalseID()){
+              val = (asCtx->FalseID() == nullptr);
+            }
+            else if(asCtx->REAL()){
+              val = (QString::fromStdString(asCtx->REAL()->getText()).toDouble());
+            }
+            else if(asCtx->INT()){
+              val = (QString::fromStdString(asCtx->INT()->getText()).toInt());
+            }
+            else if(asCtx->STRING()){
+              val = (QString::fromStdString(asCtx->STRING()->getText()));
+            }
+            else{
+              test = true;
+            }
+          }
+          else if (bdy->signalParamName()) {
+            //TODO: no idea
+          }
+          else if (bdy->attributeName()) {
+            //TODO: no idea
+          }
+          if(!test && param) msg->addParamValue(param,val);
+          if(bdy->functionCallBodyOptional()) bdy = bdy->functionCallBodyOptional()->functionCallBody();
+          else break;
+        }
 
-//        _d->_currentSignal = 0;
+        if(auto timeCtx = ctx->timeOutDecl()){
+          QString value = "";
+          if(timeCtx->REAL()){
+            value = QString::fromStdString(timeCtx->REAL()->getText());
+          }else if(timeCtx->INT()){
+            value = QString::fromStdString(timeCtx->INT()->getText());
+          }
+          int val = value.toInt();
+          if(timeCtx->SekID()){
+            val *= 1000;
+          }
+          msg->setTimeout(val);
+        }
+        if(auto accCtx = ctx->accuracyDecl()){
+          QString value = "";
+          double val = 0.0;
+          if(accCtx->REAL()){
+            value = QString::fromStdString(accCtx->REAL()->getText());
+            val = value.toDouble();
+          }else if(accCtx->INT()){
+            value = QString::fromStdString(accCtx->INT()->getText());
+            val = static_cast<double>(value.toInt());
+          }
+          msg->setAccuracy(val);
+        }
+
+        this->_modelTextLocations->insert(msg->index(),
+                                          TokenTextLocation(static_cast<int>(ctx->getStart()->getStartIndex()),
+                                                            static_cast<int>(ctx->getStop()->getStopIndex()),
+                                                            Check));
 
 
         typedef  tree::TerminalNode* (TestCaseDeclParser::CheckDeclContext::*KeywordFunction)();
@@ -647,29 +652,36 @@ void TestCaseModelListener::exitCheckDecl(TestCaseDeclParser::CheckDeclContext *
       else{
         appendDslError(ctx->getStart(),
                        QStringLiteral("No Signal with name \"")
-                       + QString::fromStdString(ctx->contextID()->getText())
+                       + QString::fromStdString(ctx->functionCall2()->idPath()->getText())
                        + QStringLiteral("\" found!"));
         return;
       }
     }
-    else{
+    else if(ctx->idPath().size() >1){
       appendDslError(ctx->getStart(),
                      QStringLiteral("No Component with name \"")
                      + QString::fromStdString(ctx->idPath().at(1)->getText())
                      + QStringLiteral("\" found!"));
       return;
     }
+    else{
+      if(this->_errors)
+        this->_errors->append(DslError(QString("Wrong Syntax!")));
+      return;
+    }
   }
   else{
+
+    Token* startToken = ctx->getStart();
+    Token* stopToken = ctx->getStop();
+    Q_ASSERT(startToken);
+    Q_ASSERT(stopToken);
     appendDslError(ctx->getStart(),
                    QStringLiteral("No Component with name \"")
                    + QString::fromStdString(ctx->idPath().at(0)->getText())
                    + QStringLiteral("\" found!"));
     return;
   }
-
-  this->_d->_currentSignal=nullptr;
-  this->_currentMessageSignalItem=nullptr;
 }
 
 void TestCaseModelListener::exitTimeOutDecl(TestCaseDeclParser::TimeOutDeclContext *ctx)
@@ -685,14 +697,14 @@ void TestCaseModelListener::exitIdStatement(TestCaseDeclParser::IdStatementConte
 
   if(ctx->exception||!ctx->idPath())
     return;
-  AttributeItem* item = 0;
+  AttributeItem* item = nullptr;
   if(!_d->_isInData){
     if(getItemFromPath(ctx->idPath())){
       if(!ctx->assignmentDef()){
         if(CheckMessageItem* item = dynamic_cast<CheckMessageItem*>(this->_d->_currentPathItem)){
           if(_d->_currentAlt.size()==0){
-            this->_model->addMessage((MessageItem*)item);
-            item = dynamic_cast<CheckMessageItem*>((model::msc::MscSequenceItem*)this->_model->sequenceItem(item->uuid()));
+            this->_model->addMessage(dynamic_cast<MessageItem*>(item));
+            item = dynamic_cast<CheckMessageItem*>(const_cast<model::msc::MscSequenceItem*>(this->_model->sequenceItem(item->uuid())));
             int start,end;
             if(this->_d->_modelPositionOfCheck.contains(item)){
               QVector<int> vals = this->_d->_modelPositionOfCheck.value(item);
@@ -712,8 +724,8 @@ void TestCaseModelListener::exitIdStatement(TestCaseDeclParser::IdStatementConte
           }
           else{
             if(_d->_currentReg.size()){
-              _d->_currentReg.at(0)->addMessage((MessageItem*)item);
-              item = dynamic_cast<CheckMessageItem*>((model::msc::MscSequenceItem*)this->_d->_currentReg.at(0)->sequenceItem(item->uuid()));
+              _d->_currentReg.at(0)->addMessage(dynamic_cast<MessageItem*>(item));
+              item = dynamic_cast<CheckMessageItem*>(const_cast<model::msc::MscSequenceItem*>(this->_d->_currentReg.at(0)->sequenceItem(item->uuid())));
             }
             else{
               appendDslError(ctx->getStart(),
@@ -788,15 +800,15 @@ void TestCaseModelListener::exitIdStatement(TestCaseDeclParser::IdStatementConte
   }
   else if(!_d->_isInData){
     BaseComponentItem* comp = getOwner(item);
-    model::msc::MscStatementItem* statItem = 0;
+    model::msc::MscStatementItem* statItem = nullptr;
     if(_d->_currentReg.size())
       statItem = _d->_currentReg.at(0)->addStatement(comp,QString::fromStdString(ctx->getText()));
     else
       statItem = _model->addStatement(comp,QString::fromStdString(ctx->getText()));
 
     this->_modelTextLocations->insert(statItem->index(),
-                                      TokenTextLocation(ctx->getStart()->getStartIndex(),
-                                                        ctx->getStop()->getStopIndex(),
+                                      TokenTextLocation(static_cast<int>(ctx->getStart()->getStartIndex()),
+                                                        static_cast<int>(ctx->getStop()->getStopIndex()),
                                                         Statement));
   }
 }
@@ -823,16 +835,51 @@ bool TestCaseModelListener::getItemFromPath(TestCaseDeclParser::IdPathContext* p
   //                                       startToken->getCharPositionInLine()));
   //      return 0;
   //  }
-  for(auto contId: path->contextID()) {
+  model::base::BaseModel* baseModel = nullptr;
+  foreach (auto contId, path->contextID()) {
     curPos++;
     QString name = QString::fromStdString(contId->getText());
     if(name == "this" || name == "timeout"){
       //      path = path->idPath();
       continue;
     }
+    if(baseModel){
+      bool test = false;
+      auto attributes = baseModel->attributes();
+      int sz3 = attributes.size();
+      for(int i = 0;i<sz3 && !test;i++){
+        if(attributes.at(i)->name() == name){
+          this->_d->_currentPathItem = dynamic_cast<ModelItem*>(attributes.at(i));
+          test = true;
+        }
+      }
+      auto compSignals = baseModel->getSignals();
+      int sz2 = compSignals.size();
+      for(int i = 0;i<sz2;i++){
+        if(compSignals.at(i)->name() == name){
+          this->_d->_currentPathItem = dynamic_cast<ModelItem*>(compSignals.at(i));
+          i = sz2;
+          test = true;
+        }
+      }
+      //If Component wasn't found!!
+      if(!test){
+        appendDslError(path->getStart(),
+                       QStringLiteral("Incorrect Path to Component!"));
+        _d->_errorAtPos = curPos;
+        return false;
+      }
+      baseModel = nullptr;
+      continue;
+    }
     if(!this->_d->_currentPathItem){
       if(this->_d->_importItems.contains(name)){
         this->_d->_currentPathItem = this->_d->_importItems.value(name);
+        //        path = path->idPath();
+        continue;
+      }
+      else if(this->_d->_importModels.contains(name)){
+        baseModel = this->_d->_importModels.value(name);
         //        path = path->idPath();
         continue;
       }
@@ -851,7 +898,7 @@ bool TestCaseModelListener::getItemFromPath(TestCaseDeclParser::IdPathContext* p
       bool test = false;
       for(int i = 0;i<sz;i++){
         if(components.at(i)->name() == name){
-          this->_d->_currentPathItem = (ModelItem*) components.at(i);
+          this->_d->_currentPathItem = dynamic_cast<ModelItem*>(const_cast<model::msc::MscComponentItem*>(components.at(i)));
           i = sz;
           test = true;
         }
@@ -860,7 +907,7 @@ bool TestCaseModelListener::getItemFromPath(TestCaseDeclParser::IdPathContext* p
       int sz3 = attributes.size();
       for(int i = 0;i<sz3 && !test;i++){
         if(attributes.at(i)->name() == name){
-          this->_d->_currentPathItem = (ModelItem*) attributes.at(i);
+          this->_d->_currentPathItem = dynamic_cast<ModelItem*>(attributes.at(i));
           test = true;
         }
       }
@@ -868,7 +915,7 @@ bool TestCaseModelListener::getItemFromPath(TestCaseDeclParser::IdPathContext* p
       int sz2 = compSignals.size();
       for(int i = 0;i<sz2;i++){
         if(compSignals.at(i)->name() == name){
-          this->_d->_currentPathItem = (ModelItem*) compSignals.at(i);
+          this->_d->_currentPathItem = dynamic_cast<ModelItem*>(compSignals.at(i));
           i = sz2;
           test = true;
         }
@@ -887,7 +934,7 @@ bool TestCaseModelListener::getItemFromPath(TestCaseDeclParser::IdPathContext* p
       bool test = false;
       for(int i = 0;i<sz2 && !test;i++){
         if(attributes.at(i)->name() == name){
-          this->_d->_currentPathItem = (ModelItem*) attributes.at(i);
+          this->_d->_currentPathItem = dynamic_cast<ModelItem*>(attributes.at(i));
           test = true;
         }
       }
@@ -998,33 +1045,30 @@ QString TestCaseModelListener::getExpression(TestCaseDeclParser::ExpressionConte
 
 model::msc::MscComponentItem *TestCaseModelListener::getOwner(AttributeItem *item)
 {
-  QStack<BaseComponentItem*> componentTree;
-  for(auto attribute: _model->attributes()) {
-    if(item->index() == attribute->index()){
-      return (BaseComponentItem*)_model;
-    }
-  }
-  int sz = _d->_importItems.size();
-  auto it = _d->_importItems.begin();
-  for(int i = 0;i<sz;i++){
-    if(TestSystemItem* currentTestSystemModel = dynamic_cast<TestSystemItem*>(it.value())){
-      for(auto comp: currentTestSystemModel->components()) {
-        componentTree.push_front((BaseComponentItem*)comp);
+  for(model::base::ComponentItem* comp : this->_d->_testSystemItem->components()){
+    model::msc::MscComponentItem* m_comp = dynamic_cast<model::msc::MscComponentItem*>(comp);
+    for(AttributeItem* att : m_comp->attributes()){
+      if(item->index() == att->index()){
+        return m_comp;
       }
     }
-    else componentTree.push_front(dynamic_cast<BaseComponentItem*>(it.value()));
-    it++;
   }
-  while(componentTree.size()){
-    BaseComponentItem* currentModel = componentTree.at(0);
-    for(auto attribute: currentModel->attributes()) {
-      if(item->index() == attribute->index()){
-        return currentModel;
+
+  for(const model::base::ComponentItem* comp : this->_d->_testSystemItem->sutItem()->components()){
+    model::msc::MscComponentItem* m_comp = const_cast<model::msc::MscComponentItem*>(dynamic_cast<const model::msc::MscComponentItem*>(comp));
+    for(AttributeItem* att : m_comp->attributes()){
+      if(item->index() == att->index()){
+        return m_comp;
       }
     }
-    componentTree.pop_front();
   }
-  return 0;
+  model::base::ComponentItem* comp = this->_d->_testSystemItem->components().first();
+  model::msc::MscComponentItem* m_comp = dynamic_cast<model::msc::MscComponentItem*>(comp);
+  if(m_comp){
+    return m_comp;
+  }else{
+    return nullptr;
+  }
 }
 
 void TestCaseModelListener::visitErrorNode(tree::ErrorNode* node)
@@ -1032,6 +1076,24 @@ void TestCaseModelListener::visitErrorNode(tree::ErrorNode* node)
   Q_UNUSED(node);
   return;
 }
+/*
+bool TestCaseModelListener::addImportedModel(const QString &name, base::BaseModel *model, QString *errorMessage) const
+{
+    if(_d->_importModels.contains(name)){
+        if(errorMessage)  errorMessage->append(QString("The BaseModel with the name \"%1\" already exists!").arg(name));
+        return false;
+    }
+    _d->_importModels.insert(name,model);
+    return true;
+}
+
+void TestCaseModelListener::removeImportedModel(const QString &name) const
+{
+    if(_d->_importModels.contains(name)){
+        delete _d->_importModels.value(name);
+        _d->_importModels.remove(name);
+    }
+}*/
 
 } // namespace testcase
 } // namespace dslparser

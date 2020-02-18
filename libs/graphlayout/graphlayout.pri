@@ -36,12 +36,12 @@ CONFIG(debug, debug|release) {
 
 LIBS += -l$$GRAPHLAYOUT_NAME
 
-isEmpty(MOBATA_LIB_PATH){
-  MOBATA_LIB_PATH = $$PWD/../../mobata
+isEmpty(MOBATAWIDGETS_LIB_PATH){
+  MOBATAWIDGETS_LIB_PATH = $$PWD/../mobatawidgets
 }
-MOBATA_PRIFILE = $${MOBATA_LIB_PATH}/mobata.pri
-requires(exists($${MOBATA_PRIFILE}))
-include($${MOBATA_PRIFILE})
+MOBATAWIDGETS_PRIFILE = $${MOBATAWIDGETS_LIB_PATH}/mobatawidgets.pri
+requires(exists($${MOBATAWIDGETS_PRIFILE}))
+include($${MOBATAWIDGETS_PRIFILE})
 
 isEmpty(ANTLR_HOME) {
   ANTLR_HOME = $$PWD/../../3rd/antlr4-cpp

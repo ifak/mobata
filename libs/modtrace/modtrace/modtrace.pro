@@ -17,8 +17,8 @@ win32-msvc*:QMAKE_CXXFLAGS += -wd4267
 win64-msvc*:QMAKE_CXXFLAGS += -wd4267
 
 HEADERS += \
-    comcreatemodetrace.hpp \
-    modtrace_global.hpp
+    modtrace_global.h \
+    comcreatemodetrace.hpp
 
 SOURCES += \
     comcreatemodetrace.cpp

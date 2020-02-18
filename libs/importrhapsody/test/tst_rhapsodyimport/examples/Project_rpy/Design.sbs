@@ -1,0 +1,61 @@
+I-Logix-RPY-Archive version 8.5.2 C++ 1159120
+{ ISubsystem 
+	- _id = GUID 0a061b39-84dd-48ff-931a-591527f14839;
+	- _myState = 8192;
+	- _name = "Design";
+	- _theMainDiagram = { IHandle 
+		- _m2Class = "IDiagram";
+		- _filename = "SubPackage.sbs";
+		- _subsystem = "Design::SubPackage";
+		- _class = "";
+		- _name = "objectmodeldiagram_19";
+		- _id = GUID 5edfe479-91ce-4764-a402-ef84cdd50e60;
+	}
+	- _lastID = 1;
+	- Declaratives = { IRPYRawContainer 
+		- size = 2;
+		- value = 
+		{ ISubsystem 
+			- fileName = "SubPackage";
+			- _id = GUID 60f9773e-d5d2-40c1-94de-11b50dc744aa;
+		}
+		{ ISubsystem 
+			- fileName = "package_0";
+			- _id = GUID 7094b5b8-3f44-4012-81a9-5a2507e354de;
+		}
+	}
+	- weakCGTime = 3.15.2018::10:18:33;
+	- strongCGTime = 12.11.2017::14:23:0;
+	- _defaultComposite = GUID 532968ec-112a-4cd2-9ffc-1e74cb4908b4;
+	- _eventsBaseID = -1;
+	- Classes = { IRPYRawContainer 
+		- size = 2;
+		- value = 
+		{ IClass 
+			- _id = GUID 532968ec-112a-4cd2-9ffc-1e74cb4908b4;
+			- _myState = 40960;
+			- _name = "TopLevel";
+			- weakCGTime = 3.15.2018::10:18:33;
+			- strongCGTime = 12.11.2017::14:23:0;
+			- _multiplicity = "";
+			- _itsStateChart = { IHandle 
+				- _m2Class = "";
+			}
+			- _classModifier = Unspecified;
+		}
+		{ IClass 
+			- _id = GUID 3d492214-367e-4d5a-8f31-b85eb73b257e;
+			- _myState = 8192;
+			- _name = "AWrongClass";
+			- weakCGTime = 12.11.2017::14:20:35;
+			- strongCGTime = 12.11.2017::14:20:35;
+			- _multiplicity = "";
+			- _itsStateChart = { IHandle 
+				- _m2Class = "";
+			}
+			- _classModifier = Unspecified;
+		}
+	}
+	- _configurationRelatedTime = 1.2.1990::0:0:0;
+}
+

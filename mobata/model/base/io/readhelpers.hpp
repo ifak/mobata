@@ -1,8 +1,6 @@
 /*
  * This file is part of mobata.
  *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
  * mobata is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,8 +14,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#pragma once
+#ifndef MODEL_BASE_IO_READHELPERS_HPP
+#define MODEL_BASE_IO_READHELPERS_HPP
 
 #include <QJsonValue>
 #include <QJsonObject>
@@ -87,7 +85,7 @@ bool readProperty(const QJsonObject& jsonObject,
   {
     if(errorMessage)
       *errorMessage += QObject::tr("property '%1' is not available!")
-                       .arg(propertyKey);
+        .arg(propertyKey);
     return  false;
   }
 
@@ -214,14 +212,14 @@ bool readJsonArray(const QJsonObject& jsonObject,
   {
     if(errorMessage)
       *errorMessage += QObject::tr("json-array '%1' is not available!")
-                       .arg(arrayKey);
+        .arg(arrayKey);
     return  false;
   }
   else if(!value.isArray())
   {
     if(errorMessage)
       *errorMessage += QObject::tr("json value of '%1' is not a json-array!")
-                       .arg(arrayKey);
+        .arg(arrayKey);
     return  false;
   }
 
@@ -245,14 +243,14 @@ bool readObjectArray(const QJsonObject& jsonObject,
   if(!result)
     return false;
 
-  for(const QJsonValue& jsonValue: jsonArray)
+  foreach(const QJsonValue& jsonValue, jsonArray)
   {
     if(!jsonValue.isObject())
     {
       if(errorMessage)
         *errorMessage += QObject::tr("json value of array '%1' "
                                      "is not a json-object")
-                         .arg(arrayKey);
+          .arg(arrayKey);
       return false;
     }
     QJsonObject jsonObject=jsonValue.toObject();
@@ -268,3 +266,5 @@ bool readObjectArray(const QJsonObject& jsonObject,
 } // namespace io
 } // namespace base
 } // namespace model
+
+#endif // MODEL_BASE_IO_READHELPERS_HPP

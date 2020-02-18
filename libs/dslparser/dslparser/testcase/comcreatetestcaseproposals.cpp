@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "comcreatetestcaseproposals.hpp"
 
 #include "combuildtestcasemodel.hpp"
@@ -34,10 +17,10 @@
 #include "TestCaseDeclLexer.h"
 #include "TestCaseDeclBaseListener.h"
 #include "testcasemodellistener.hpp"
-
-#include <mobata/model/msc/mscstepitem.hpp>
-
+#include "mobata/model/msc/mscstepitem.hpp"
 #include <QList>
+
+#include <mobata/memory_leak_start.hpp>
 
 using namespace utils;
 using namespace model;
@@ -69,8 +52,8 @@ public:
                                 DslProposalList* testcaseProposals,
                                 const ImportModelItem& importItems,
                                 QHash<QString, ModelItem *> testCaseItems,
-                                TestCaseItem* TestCaseDeclModel = nullptr,
-                                ModelItem* currentSignalItem = nullptr,
+                                TestCaseItem* TestCaseDeclModel = 0,
+                                ModelItem* currentSignalItem = 0,
                                 QPair<model::base::ModelItem*,int> currentPathItem = QPair<model::base::ModelItem*,int>(0,0),
                                 const QString& praefix = "")
     : _line(line),
@@ -301,6 +284,10 @@ protected:
       pathStr.remove('\t');
       calcImportOptions(pathStr, _testCaseProposals);
     }
+//    else if(ruleIndex == TestCaseDeclParser::RuleCheckDeclBody){
+//      addUniqueProposal(_testCaseProposals,DslProposal("accuracy",Accuracy));
+//      addUniqueProposal(_testCaseProposals,DslProposal("timeout",Timeout));
+//    }
     else
     {//keywords
       const dfa::Vocabulary& vocabulary = parser->getVocabulary();
@@ -315,7 +302,7 @@ protected:
           continue;//no contextID token as proposal
 
         QString displayName = QString::fromStdString(vocabulary.getDisplayName(token)).trimmed();
-        //        qDebug()<<"else - expected token name: "<<displayName;
+//        qDebug()<<"else - expected token name: "<<displayName;
 
         if(displayName.startsWith("'"))
           displayName.remove(0,1);
@@ -368,7 +355,7 @@ protected:
     if(_inRecursivLoop) curPath = _recursivRest;
     int sz = curPath.size();
     QStringList list = homeDir.entryList();
-    for(QString option: list) {
+    foreach (QString option, list) {
       QString test = option;
       test.resize(sz);
       if(test == curPath)
@@ -400,7 +387,7 @@ protected:
           addProposalsFromModelItem(dslProposalList,name,listOfWanted,item,false,option);
       }
 
-      for(auto option: this->_testCaseItems.keys()) {
+      foreach (auto option, this->_testCaseItems.keys()) {
         QString testStr = option;
         ModelItem* item = _testCaseItems.value(option);
         testStr.resize(name.size());
@@ -722,6 +709,7 @@ bool ComCreateTestCaseProposals::Private::executePrivate(QString* errorString)
 
   ComBuildTestCaseModel buildCommand(this->_testCaseDocText,
                                      testcaseModel,
+                                     nullptr,
                                      this->_praefix);
   buildCommand.execute();
 
@@ -819,13 +807,13 @@ bool ComCreateTestCaseProposals::execute(QString* errorString)
         currentChar=QChar();
     }
   }
-  //  qDebug()<<"lastWordAtEndOfDocText: "<<lastWordAtEndOfDocText;
+//  qDebug()<<"lastWordAtEndOfDocText: "<<lastWordAtEndOfDocText;
 
   int lastWordSize = lastWordAtEndOfDocText.size();
 
   if(lastWordSize)
     this->_d->_testCaseDocText.remove(this->_d->_testCaseDocText.size()-lastWordSize,
-                                      lastWordSize);
+                                    lastWordSize);
 
   bool result = this->_d->executePrivate(errorString);
   if(!result)

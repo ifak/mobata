@@ -12,6 +12,8 @@ LIBS -= -l$$MOBATA_NAME
 
 HEADERS += \
     mobata_global.hpp \
+    memory_leak_start.hpp \
+    memory_leak_end.hpp \
     model/base/statichelpers.hpp \
     model/base/signalitem.hpp \
     model/base/modelitem.hpp \
@@ -86,6 +88,7 @@ HEADERS += \
     model/ts/ts_types.hpp \
     model/ts/sutcomponentitem.hpp \
     model/ts/testcomponentitem.hpp \
+    utils/comsaveobjectasqml.hpp \
     utils/fileutils.hpp \
     utils/functors.hpp \
     model/msc/comsavemscmodel.hpp \
@@ -105,6 +108,8 @@ HEADERS += \
     model/msc/msc_constants.hpp \
     model/ts/ts_constants.hpp \
     model/spenat/io/comimportxmlspenat.hpp \
+    model/statemachine/comscxmlimport.hpp \
+    convert/msc/commsctostatemachine.hpp \
     model/ts/io/comimportxmltestsuite.hpp \
     model/base/io/readxmlbasemodel.hpp \
     model/msc/io/readxmlmscmodel.hpp \
@@ -116,9 +121,16 @@ HEADERS += \
     model/statemachine/compositestateitem.hpp \
     model/statemachine/statemachine.hpp \
     model/spenat/junctionarc.hpp \
+    sim/basesimstate.hpp \
+    sim/basesimstatemachine.hpp \
     model/base/propparams.hpp \
+    model/spenat/nodeitem.hpp \
     model/spenat/placearc.hpp \
     model/msc/mscloopfragmentitem.hpp \
+    model/diagnosis/diagsignalitem.hpp \
+    model/diagnosis/diagcomponentitem.hpp \
+    model/diagnosis/diagnosisitem.hpp \
+    model/diagnosis/diagsequenceruleitem.hpp \
     model/ts/testsuiteitem.hpp \
     model/ts/io/comreadxmltestsuiteitem.hpp \
     model/statemachine/choicestateitem.hpp \
@@ -128,26 +140,26 @@ HEADERS += \
     model/statemachine/io/writesmmodel.hpp \
     model/statemachine/io/readsmmodel.hpp \
     model/statemachine/concurrentstateitem.hpp \
-    model/irdl/fragmentitem.hpp \
-    model/irdl/fragmentregionitem.hpp \
-    model/irdl/messageitem.hpp \
-    model/irdl/requirementitem.hpp \
-    model/irdl/requirement_types.hpp \
-    model/irdl/requirementsmodel.hpp \
-    model/irdl/proprequirements.hpp \
-    model/irdl/req.hpp \
-    model/irdl/reqactorcomponentitem.hpp \
-    model/irdl/reqcomponentitem.hpp \
-    model/irdl/descriptionproperty.hpp \
-    model/irdl/statementitem.hpp \
-    model/irdl/timeritem.hpp \
-    model/irdl/checkmessageitem.hpp \
+    model/requirement/fragmentitem.hpp \
+    model/requirement/fragmentregionitem.hpp \
+    model/requirement/messageitem.hpp \
+    model/requirement/requirementitem.hpp \
+    model/requirement/requirement_types.hpp \
+    model/requirement/requirementsmodel.hpp \
+    model/requirement/proprequirements.hpp \
+    model/requirement/req.hpp \
+    model/requirement/reqactorcomponentitem.hpp \
+    model/requirement/reqcomponentitem.hpp \
+    model/requirement/descriptionproperty.hpp \
+    model/requirement/statementitem.hpp \
+    model/requirement/timeritem.hpp \
+    model/requirement/checkmessageitem.hpp \
     model/msc/mscpropcoverages.hpp \
     model/statemachine/io/comloadjsonsmmodel.hpp \
     model/statemachine/io/comsavejsonsmmodel.hpp \
     model/statemachine/functors.hpp \
-    model/irdl/comsavereqmodel.hpp \
-    model/irdl/io/writereqmodel.hpp \
+    model/requirement/comsavereqmodel.hpp \
+    model/requirement/io/writereqmodel.hpp \
     model/spenat/spenatdeclmodel.hpp \
     model/base/functionitem.hpp \
     model/base/propfunctions.hpp \
@@ -158,6 +170,7 @@ HEADERS += \
     model/base/signaltriggeritem.hpp \
     model/base/timeouttriggeritem.hpp \
     convert/statemachine/virtualtransition.hpp \
+    convert/statemachine/converttrace.h \
     model/base/statements/attributeassignstatementmodel.hpp \
     model/base/statements/conditionstatementmodel.hpp \
     model/base/statements/functioncallstatementmodel.hpp \
@@ -166,7 +179,12 @@ HEADERS += \
     model/base/statements/sendtostatementmodel.hpp \
     model/base/statements/statementmodel.hpp \
     prop/idproperty.hpp \
-    convert/statemachine/converttrace.hpp
+    model/isrdl/isrdlitem.hpp \
+    model/isrdl/isrdlmodel.hpp \
+    model/isrdl/isrdl_types.hpp \
+    model/isrdl/propisrdl.hpp \
+    model/isrdl/isrdlattackdescription.h \
+    model/isrdl/isrdlattackimpact.h
 
 SOURCES += \
     model/base/statichelpers.cpp \
@@ -226,6 +244,7 @@ SOURCES += \
     model/statemachine/proptransitions.cpp \
     model/statemachine/propstates.cpp \
     model/msc/msccomponentitem.cpp \
+    utils/comsaveobjectasqml.cpp \
     utils/fileutils.cpp \
     model/msc/comsavemscmodel.cpp \
     model/base/comsavebasemodel.cpp \
@@ -237,6 +256,8 @@ SOURCES += \
     model/base/datatypeitem.cpp \
     model/base/propdatatypes.cpp \
     model/spenat/io/comimportxmlspenat.cpp \
+    convert/msc/commsctostatemachine.cpp \
+    model/statemachine/comscxmlimport.cpp \
     model/ts/io/comimportxmltestsuite.cpp \
     model/statemachine/abstractstateitem.cpp \
     model/statemachine/finalstateitem.cpp \
@@ -244,9 +265,14 @@ SOURCES += \
     model/statemachine/simplestateitem.cpp \
     model/statemachine/compositestateitem.cpp \
     model/spenat/junctionarc.cpp \
+    sim/basesimstate.cpp \
+    sim/basesimstatemachine.cpp \
     model/base/propparams.cpp \
     model/spenat/placearc.cpp \
     model/msc/mscloopfragmentitem.cpp \
+    model/diagnosis/diagsignalitem.cpp \
+    model/diagnosis/diagcomponentitem.cpp \
+    model/diagnosis/diagnosisitem.cpp \
     model/ts/testsuiteitem.cpp \
     model/ts/io/comreadxmltestsuiteitem.cpp \
     model/statemachine/choicestateitem.cpp \
@@ -257,14 +283,14 @@ SOURCES += \
     model/statemachine/io/readsmmodel.cpp \
     model/statemachine/io/readsmmodel.inl \
     model/statemachine/concurrentstateitem.cpp \
-    model/irdl/requirementitem.cpp \
-    model/irdl/requirementsmodel.cpp \
-    model/irdl/proprequirements.cpp \
+    model/requirement/requirementitem.cpp \
+    model/requirement/requirementsmodel.cpp \
+    model/requirement/proprequirements.cpp \
     model/msc/mscpropcoverages.cpp \
     model/statemachine/io/comloadjsonsmmodel.cpp \
     model/statemachine/io/comsavejsonsmmodel.cpp \
-    model/irdl/comsavereqmodel.cpp \
-    model/irdl/io/writereqmodel.cpp \
+    model/requirement/comsavereqmodel.cpp \
+    model/requirement/io/writereqmodel.cpp \
     model/spenat/spenatdeclmodel.cpp \
     model/msc/mscsequence.cpp \
     model/base/functionitem.cpp \
@@ -275,7 +301,12 @@ SOURCES += \
     model/base/timeouttriggeritem.cpp \
     model/statemachine/smtransitionitem.cpp \
     convert/statemachine/virtualtransition.cpp \
-    convert/statemachine/converttrace.cpp
+    convert/statemachine/converttrace.cpp \
+    model/isrdl/isrdlitem.cpp \
+    model/isrdl/isrdlmodel.cpp \
+    model/isrdl/propisrdl.cpp \
+    model/isrdl/isrdlattackdescription.cpp \
+    model/isrdl/isrdlattackimpact.cpp
 
 OTHER_FILES += \
     mobata.pri

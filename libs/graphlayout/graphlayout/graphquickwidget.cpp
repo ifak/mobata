@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "graphquickwidget.hpp"
 
 #include "layoutnode.hpp"
@@ -329,7 +312,7 @@ bool GraphQuickWidget::layout(QString* errorString)
   }
 
 
-  for(QQuickItem* item: _d->_rootObject->findChildren<QQuickItem*>("text"))
+  foreach(QQuickItem* item, _d->_rootObject->findChildren<QQuickItem*>("text"))
   {
     item->setProperty("visible",false);
   }
@@ -340,7 +323,7 @@ bool GraphQuickWidget::layout(QString* errorString)
 
   return true;
 }
-//! Call the addNode function for each node
+//! Call the addNode function foreach node
 void GraphQuickWidget::addNodesFromList(const QList<graphlayout::LayoutNode*>& list,
                                         QQuickItem *parent){
   for(graphlayout::LayoutNode const* node : list) {
@@ -349,7 +332,7 @@ void GraphQuickWidget::addNodesFromList(const QList<graphlayout::LayoutNode*>& l
       this->addNodesFromList(node->nodes(), item);
     }
     if(node->ports().isEmpty() == false){
-      for (LayoutNodePort* port: node->ports()) {
+      foreach (LayoutNodePort* port, node->ports()) {
         if(this->_d->_layoutGraph->allUsedPorts().contains(port)){
           port->setPos(QPointF(0,0));
           this->addPort(port,parent);
@@ -464,7 +447,7 @@ QQuickItem* GraphQuickWidget::addEdge(LayoutEdge const* edge)
 
 
     QList<QPointF> pointlist;
-    for (QPointF* poi: edge->points()) {
+    foreach (QPointF* poi, edge->points()) {
       pointlist.append(poi->toPoint());
     }
     QmlEdge* edgeItem = qobject_cast<QmlEdge*>(item);
@@ -525,6 +508,7 @@ QQuickItem* GraphQuickWidget::addEdge(LayoutEdge const* edge)
       item2->setProperty("text",edge->label());
       item2->setProperty("textSize",edge->labelTextSize());
       item2->setProperty("textColor",edge->labelColor());
+      item2->setProperty("highlightColor",edge->highlightColor());
       item2->setProperty("textFamily",this->_d->_textfamily.family());
       item2->setProperty("uuid",edge->externUuid());
       if(edge->staticLabel()==false){
@@ -565,6 +549,8 @@ QQuickItem* GraphQuickWidget::addEdge(LayoutEdge const* edge)
       }
       item2->setParentItem(_d->_rootObject->findChild<QQuickItem*>("drawArea"));
       item2->setParent(_d->_rootObject->findChild<QQuickItem*>("drawArea"));
+      QObject::connect(edgeItem, SIGNAL(highlightChanged(QVariant)),
+                       item2, SLOT(highlight(QVariant)));
     }
 
     if(edge->targetPort()!=nullptr){
@@ -885,8 +871,10 @@ void GraphQuickWidget::unhighlightAllGraphicItems()
   for(LayoutEdge* currLayoutEdge : this->_d->_highlightedEdges.keys())
   {
     QQuickItem* currQuickEdge = this->_d->_highlightedEdges.value(currLayoutEdge);
+    QmlEdge* currQmlEdge = qobject_cast<QmlEdge*>(currQuickEdge);
     Q_ASSERT(currQuickEdge);
 
+    currQmlEdge->highlightChanged(false);
     currQuickEdge->setProperty("lineColor",currLayoutEdge->color());
   }
   this->_d->_highlightedEdges.clear();
@@ -928,6 +916,8 @@ void GraphQuickWidget::highlightItemByUuid(const QUuid& itemUuid, const bool ena
     QObject* edge = graphicQmlEdgeFromUuid(itemUuid);
     if(edge){
       QQuickItem* edgeItem = qobject_cast<QQuickItem*>(edge);
+      QmlEdge* qmlEdgeItem = qobject_cast<QmlEdge*>(edgeItem);
+      qmlEdgeItem->highlightChanged(QVariant(enabled));
       if(enabled==true){
         edgeItem->setProperty("lineColor",currentEdge->highlightColor());
         this->_d->_highlightedEdges.insert(currentEdge, edgeItem);
@@ -1063,12 +1053,12 @@ void GraphQuickWidget::showLabels(bool enabled){
 }
 void GraphQuickWidget::showLabel(bool enabled){
   if(enabled==true){
-    for(QQuickItem* item: _d->_rootObject->findChildren<QQuickItem*>("text"))
+    foreach(QQuickItem* item, _d->_rootObject->findChildren<QQuickItem*>("text"))
     {
       item->setProperty("visible",true);
     }
   }else{
-    for(QQuickItem* item: _d->_rootObject->findChildren<QQuickItem*>("text"))
+    foreach(QQuickItem* item, _d->_rootObject->findChildren<QQuickItem*>("text"))
     {
       item->setProperty("visible",false);
     }
@@ -1190,6 +1180,7 @@ void GraphQuickWidget::contextMenuEvent(QContextMenuEvent* event){
                    this, &GraphQuickWidget::zoomHeight);
   QMenu* saveMenu = menu.addMenu(QIcon(QLatin1String(":/mobata/images/save_picture.png")),"save as image");
   QAction* saveFull = saveMenu->addAction(QIcon(QLatin1String(":/mobata/images/save_picture.png")),"save full graph");
+  saveFull->setEnabled(false);
   QAction* saveView = saveMenu->addAction(QIcon(QLatin1String(":/mobata/images/save_picture.png")),"save current view");
   QObject::connect(saveFull, &QAction::triggered,
                    this, &GraphQuickWidget::saveGraphAsPicture);

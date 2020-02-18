@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "comcreatemodetrace.hpp"
 #include "mobata/model/base/io/readhelpers.hpp"
 #include "mobata/utils/functors.hpp"
@@ -32,8 +15,8 @@ class ComCreateModeTrace::Private
 
   const QString _spenatTraceFilePath;
   const QString _atsFilePath;
-  const QString _targetPath;
   const QString _filename;
+  const QString _targetPath;
 
   QStringList                _testcaseList;
   QHash<QString,QStringList> _placesRequirements;
@@ -73,7 +56,7 @@ bool ComCreateModeTrace::execute(QString* errorString)
   if (!spenatInputFile.open(QIODevice::ReadOnly
                             | QIODevice::Text))
   {
-    utils::AddPtrString(errorString) << "Spenat trace file '" << this->_d->_spenatTraceFilePath << "' could not be loaded!";
+    utils::AddPtrString(errorString) << "Spenat trace file '" << this->_d->_spenatTraceFilePath << "' could not be loaded! ";
     return false;
   }
   QByteArray spenatFileContent = spenatInputFile.readAll();
@@ -152,6 +135,9 @@ bool ComCreateModeTrace::execute(QString* errorString)
             return false;
           if(itemType == QString("PlaceCoverageItem"))
           {
+            //init state is not part of trace file
+            if (itemName == QStringLiteral("init"))
+              continue;
             if(!this->_d->_placesRequirements.contains(itemName)
                || !this->_d->_placesRequirementsChange.contains(itemName))
             {

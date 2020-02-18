@@ -1,5 +1,21 @@
+/*
+ * This file is part of mobata.
+ *
+ * mobata is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
 
-// Generated from C:/Users/j05kraus/Private/SWDevelop/mobata_oss_dev/libs/dslparser/dslparser/grammars/Irdl.g4 by ANTLR 4.7.2
+ * mobata is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+// Generated from /home/sebastian/Documents/Git/MbtCreator/3rd/mobata/libs/dslparser/dslparser/grammars/Irdl.g4 by ANTLR 4.7
 
 #pragma once
 
@@ -38,25 +54,25 @@ public:
     RuleDescriptionDecl = 11, RuleSequenceDecl = 12, RuleStateDecl = 13, 
     RuleLifelineList = 14, RuleLifelineListOptional = 15, RuleMessageSignal = 16, 
     RuleMessageSignalBody = 17, RuleMessageSignalBodyOptional = 18, RuleMessageDecl = 19, 
-    RuleCheckDecl = 20, RuleCheckDeclBody = 21, RuleTimerDecl = 22, RuleTimeOutDecl = 23, 
-    RuleAltDecl = 24, RuleAltBody = 25, RuleAltBodyOptional = 26, RuleDurationDecl = 27, 
-    RuleContextID = 28, RuleComponentIdPath = 29, RuleSignalIdPath = 30, 
-    RuleAttributeIdPath = 31, RuleSignalSend = 32, RuleCommonDecl = 33, 
-    RuleImportPathDecl = 34, RuleImportPathBody = 35, RuleImportFileBody = 36, 
-    RuleImportAs = 37, RuleTypeDefDecl = 38, RuleTypeDecl = 39, RuleIntTypeDecl = 40, 
-    RuleRealTypeDecl = 41, RuleEnumTypeDecl = 42, RuleAttributeDecl = 43, 
-    RuleLiteralValue = 44, RuleSignalParamName = 45, RuleAttributeName = 46, 
-    RuleToPortName = 47, RuleLocalAssignStatement = 48, RuleSendToStatement = 49, 
-    RuleSingleAssignment = 50, RuleMultiAssignment = 51, RuleSignalDecl = 52, 
-    RuleParamDecl = 53, RuleFunctionDecl = 54, RuleFunctionParameters = 55, 
-    RuleFunctionCall = 56, RuleFunctionCallBody = 57, RuleFunctionCallBodyOptional = 58, 
-    RuleTriggerDecl = 59, RuleThisDecl = 60, RulePortDecl = 61, RuleNameDecl = 62, 
-    RuleIdPath = 63, RuleStatementDecl = 64, RuleStatementBody = 65, RuleFunctionCallStatement = 66, 
-    RuleNestedStatementBody = 67, RuleReturnStatement = 68, RuleBreakStatement = 69, 
-    RuleOperation = 70, RuleOperationOptional = 71, RuleExpression = 72, 
-    RuleExpressionOptional = 73, RuleConditionalStatement = 74, RuleIfStatement = 75, 
-    RuleIfEuT = 76, RuleElseStatement = 77, RuleSwitchStatement = 78, RuleSwitchPuT = 79, 
-    RuleCaseStatement = 80, RuleDefaultStatement = 81
+    RuleCheckDecl = 20, RuleCheckDeclBody = 21, RuleTimerDecl = 22, RuleAttributeAssign = 23, 
+    RuleTimeOutDecl = 24, RuleAltDecl = 25, RuleAltBody = 26, RuleAltBodyOptional = 27, 
+    RuleDurationDecl = 28, RuleContextID = 29, RuleComponentIdPath = 30, 
+    RuleSignalIdPath = 31, RuleAttributeIdPath = 32, RuleSignalSend = 33, 
+    RuleCommonDecl = 34, RuleImportPathDecl = 35, RuleImportPathBody = 36, 
+    RuleImportFileBody = 37, RuleImportAs = 38, RuleTypeDefDecl = 39, RuleTypeDecl = 40, 
+    RuleIntTypeDecl = 41, RuleRealTypeDecl = 42, RuleEnumTypeDecl = 43, 
+    RuleAttributeDecl = 44, RuleLiteralValue = 45, RuleSignalParamName = 46, 
+    RuleAttributeName = 47, RuleToPortName = 48, RuleLocalAssignStatement = 49, 
+    RuleSendToStatement = 50, RuleSingleAssignment = 51, RuleMultiAssignment = 52, 
+    RuleSignalDecl = 53, RuleParamDecl = 54, RuleFunctionDecl = 55, RuleFunctionParameters = 56, 
+    RuleFunctionCall = 57, RuleFunctionCallBody = 58, RuleFunctionCallBodyOptional = 59, 
+    RuleTriggerDecl = 60, RuleThisDecl = 61, RulePortDecl = 62, RuleNameDecl = 63, 
+    RuleIdPath = 64, RuleStatementDecl = 65, RuleStatementBody = 66, RuleFunctionCallStatement = 67, 
+    RuleNestedStatementBody = 68, RuleReturnStatement = 69, RuleBreakStatement = 70, 
+    RuleOperation = 71, RuleOperationOptional = 72, RuleExpression = 73, 
+    RuleExpressionOptional = 74, RuleConditionalStatement = 75, RuleIfStatement = 76, 
+    RuleIfEuT = 77, RuleElseStatement = 78, RuleSwitchStatement = 79, RuleSwitchPuT = 80, 
+    RuleCaseStatement = 81, RuleDefaultStatement = 82
   };
 
   IrdlParser(antlr4::TokenStream *input);
@@ -92,6 +108,7 @@ public:
   class CheckDeclContext;
   class CheckDeclBodyContext;
   class TimerDeclContext;
+  class AttributeAssignContext;
   class TimeOutDeclContext;
   class AltDeclContext;
   class AltBodyContext;
@@ -519,11 +536,12 @@ public:
     CheckDeclBodyContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *LBRACKET();
-    ExpressionContext *expression();
     antlr4::tree::TerminalNode *RBRACKET();
+    antlr4::tree::TerminalNode *SEMI();
+    ExpressionContext *expression();
+    AttributeAssignContext *attributeAssign();
     antlr4::tree::TerminalNode *COMMA();
     TimeOutDeclContext *timeOutDecl();
-    antlr4::tree::TerminalNode *SEMI();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -554,13 +572,29 @@ public:
 
   TimerDeclContext* timerDecl();
 
+  class  AttributeAssignContext : public antlr4::ParserRuleContext {
+  public:
+    AttributeAssignContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *COMMA();
+    AttributeIdPathContext *attributeIdPath();
+    antlr4::tree::TerminalNode *ASSIGN();
+    SignalParamNameContext *signalParamName();
+    AttributeAssignContext *attributeAssign();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  AttributeAssignContext* attributeAssign();
+
   class  TimeOutDeclContext : public antlr4::ParserRuleContext {
   public:
     TimeOutDeclContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *TimeOutID();
     antlr4::tree::TerminalNode *COLON();
-    antlr4::tree::TerminalNode *SEMI();
     antlr4::tree::TerminalNode *REAL();
     antlr4::tree::TerminalNode *INT();
     antlr4::tree::TerminalNode *MilliSekID();

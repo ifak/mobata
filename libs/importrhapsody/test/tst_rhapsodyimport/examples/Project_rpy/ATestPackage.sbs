@@ -1,0 +1,260 @@
+I-Logix-RPY-Archive version 8.5.2 C++ 1159120
+{ ISubsystem 
+	- _id = GUID 9726d35d-6659-4c12-9c22-73fef9f7e262;
+	- _myState = 8192;
+	- _name = "ATestPackage";
+	- _lastID = 1;
+	- weakCGTime = 12.11.2017::13:44:50;
+	- strongCGTime = 11.29.2017::11:22:28;
+	- _defaultComposite = GUID eee4ffbe-fb5b-4c6f-8984-19817a8c4541;
+	- _eventsBaseID = -1;
+	- Classes = { IRPYRawContainer 
+		- size = 2;
+		- value = 
+		{ IClass 
+			- _id = GUID eee4ffbe-fb5b-4c6f-8984-19817a8c4541;
+			- _myState = 40960;
+			- _name = "TopLevel";
+			- weakCGTime = 12.11.2017::13:44:50;
+			- strongCGTime = 11.29.2017::11:22:28;
+			- _multiplicity = "";
+			- _itsStateChart = { IHandle 
+				- _m2Class = "";
+			}
+			- _classModifier = Unspecified;
+		}
+		{ IClass 
+			- _id = GUID 026294fb-c0ec-46d7-bc4e-39325c71d7f1;
+			- _myState = 8192;
+			- _name = "EmptyClass";
+			- _lastID = 15;
+			- Declaratives = { IRPYRawContainer 
+				- size = 3;
+				- value = 
+				{ IType 
+					- _id = GUID 951c7cea-72ce-438c-9dd8-da7d04eeb40a;
+					- _myState = 8192;
+					- _name = "wrong_type8";
+					- _declaration = "";
+					- _kind = Language;
+				}
+				{ IType 
+					- _id = GUID 1c392951-0ebd-4131-98dd-dd44b8bb2fb4;
+					- _myState = 8192;
+					- _name = "wrong_type7";
+					- _declaration = "";
+					- _kind = Language;
+				}
+				{ IType 
+					- _id = GUID 4a5578a3-adee-468f-8885-df79c41c5ace;
+					- _myState = 8192;
+					- _name = "wrong_type6";
+					- _declaration = "";
+					- _kind = Language;
+				}
+			}
+			- weakCGTime = 12.11.2017::13:53:20;
+			- strongCGTime = 11.29.2017::11:22:47;
+			- Attrs = { IRPYRawContainer 
+				- size = 3;
+				- value = 
+				{ IAttribute 
+					- _id = GUID 84ac8c88-5eec-4ad3-9b5d-d9ad1501b303;
+					- _name = "wrong_attribute1";
+					- ValueSpecifications = { IRPYRawContainer 
+						- size = 1;
+						- value = 
+						{ ILiteralSpecification 
+							- _id = GUID 040a75d8-d737-48cf-8ede-55814c2b2ddd;
+							- _value = "10";
+						}
+					}
+					- _typeOf = { IHandle 
+						- _m2Class = "IType";
+						- _id = GUID 4a5578a3-adee-468f-8885-df79c41c5ace;
+					}
+					- _isOrdered = 0;
+					- _protection = iPublic;
+					- _static = 0;
+					- _isReference = 0;
+					- _isConstant = 0;
+				}
+				{ IAttribute 
+					- _id = GUID cc81c3b7-93c1-459e-94d4-0c826479ec13;
+					- _name = "wrong_attribute3";
+					- ValueSpecifications = { IRPYRawContainer 
+						- size = 1;
+						- value = 
+						{ ILiteralSpecification 
+							- _id = GUID e1769a7a-f317-4980-ab1a-ed185ae4fbb2;
+							- _value = "0";
+						}
+					}
+					- _typeOf = { IHandle 
+						- _m2Class = "IType";
+						- _filename = "PredefinedTypes.sbs";
+						- _subsystem = "PredefinedTypes";
+						- _class = "";
+						- _name = "int";
+						- _id = GUID 6024c6ab-fe9e-402e-954f-27aca6d3b5e4;
+					}
+					- _isOrdered = 0;
+					- _protection = iPublic;
+					- _static = 0;
+					- _isReference = 0;
+					- _isConstant = 0;
+				}
+				{ IAttribute 
+					- _id = GUID 3f1a3f71-30b8-4a04-a97f-06c2dacba3b4;
+					- _name = "wrong_attribute2";
+					- ValueSpecifications = { IRPYRawContainer 
+						- size = 1;
+						- value = 
+						{ ILiteralSpecification 
+							- _id = GUID 2194468e-6de1-4b9f-8cc0-b27ca3cbe32c;
+							- _value = "0";
+						}
+					}
+					- _typeOf = { IHandle 
+						- _m2Class = "IType";
+						- _id = GUID 4a5578a3-adee-468f-8885-df79c41c5ace;
+					}
+					- _isOrdered = 0;
+					- _protection = iPublic;
+					- _static = 0;
+					- _isReference = 0;
+					- _isConstant = 0;
+				}
+			}
+			- _multiplicity = "";
+			- StateCharts = { IRPYRawContainer 
+				- size = 1;
+				- value = 
+				{ IStateChart 
+					- _id = GUID 6629771b-d1a4-4eab-9c1f-bedc95a38122;
+					- _myState = 10240;
+					- _name = "statechart_0";
+					- _lastID = 1;
+					- weakCGTime = 12.11.2017::13:53:20;
+					- strongCGTime = 11.29.2017::11:22:47;
+					- _multiplicity = "";
+					- _itsStateChart = { IHandle 
+						- _m2Class = "";
+					}
+					- _classModifier = Unspecified;
+					- _defNumber = 0;
+					- States = { IRPYRawContainer 
+						- size = 1;
+						- value = 
+						{ IState 
+							- _id = GUID 46c2ee4b-683b-4296-bc74-43bfc76183ee;
+							- _parent = ;
+							- _defaultTrans = ;
+						}
+					}
+					- _version = 11.29.2017::12:22:47;
+					- _baseVersion = 1.2.1990::0:0:0;
+					- _diagram = { IStateChartDiagram 
+						- _id = GUID 8b1e416d-0286-4d26-af70-5d49906b95b8;
+						- _myState = 10240;
+						- _name = "statechartdiagram_0";
+						- _lastModifiedTime = "11.29.2017::11:22:47";
+						- _graphicChart = { CGIStateChart 
+							- _id = GUID 748f53d6-fa1b-44af-9c3b-91d7388977a0;
+							- m_type = 0;
+							- m_pModelObject = { IHandle 
+								- _m2Class = "IStateChart";
+								- _id = GUID 6629771b-d1a4-4eab-9c1f-bedc95a38122;
+							}
+							- m_pParent = ;
+							- m_name = { CGIText 
+								- m_str = "";
+								- m_style = "Arial" 10 0 0 0 1 ;
+								- m_color = { IColor 
+									- m_fgColor = 0;
+									- m_bgColor = 0;
+									- m_bgFlag = 0;
+								}
+								- m_position = 1 0 0  ;
+								- m_nIdent = 0;
+								- m_bImplicitSetRectPoints = 0;
+								- m_nOrientationCtrlPt = 8;
+							}
+							- m_drawBehavior = 4096;
+							- m_bIsPreferencesInitialized = 1;
+							- elementList = 1;
+							{ CGIState 
+								- _id = GUID 2ef08692-49d5-47d4-b09f-b1b9021cc90a;
+								- m_type = 5;
+								- m_pModelObject = { IHandle 
+									- _m2Class = "IState";
+									- _id = GUID 46c2ee4b-683b-4296-bc74-43bfc76183ee;
+								}
+								- m_pParent = ;
+								- m_name = { CGIText 
+									- m_str = "ROOT";
+									- m_style = "Arial" 10 0 0 0 1 ;
+									- m_color = { IColor 
+										- m_fgColor = 0;
+										- m_bgColor = 0;
+										- m_bgFlag = 0;
+									}
+									- m_position = 1 0 0  ;
+									- m_nIdent = 0;
+									- m_bImplicitSetRectPoints = 0;
+									- m_nOrientationCtrlPt = 5;
+								}
+								- m_drawBehavior = 0;
+								- m_bIsPreferencesInitialized = 0;
+								- m_AdditionalLabel = { CGIText 
+									- m_str = "";
+									- m_style = "Arial" 10 0 0 0 1 ;
+									- m_color = { IColor 
+										- m_fgColor = 0;
+										- m_bgColor = 0;
+										- m_bgFlag = 0;
+									}
+									- m_position = 1 0 0  ;
+									- m_nIdent = 0;
+									- m_bImplicitSetRectPoints = 0;
+									- m_nOrientationCtrlPt = 1;
+								}
+								- m_polygon = 4 0 0  0 0  0 0  0 0  ;
+								- m_nNameFormat = 0;
+								- m_nIsNameFormat = 0;
+								- nAndLineCount = 0;
+								- m_pInheritsFrom = { IHandle 
+									- _m2Class = "";
+								}
+								- m_nInheritanceMask = 0;
+								- m_pDefaultComponentRelation = ;
+							}
+							
+							- m_access = 'Z';
+							- m_modified = 'N';
+							- m_fileVersion = "";
+							- m_nModifyDate = 0;
+							- m_nCreateDate = 0;
+							- m_creator = "";
+							- m_bScaleWithZoom = 1;
+							- m_arrowStyle = 'S';
+							- m_pRoot = GUID 2ef08692-49d5-47d4-b09f-b1b9021cc90a;
+							- m_currentLeftTop = 0 0 ;
+							- m_currentRightBottom = 0 0 ;
+							- m_pInheritsFrom = { IHandle 
+								- _m2Class = "";
+							}
+						}
+					}
+				}
+			}
+			- _itsStateChart = { IHandle 
+				- _m2Class = "IStateChart";
+				- _id = GUID 6629771b-d1a4-4eab-9c1f-bedc95a38122;
+			}
+			- _classModifier = Unspecified;
+		}
+	}
+	- _configurationRelatedTime = 1.2.1990::0:0:0;
+}
+

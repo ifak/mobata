@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "writemscmodel.hpp"
 
 #include "../msc.hpp"
@@ -40,8 +21,8 @@ void writeMscModel(MscModel const* mscModel,
   if(mscModel->components().count())
   {
     QJsonArray mscComponentsArray;
-    for (MscComponentItem const* mscComponent:
-         mscModel->components())
+    foreach (MscComponentItem const* mscComponent,
+             mscModel->components())
     {
       QJsonObject componentObject;
       writeMscComponent(mscComponent, componentObject);
@@ -53,8 +34,8 @@ void writeMscModel(MscModel const* mscModel,
   if(mscModel->sequences().count())
   {
     QJsonArray sequencesArray;
-    for (MscSequence const* mscSequence:
-         mscModel->sequences())
+    foreach (MscSequence const* mscSequence,
+             mscModel->sequences())
     {
       QJsonObject sequenceObject;
       writeMscSequence(mscSequence, sequenceObject);
@@ -103,8 +84,8 @@ void writeMscStepsArray(const MscSequence* mscSequence,
 
   Q_ASSERT(mscSequence);
 
-  for (MscSequenceItem const* mscSequenceItem:
-       mscSequence->sequenceItems())
+  foreach (MscSequenceItem const* mscSequenceItem,
+           mscSequence->sequenceItems())
   {
     QJsonObject jsonStepObject;
 
@@ -174,7 +155,7 @@ void writeMscMessage(const MscMessageItem* mscMessage,
     if(mscMessage->paramValues().count())
     {
       QJsonArray jsonParamValues;
-      for(ParamValueItem const* paramValue: mscMessage->paramValues())
+      foreach(ParamValueItem const* paramValue, mscMessage->paramValues())
       {
         QJsonObject jsonParamValue;
         base::io::writeParamValueItem(paramValue, jsonParamValue);
@@ -188,19 +169,24 @@ void writeMscMessage(const MscMessageItem* mscMessage,
 }
 
 void writeMscCheckMessage(const MscCheckMessageItem* mscCheckMessage,
-                          QJsonObject& jsonObject)
+                     QJsonObject& jsonObject)
 {
   Q_ASSERT(mscCheckMessage);
 
   writeMscMessage(mscCheckMessage, jsonObject);
 
   jsonObject["guard"] = mscCheckMessage->guard();
+  QJsonObject obj;
+  for(const QString& key : mscCheckMessage->assign().keys()){
+    obj.insert(key, mscCheckMessage->assign().value(key));
+  }
+  jsonObject["assign"] = obj;
 
   return;
 }
 
 void writeMscStatement(const MscStatementItem* mscStatement,
-                       QJsonObject& jsonObject)
+                     QJsonObject& jsonObject)
 {
   Q_ASSERT(mscStatement);
   Q_ASSERT(mscStatement->component());
@@ -232,7 +218,7 @@ void writeMscTimeout(const MscTimeoutItem* mscTimeout,
 }
 
 void writeMscTimer(const MscTimerItem* mscTimer,
-                   QJsonObject& jsonObject)
+                     QJsonObject& jsonObject)
 {
   Q_ASSERT(mscTimer);
   Q_ASSERT(mscTimer->component());
@@ -246,7 +232,7 @@ void writeMscTimer(const MscTimerItem* mscTimer,
 }
 
 void writeMscSleepTimer(const MscSleepTimerItem* mscSleepTimer,
-                        QJsonObject& jsonObject)
+                     QJsonObject& jsonObject)
 {
   Q_ASSERT(mscSleepTimer);
   Q_ASSERT(mscSleepTimer->component());
@@ -259,7 +245,7 @@ void writeMscSleepTimer(const MscSleepTimerItem* mscSleepTimer,
 }
 
 void writeMscFragment(const MscFragmentItem* mscFragment,
-                      QJsonObject& jsonObject)
+                     QJsonObject& jsonObject)
 {
   Q_ASSERT(mscFragment);
 
@@ -268,8 +254,8 @@ void writeMscFragment(const MscFragmentItem* mscFragment,
   jsonObject["duration"] = QString::number(mscFragment->duration());
 
   QJsonArray jsonFragmentRegions;
-  for(MscFragmentRegionItem const* fragmentRegion:
-      mscFragment->regions())
+  foreach(MscFragmentRegionItem const* fragmentRegion,
+          mscFragment->regions())
   {
     QJsonObject jsonFragmentRegion;
     writeMscFragmentRegion(fragmentRegion, jsonFragmentRegion);
@@ -281,7 +267,7 @@ void writeMscFragment(const MscFragmentItem* mscFragment,
 }
 
 void writeMscFragmentRegion(const MscFragmentRegionItem* mscFragmentRegion,
-                            QJsonObject& jsonObject)
+                     QJsonObject& jsonObject)
 {
   Q_ASSERT(mscFragmentRegion);
 

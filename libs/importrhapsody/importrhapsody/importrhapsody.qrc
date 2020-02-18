@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/importrhapsody">
+        <file>images/class.png</file>
+        <file>images/package.png</file>
+        <file>images/statechart.png</file>
+    </qresource>
+</RCC>

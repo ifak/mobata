@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "qmlgraphview.hpp"
 
 #include "layoutnode.hpp"
@@ -31,6 +14,10 @@
 
 #include <QFileDialog>
 #include <QDebug>
+
+#include <mobata/memory_leak_start.hpp>
+
+//inline void initMyResource() { Q_INIT_RESOURCE(graphlayout); }
 
 using namespace graphlayout;
 
@@ -174,24 +161,24 @@ bool QmlGraphView::layout(QString* errorString)
   if(this->_d->_graph->allPorts().isEmpty()==false){
     graphlayout::ComCreateLayoutEdgesOnly graphvizEdge(_d->_graph,_d->_algorithm,_d->_graphvizPath);
     graphvizEdge.execute(errorString, &this->_d->_lastGraphvizLog);
-    for(QQuickItem* item: _d->_rootObject->findChildren<QQuickItem*>(QRegExp("text*",Qt::CaseSensitive,QRegExp::Wildcard))){
+    foreach(QQuickItem* item, _d->_rootObject->findChildren<QQuickItem*>(QRegExp("text*",Qt::CaseSensitive,QRegExp::Wildcard))){
       item->deleteLater();
       item->setProperty("uuid",0);
     }
-    for(QQuickItem* item: _d->_rootObject->findChildren<QQuickItem*>("edge")){
+    foreach(QQuickItem* item, _d->_rootObject->findChildren<QQuickItem*>("edge")){
       item->deleteLater();
     }
-    for(QQuickItem* item: _d->_rootObject->findChildren<QQuickItem*>("port")){
+    foreach(QQuickItem* item, _d->_rootObject->findChildren<QQuickItem*>("port")){
       item->setProperty("uuid",0);
       item->deleteLater();
     }
-    for(QQuickItem* item: _d->_rootObject->findChildren<QQuickItem*>(QRegExp("node*",Qt::CaseSensitive,QRegExp::Wildcard))){
+    foreach(QQuickItem* item, _d->_rootObject->findChildren<QQuickItem*>(QRegExp("node*",Qt::CaseSensitive,QRegExp::Wildcard))){
       item->setProperty("uuid",0);
       item->deleteLater();
     }
     QmlGraphView::addNodesFromList(_d->_graph->nodes(),_d->_rootObject->findChild<QQuickItem*>("drawArea"));
     QmlGraphView::addEdgesFromList(_d->_graph->edges());
-    for(LayoutNodePort* port: _d->_graph->allPorts()){
+    foreach(LayoutNodePort* port, _d->_graph->allPorts()){
       if(port->pos()==QPointF(0,0)){
         port->setPos(_d->_graph->portParentNode(port->externUuid())->pos());
       }
@@ -249,7 +236,7 @@ bool QmlGraphView::layout(QString* errorString)
 
   return true;
 }
-//! Call the addNode function for each node
+//! Call the addNode function foreach node
 void QmlGraphView::addNodesFromList(const QList<graphlayout::LayoutNode*>& list,
                                     QQuickItem *parent){
   for(graphlayout::LayoutNode const* node : list) {
@@ -258,7 +245,7 @@ void QmlGraphView::addNodesFromList(const QList<graphlayout::LayoutNode*>& list,
       this->addNodesFromList(node->nodes(), item);
     }
     if(node->ports().isEmpty() == false){
-      for (LayoutNodePort* port: node->ports()) {
+      foreach (LayoutNodePort* port, node->ports()) {
         if(this->_d->_graph->allUsedPorts().contains(port)){
           port->setPos(QPointF(0,0));
           this->addPort(port,parent);
@@ -346,13 +333,13 @@ QQuickItem* QmlGraphView::addEdge(LayoutEdge const* edge)
 
     QSizeF mouseAreaSize;
     QRectF linePos(edge->points().first()->x(),edge->points().first()->y(),0,0);
-    for (QPointF* poi: edge->points()) {
+    foreach (QPointF* poi, edge->points()) {
       if(linePos.x()>poi->x())
         linePos.setX(poi->x());
       if(linePos.y()>poi->y())
         linePos.setY(poi->y());
     }
-    for (QPointF* poi: edge->points()) {
+    foreach (QPointF* poi, edge->points()) {
       if(linePos.width()<poi->x()-linePos.left())
         linePos.setWidth(poi->x()-linePos.left());
       if(linePos.height()<poi->y()-linePos.top())
@@ -368,7 +355,7 @@ QQuickItem* QmlGraphView::addEdge(LayoutEdge const* edge)
     linePos.setHeight(linePos.height()+40+edge->Arrowsize()*2);
 
     QList<QVariant> pointlist;
-    for (QPointF* poi: edge->points()) {
+    foreach (QPointF* poi, edge->points()) {
       pointlist.append(QVariant::fromValue(poi->toPoint()));
     }
     item->setProperty("points",pointlist);
@@ -703,11 +690,11 @@ void QmlGraphView::setZoom(QString zoomType){
 void QmlGraphView::zoomLevel(){
   QQuickItem* item = this->_d->_rootObject->findChild<QQuickItem*>("zoomObject");
   if(item->scale()<this->_d->_zoomBound){
-    for(QQuickItem* item: _d->_rootObject->findChildren<QQuickItem*>("text")){
+    foreach(QQuickItem* item, _d->_rootObject->findChildren<QQuickItem*>("text")){
       item->setProperty("visible",false);
     }
   }else{
-    for(QQuickItem* item: _d->_rootObject->findChildren<QQuickItem*>("text")){
+    foreach(QQuickItem* item, _d->_rootObject->findChildren<QQuickItem*>("text")){
       item->setProperty("visible",true);
     }
   }

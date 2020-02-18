@@ -1,8 +1,6 @@
 /*
  * This file is part of mobata.
  *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
  * mobata is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,8 +14,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#pragma once
+#ifndef MODEL_SPENAT_TRANSITIONITEM_HPP
+#define MODEL_SPENAT_TRANSITIONITEM_HPP
 
 #include "../../mobata_global.hpp"
 
@@ -93,3 +91,5 @@ private:
 
 }/// namespace spenat
 }/// namespace model
+
+#endif // MODEL_SPENAT_TRANSITIONITEM_HPP

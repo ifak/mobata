@@ -70,7 +70,7 @@ namespace pattern {
     /// are returned in the form {@code label:tag}, and unlabeled tags are
     /// returned as just the tag name.
     /// </summary>
-    virtual std::string toString() override;
+    virtual std::string toString();
 
   private:
     /// This is the backing field for <seealso cref="#getTag"/>.

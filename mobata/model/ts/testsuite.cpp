@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "testsuite.hpp"
 
 #include "testgroupitem.hpp"
@@ -29,6 +10,8 @@
 #include "../base/portitem.hpp"
 
 #include "../../utils/functors.hpp"
+
+#include "../../memory_leak_start.hpp"
 
 namespace model{
 namespace ts{
@@ -80,7 +63,7 @@ TestSuite::TestSuite(QObject *parent)
 
 TestSuite::~TestSuite()
 {
-  delete this->_d;
+    delete this->_d;
 }
 
 void TestSuite::reset()
@@ -148,7 +131,7 @@ TestGroupItem *TestSuite::addTestGroup(const QString& name,
 
 TestGroupItem* TestSuite::testGroup(const QString& name)
 {
-  for(TestGroupItem* testGroup : this->testGroups())
+  foreach(TestGroupItem* testGroup, this->testGroups())
     if(testGroup->name()==name)
       return testGroup;
 
@@ -157,7 +140,8 @@ TestGroupItem* TestSuite::testGroup(const QString& name)
 
 const TestGroupItem*TestSuite::testGroup(const QString& name) const
 {
-  for(TestGroupItem const* testGroup : this->testGroups())
+  foreach(TestGroupItem const* testGroup,
+          this->testGroups())
     if(testGroup->name()==name)
       return testGroup;
 
@@ -211,18 +195,18 @@ const PortItem* TestSuite::port(const QUuid &portUuid) const
       return portItem;
   }
 
-  //  for(TestGroupItem const* testGroup : this->testGroups())
-  //  {
-  //    TestSystemItem const* testGroupTestSystem=testGroup->testSystemItem();
-  //    if(!testGroupTestSystem)
-  //      continue;
+//  for(TestGroupItem const* testGroup : this->testGroups())
+//  {
+//    TestSystemItem const* testGroupTestSystem=testGroup->testSystemItem();
+//    if(!testGroupTestSystem)
+//      continue;
 
-  //    for(TestComponentItem const* testComp : testGroupTestSystem->components())
-  //    {
-  //      if((portItem=testComp->port(portUuid)))
-  //        return portItem;
-  //    }
-  //  }
+//    for(TestComponentItem const* testComp : testGroupTestSystem->components())
+//    {
+//      if((portItem=testComp->port(portUuid)))
+//        return portItem;
+//    }
+//  }
 
   return 0;
 }

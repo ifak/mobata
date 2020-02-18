@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/qmlRhapsodyExample">
+        <file>images/refresh.png</file>
+        <file>images/zoomIn.png</file>
+        <file>images/zoomOut.png</file>
+        <file>images/loading.gif</file>
+    </qresource>
+</RCC>

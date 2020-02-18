@@ -7,7 +7,7 @@
 #include <mobata/model/msc/msc_types.hpp>
 #include <mobata/model/msc/msccheckmessageitem.hpp>
 #include <mobata/model/msc/msctimeoutitem.hpp>
-#include <mobata/model/irdl/req.hpp>
+#include <mobata/model/requirement/req.hpp>
 
 class IrdlSyntaxTest
     : public QObject
@@ -107,6 +107,7 @@ void IrdlSyntaxTest::attributeAssignment()
   QCOMPARE(result, true);
   QCOMPARE(0, command.errors().count());
 }
+
 
 //void IrdlSyntaxTest::simpleIrdlTest_2()
 //{
@@ -611,7 +612,7 @@ void IrdlSyntaxTest::importDoubleDeclError1()
     qDebug()<<"error: "<<error.message()<<"; at line: "<<error.line()<<"; at pos: "<<error.charPositionInLine();
 
   QCOMPARE(result, false);
-  QCOMPARE(8, command.errors().count());
+  QCOMPARE(12, command.errors().count());
 }
 
 //void IrdlSyntaxTest::simpleRequirementsErrorTest_3()

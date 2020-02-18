@@ -1,30 +1,14 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "testcaseitem.hpp"
 #include "testsystemitem.hpp"
 #include "sutitem.hpp"
 
 #include "testgroupitem.hpp"
 #include "testsuite.hpp"
+#include "model/base/attributeitem.hpp"
 
 #include "../msc/mscstepitem.hpp"
+
+#include "../../memory_leak_start.hpp"
 
 namespace model{
 namespace ts{
@@ -109,6 +93,49 @@ int TestCaseItem::calcTestStepsCount() const
   }
 
   return testStepsCount;
+}
+
+void TestCaseItem::addContent(base::BaseModel *model,QString* errorString)
+{
+  QString err("");
+  for (auto type : model->dataTypes())
+  {
+    if(type->name() == QString("int") || type->name() == QString("real") || type->name() == QString("bool") || type->name() == QString("string"))
+      continue;
+    base::DataTypeItem* item = new base::DataTypeItem(type->name(),type->uuid());
+    for (auto literals : type->literals())
+      item->addLiteral(literals);
+    this->addDataType(item,&err);
+    if(errorString) errorString->append(err);
+    err = QString("");
+  }
+
+  for (base::AttributeItem* attr : model->attributes())
+  {
+    auto newAttr = new base::AttributeItem(attr->name(),
+                                           attr->dataType(),
+                                           attr->initValue(),
+                                           attr->uuid());
+    this->addAttribute(newAttr,&err);
+    if(errorString) errorString->append(err);
+    err = QString("");
+  }
+  for (auto signal : model->getSignals())
+  {
+    base::SignalItem* item = new base::SignalItem(signal->name(),signal->uuid());
+    for(auto param : signal->params())
+    {
+      base::ParamItem* pItem = new base::ParamItem(param->name(),
+                                                   param->dataType(),
+                                                   param->uuid());
+      item->addParameter(pItem,&err);
+      if(errorString) errorString->append(err);
+      err = QString("");
+    }
+    this->addSignal(item,&err);
+    if(errorString) errorString->append(err);
+    err = QString("");
+  }
 }
 
 }/// end namespace ts

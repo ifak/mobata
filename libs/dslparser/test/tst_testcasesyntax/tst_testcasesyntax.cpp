@@ -23,6 +23,8 @@ private Q_SLOTS:
   void simpleTestCaseDeclTest_1();
   void simpleTestCaseDeclTest_2();
 
+  void checkTest();
+
   void complexTestCaseDeclTest();
 
   void simpleTestCaseErrorTest_1();
@@ -60,7 +62,7 @@ void TestCaseSyntaxTest::simpleTestCaseDeclTest_1()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr);
 
   QString errorString;
   bool result = command.execute(&errorString);
@@ -79,7 +81,7 @@ void TestCaseSyntaxTest::simpleTestCaseDeclTest_2()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr);
 
   QString errorString;
   bool result = command.execute(&errorString);
@@ -98,6 +100,88 @@ void TestCaseSyntaxTest::simpleTestCaseDeclTest_2()
   return;
 }
 
+void TestCaseSyntaxTest::checkTest()
+{
+  QString docText(
+  "import <example1.testsystem> as testsystem\n"
+  "TestCase{\n"
+  "  Declaration {\n"
+  "    name: Gutverhalten;\n"
+  "    enabled:  false;\n"
+  "    Attribute int retValue = 0;\n"
+  "    Signal sendResponse(int retValue);\n"
+  "  }\n"
+  "  Check(testsystem.monitoring.pRseApp -> sut.RSE_App.pTestSystem): 	sendResponse[true],\n"
+  "                                                        timeout: 3s,\n"
+  "                                                        accuracy: 0.5;\n"
+  "  Check(testsystem.monitoring.pRseApp -> sut.RSE_App.pTestSystem): 	sendResponse[true],\n"
+  "                                                        accuracy: 0.5,\n"
+  "                                                        timeout: 3s;\n"
+  "  Check(testsystem.monitoring.pRseApp -> sut.RSE_App.pTestSystem): 	sendResponse[true],\n"
+  "                                                        accuracy: 0.5;\n"
+  "  Check(testsystem.monitoring.pRseApp -> sut.RSE_App.pTestSystem): 	sendResponse[true],\n"
+  "                                                        timeout: 3s;\n"
+  "}");
+
+  QString praefix = ":/Examples/";
+  //  model::ts::TestSuite testSuiteModel;
+  //  testSuiteModel.initStandardDataTypes();
+  model::ts::TestSuite testSuiteModel;
+  testSuiteModel.initStandardDataTypes();
+  model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
+  QVERIFY(testcaseModel);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr,praefix);
+
+  QString errorString;
+  bool result = command.execute(&errorString);
+  for(const dslparser::DslError& error : command.errors())
+    qDebug()<<"error: "<<error.message()<<"; at line: "<<error.line()<<"; at pos: "<<error.charPositionInLine();
+
+  QCOMPARE(result, true);
+  QCOMPARE(0, command.errors().count());
+
+  //signals
+  model::base::SignalItem* signal_sendResponseBool = testcaseModel->signal(QString("sendResponse"));
+  QVERIFY(signal_sendResponseBool);
+  model::base::ParamItem* paramItem =  signal_sendResponseBool->parameter(QString("retValue"));
+  QVERIFY(paramItem);
+
+  QCOMPARE(testcaseModel->sequenceItems().size(),4);
+  //check1
+  model::msc::MscCheckMessageItem* check = (model::msc::MscCheckMessageItem*)testcaseModel->sequenceItems().at(0);//anlageComp, actorComp, "sendResponse"));
+  QVERIFY(check);
+  QCOMPARE(check->signal(),signal_sendResponseBool);
+  QVERIFY(check->paramValues().first());
+  QCOMPARE(check->paramValues().first()->value().toBool(),true);
+  QCOMPARE(check->timeout(),3000);
+  QCOMPARE(check->accuracy(),0.5);
+
+  //check2
+  check = (model::msc::MscCheckMessageItem*)testcaseModel->sequenceItems().at(1);//anlageComp, actorComp, "sendResponse"));QVERIFY(check);
+  QCOMPARE(check->signal(),signal_sendResponseBool);
+  QVERIFY(check->paramValues().first());
+  QCOMPARE(check->paramValues().first()->value().toBool(),true);
+  QCOMPARE(check->timeout(),3000);
+  QCOMPARE(check->accuracy(),0.5);
+
+  //check3
+  check = (model::msc::MscCheckMessageItem*)testcaseModel->sequenceItems().at(2);//anlageComp, actorComp, "sendResponse"));QVERIFY(check);
+  QCOMPARE(check->signal(),signal_sendResponseBool);
+  QVERIFY(check->paramValues().first());
+  QCOMPARE(check->paramValues().first()->value().toBool(),true);
+  QCOMPARE(check->timeout(),-1);
+  QCOMPARE(check->accuracy(),0.5);
+
+  //check4
+  check = (model::msc::MscCheckMessageItem*)testcaseModel->sequenceItems().at(3);//anlageComp, actorComp, "sendResponse"));QVERIFY(check);
+  QCOMPARE(check->signal(),signal_sendResponseBool);
+  QVERIFY(check->paramValues().first());
+  QCOMPARE(check->paramValues().first()->value().toBool(),true);
+  QCOMPARE(check->timeout(),3000);
+  QCOMPARE(check->accuracy(),0.0);
+
+}
+
 void TestCaseSyntaxTest::complexTestCaseDeclTest(){
   QString praefix = ":/Examples/";
   QString filename = praefix + "example_testcase_4.testcase";
@@ -110,7 +194,7 @@ void TestCaseSyntaxTest::complexTestCaseDeclTest(){
   testSuiteModel.initStandardDataTypes();
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel,praefix);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr,praefix);
 
   QString errorString;
   bool result = command.execute(&errorString);
@@ -120,8 +204,8 @@ void TestCaseSyntaxTest::complexTestCaseDeclTest(){
   QCOMPARE(result, true);
   QCOMPARE(0, command.errors().count());
 
-  QCOMPARE(35, command.keywordTextLocations().size());
-  QCOMPARE(25, command.modelTextLocations().size());
+  QCOMPARE(28, command.keywordTextLocations().size());
+  QCOMPARE(16, command.modelTextLocations().size());
 
   typedef model::msc::MscTimerItem* TimerItem;
   typedef model::msc::MscSequenceItem* SeqItem;
@@ -162,41 +246,9 @@ void TestCaseSyntaxTest::complexTestCaseDeclTest(){
   QCOMPARE(check1->targetPort()->name(),QString("pRseApp"));
   QCOMPARE(check1->sourcePort()->name(),QString("pEvaluation"));
 
-  QString expectedGuard("");
-#ifdef Q_OS_WIN
-  expectedGuard=QLatin1String("msg.res==true and\r\n                    "
-                              "(msg.value >=10)\r\n                    "
-                              "and msg.value<=20\r\n                    "
-                              "and (msg.value<=15\r\n                          "
-                              "or msg.value>=12) and (internAttribute < 10)");
-#else
-  expectedGuard=QLatin1String("msg.res==true and\n                    "
-                              "(msg.value >=10)\n                    "
-                              "and msg.value<=20\n                    "
-                              "and (msg.value<=15\n                          "
-                              "or msg.value>=12) and (internAttribute < 10)");
-#endif
-
-  QCOMPARE(check1->guard(),expectedGuard);
+  QCOMPARE(check1->paramValues().isEmpty(), false);
+  QCOMPARE(check1->paramValues().first()->value(),true);
   QCOMPARE(check1->timeout(), 300);
-
-  QVERIFY(dynamic_cast<AltItem>((SeqItem)testcaseModel->sequenceItems().at(4)));
-  AltItem alt1 = dynamic_cast<AltItem>((SeqItem)testcaseModel->sequenceItems().at(4));
-  RegItem reg1 = alt1->regions().at(0);
-  QVERIFY(dynamic_cast<CheckItem>((SeqItem)reg1->sequenceItems().at(0)));
-  CheckItem check2 = dynamic_cast<CheckItem>((SeqItem)reg1->sequenceItems().at(0));
-  QVERIFY(dynamic_cast<StateItem>((SeqItem)reg1->sequenceItems().at(1)));
-  StateItem state2 = dynamic_cast<StateItem>((SeqItem)reg1->sequenceItems().at(1));
-
-  RegItem reg2 = alt1->regions().at(1);
-  QVERIFY(dynamic_cast<CheckItem>((SeqItem)reg2->sequenceItems().at(0)));
-  CheckItem check3 = dynamic_cast<CheckItem>((SeqItem)reg2->sequenceItems().at(0));
-  QVERIFY(dynamic_cast<StateItem>((SeqItem)reg2->sequenceItems().at(1)));
-  StateItem state3 = dynamic_cast<StateItem>((SeqItem)reg2->sequenceItems().at(1));
-
-  RegItem reg3 = alt1->regions().at(2);
-  QVERIFY(dynamic_cast<StateItem>((SeqItem)reg3->sequenceItems().at(0)));
-  StateItem state4 = dynamic_cast<StateItem>((SeqItem)reg3->sequenceItems().at(0));
 
 
 
@@ -236,33 +288,6 @@ void TestCaseSyntaxTest::complexTestCaseDeclTest(){
   modelTextLocation = command.modelTextLocations().value(check1->index());
   QCOMPARE((int)dslparser::Check, modelTextLocation.tokenType());
 
-  modelTextLocation = command.modelTextLocations().value(alt1->index());
-  QCOMPARE((int)dslparser::Alt, modelTextLocation.tokenType());
-
-  modelTextLocation = command.modelTextLocations().value(reg1->index());
-  QCOMPARE((int)dslparser::Region, modelTextLocation.tokenType());
-
-  modelTextLocation = command.modelTextLocations().value(check2->index());
-  QCOMPARE((int)dslparser::Check, modelTextLocation.tokenType());
-
-  modelTextLocation = command.modelTextLocations().value(state2->index());
-  QCOMPARE((int)dslparser::Statement, modelTextLocation.tokenType());
-
-  modelTextLocation = command.modelTextLocations().value(reg2->index());
-  QCOMPARE((int)dslparser::Region, modelTextLocation.tokenType());
-
-  modelTextLocation = command.modelTextLocations().value(check3->index());
-  QCOMPARE((int)dslparser::Check, modelTextLocation.tokenType());
-
-  modelTextLocation = command.modelTextLocations().value(state3->index());
-  QCOMPARE((int)dslparser::Statement, modelTextLocation.tokenType());
-
-  modelTextLocation = command.modelTextLocations().value(reg3->index());
-  QCOMPARE((int)dslparser::Region, modelTextLocation.tokenType());
-
-  modelTextLocation = command.modelTextLocations().value(state4->index());
-  QCOMPARE((int)dslparser::Statement, modelTextLocation.tokenType());
-
   return;
 }
 
@@ -272,7 +297,7 @@ void TestCaseSyntaxTest::simpleTestCaseErrorTest_1()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr);
   QString errorString;
   bool result = command.execute(&errorString);
   QCOMPARE(result, false);
@@ -293,11 +318,11 @@ void TestCaseSyntaxTest::simpleTestCaseErrorTest_2()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel,praefix);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr,praefix);
   QString errorString;
   bool result = command.execute(&errorString);
   QCOMPARE(result, false);
-  QCOMPARE(4, command.errors().count());
+  QCOMPARE(11, command.errors().count());
   return;
 }
 
@@ -313,13 +338,13 @@ void TestCaseSyntaxTest::simpleTestCaseErrorTest_3()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel,praefix);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr,praefix);
   QString errorString;
   bool result = command.execute(&errorString);
   for(const dslparser::DslError& error : command.errors())
     qDebug()<<"error: "<<error.message()<<"; at line: "<<error.line()<<"; at pos: "<<error.charPositionInLine();
   QCOMPARE(result, false);
-  QCOMPARE(command.errors().count(), 8);
+  QCOMPARE(command.errors().count(), 12);
   return;
 }
 
@@ -335,13 +360,13 @@ void TestCaseSyntaxTest::simpleTestCaseErrorTest_4()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel,praefix);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr,praefix);
   QString errorString;
   bool result = command.execute(&errorString);
   for(const dslparser::DslError& error : command.errors())
     qDebug()<<"error: "<<error.message()<<"; at line: "<<error.line()<<"; at pos: "<<error.charPositionInLine();
   QCOMPARE(result, false);
-  QCOMPARE(8, command.errors().count());
+  QCOMPARE(12, command.errors().count());
   return;
 }
 
@@ -357,13 +382,13 @@ void TestCaseSyntaxTest::simpleTestCaseErrorTest_5()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel,praefix);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr,praefix);
   QString errorString;
   bool result = command.execute(&errorString);
   for(const dslparser::DslError& error : command.errors())
     qDebug()<<"error: "<<error.message()<<"; at line: "<<error.line()<<"; at pos: "<<error.charPositionInLine();
   QCOMPARE(result, false);
-  QCOMPARE(10, command.errors().count());
+  QCOMPARE(14, command.errors().count());
   return;
 }
 
@@ -379,13 +404,13 @@ void TestCaseSyntaxTest::simpleTestCaseErrorTest_6()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel,praefix);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr,praefix);
   QString errorString;
   bool result = command.execute(&errorString);
   for(const dslparser::DslError& error : command.errors())
     qDebug()<<"error: "<<error.message()<<"; at line: "<<error.line()<<"; at pos: "<<error.charPositionInLine();
   QCOMPARE(result, false);
-  QCOMPARE(8, command.errors().count());
+  QCOMPARE(12, command.errors().count());
   return;
 }
 
@@ -401,13 +426,13 @@ void TestCaseSyntaxTest::simpleTestCaseErrorTest_7()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel,praefix);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr,praefix);
   QString errorString;
   bool result = command.execute(&errorString);
   for(const dslparser::DslError& error : command.errors())
     qDebug()<<"error: "<<error.message()<<"; at line: "<<error.line()<<"; at pos: "<<error.charPositionInLine();
   QCOMPARE(result, false);
-  QCOMPARE(8, command.errors().count());
+  QCOMPARE(12, command.errors().count());
   return;
 }
 
@@ -423,13 +448,13 @@ void TestCaseSyntaxTest::simpleTestCaseErrorTest_8()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel,praefix);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr,praefix);
   QString errorString;
   bool result = command.execute(&errorString);
   for(const dslparser::DslError& error : command.errors())
     qDebug()<<"error: "<<error.message()<<"; at line: "<<error.line()<<"; at pos: "<<error.charPositionInLine();
   QCOMPARE(result, false);
-  QCOMPARE(9, command.errors().count());
+  QCOMPARE(11, command.errors().count());
   return;
 }
 
@@ -445,13 +470,13 @@ void TestCaseSyntaxTest::simpleTestCaseErrorTest_9()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel,praefix);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr,praefix);
   QString errorString;
   bool result = command.execute(&errorString);
   for(const dslparser::DslError& error : command.errors())
     qDebug()<<"error: "<<error.message()<<"; at line: "<<error.line()<<"; at pos: "<<error.charPositionInLine();
   QCOMPARE(result, false);
-  QCOMPARE(9, command.errors().count());
+  QCOMPARE(11, command.errors().count());
   return;
 }
 
@@ -467,13 +492,13 @@ void TestCaseSyntaxTest::simpleTestCaseErrorTest_10()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel,praefix);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr,praefix);
   QString errorString;
   bool result = command.execute(&errorString);
   for(const dslparser::DslError& error : command.errors())
     qDebug()<<"error: "<<error.message()<<"; at line: "<<error.line()<<"; at pos: "<<error.charPositionInLine();
   QCOMPARE(result, false);
-  QCOMPARE(8, command.errors().count());
+  QCOMPARE(12, command.errors().count());
   return;
 }
 
@@ -483,7 +508,7 @@ void TestCaseSyntaxTest::simpleTestCaseDeclKeywordTest_1()
   model::ts::TestSuite testSuiteModel;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"));
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr);
 
   QString errorString;
   bool result = command.execute(&errorString);
@@ -511,7 +536,7 @@ void TestCaseSyntaxTest::simpleTestCaseDeclKeywordTest_2()
   QString errorString1;
   model::ts::TestCaseItem* testcaseModel=testSuiteModel.addTestCase(QString("test"),&errorString1);
   QVERIFY(testcaseModel);
-  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel);
+  dslparser::testcase::ComBuildTestCaseModel command(docText, testcaseModel, nullptr);
 
   QString errorString;
   bool result = command.execute(&errorString);

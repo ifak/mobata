@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "mscmodel.hpp"
 
 #include "mscmessageitem.hpp"
@@ -29,6 +10,8 @@
 #include "../../utils/functors.hpp"
 
 #include <stdexcept>
+
+#include "../../memory_leak_start.hpp"
 
 namespace model{
 namespace msc{
@@ -122,7 +105,7 @@ void MscModel::addSequence(MscSequence *sequence)
 
 const MscSequence *MscModel::sequence(const QUuid &sequUuid) const
 {
-  for(MscSequence const* sequence: this->sequences())
+  foreach(MscSequence const* sequence, this->sequences())
     if(sequence->uuid()==sequUuid)
       return sequence;
 
@@ -167,7 +150,7 @@ MscModel::ConstSequenceSet MscModel::sequences() const
 
 void MscModel::removeSequence(const QUuid &sequUuid)
 {
-  for(MscSequence const* sequence: this->sequences())
+  foreach(MscSequence const* sequence, this->sequences())
   {
     if(sequence->uuid()==sequUuid)
     {
@@ -179,9 +162,9 @@ void MscModel::removeSequence(const QUuid &sequUuid)
 
 //const PortItem *MscModel::port(const QUuid &portUuid) const
 //{
-//  for(MscCompItem const* component: this->components())
+//  foreach(MscCompItem const* component, this->components())
 //  {
-//    for(base::PortItem const* portItem: component->ports())
+//    foreach(base::PortItem const* portItem, component->ports())
 //    {
 //      if(portItem->uuid()==portUuid)
 //        return simple_cast<PortItem const*>(portItem);

@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "comcreatespenatmodel.hpp"
 
 #include "spenatdeclmodel.hpp"
@@ -44,6 +25,8 @@
 
 #include <stdexcept>
 
+#include "../../memory_leak_start.hpp"
+
 namespace model{
 
 using namespace base;
@@ -65,7 +48,7 @@ bool ComCreateSpenatModel::execute(QString* errorString)
   this->_spenat2DeclMapping=Spenat2DeclMappingPtr(new Spenat2DeclMapping(this->_spenatModel.data(),
                                                                          this->_declModel));
 
-  for(base::DataTypeItem const* declTypeItem: this->_declModel->dataTypes())
+  foreach(base::DataTypeItem const* declTypeItem, this->_declModel->dataTypes())
   {
     base::DataTypeItem* spenatTypeItem=this->_spenatModel->addDataType(declTypeItem->name(),
                                                                        declTypeItem->uuid(),
@@ -75,7 +58,7 @@ bool ComCreateSpenatModel::execute(QString* errorString)
     spenatTypeItem->setTypeEnum(declTypeItem->typeEnum());
     spenatTypeItem->setLowest(declTypeItem->lowest());
     spenatTypeItem->setHighest(declTypeItem->highest());
-    for(const QString& literal: declTypeItem->literals())
+    foreach(const QString& literal, declTypeItem->literals())
       spenatTypeItem->addLiteral(literal);
     spenatTypeItem->setText(spenatTypeItem->typeDeclString());
     //    spenatTypeItem->setText(spenatTypeItem->name());
@@ -83,7 +66,7 @@ bool ComCreateSpenatModel::execute(QString* errorString)
     this->_spenat2DeclMapping->addTypeMapping(spenatTypeItem, declTypeItem);
   }
 
-  for(SignalItem const* declSignalItem: this->_declModel->getSignals())
+  foreach(SignalItem const* declSignalItem, this->_declModel->getSignals())
   {
     SignalItem* spenatSignalItem=this->_spenatModel->addSignal(declSignalItem->name(),
                                                                errorString);
@@ -91,11 +74,11 @@ bool ComCreateSpenatModel::execute(QString* errorString)
       return false;
 
     spenatSignalItem->setUuid(declSignalItem->uuid());
-    for(ParamItem const* declParam: declSignalItem->params())
+    foreach(ParamItem const* declParam, declSignalItem->params())
     {
       ParamItem* paramItem=spenatSignalItem->addParameter(declParam->name(),
-                                                          declParam->dataType(),
-                                                          errorString);
+                                                              declParam->dataType(),
+                                                              errorString);
       Q_ASSERT(paramItem);
     }
 
@@ -202,8 +185,8 @@ bool ComCreateSpenatModel::execute(QString* errorString)
       return false;
   }
 
-  //  for(PlaceItem const* initPlaceItem: this->_declModel->initPlaces())
-  //    this->_spenatModel->addInitPlace(initPlaceItem);
+//  foreach(PlaceItem const* initPlaceItem, this->_declModel->initPlaces())
+//    this->_spenatModel->addInitPlace(initPlaceItem);
 
   return true;
 }
@@ -215,139 +198,139 @@ bool ComCreateSpenatModel::processJunction(JunctionItem const* /*declJunctionIte
                                     "for transformation to spenat model!";
   return false;
 
-  //  for(JunctionArc const* junctionSourceArc:
-  //          declJunctionItem->sources())
-  //  {
-  //    PlaceItem const* preDeclPlace=junctionSourceArc->place();
-  //    Q_ASSERT(preDeclPlace);
+//  foreach(JunctionArc const* junctionSourceArc,
+//          declJunctionItem->sources())
+//  {
+//    PlaceItem const* preDeclPlace=junctionSourceArc->place();
+//    Q_ASSERT(preDeclPlace);
 
-  //    PlaceItem* preSpenatPlace=this->_spenatModel->place(preDeclPlace->uuid());
-  //    Q_ASSERT(preSpenatPlace);
+//    PlaceItem* preSpenatPlace=this->_spenatModel->place(preDeclPlace->uuid());
+//    Q_ASSERT(preSpenatPlace);
 
-  //    ///possible else-transition///////////////
-  //    TransitionItem* elseSpenatTransItem=0;
-  //    JunctionArc const* elseDeclJuncTarget=0;
-  //    QVector<QString> guardStrings;
+//    ///possible else-transition///////////////
+//    TransitionItem* elseSpenatTransItem=0;
+//    JunctionArc const* elseDeclJuncTarget=0;
+//    QVector<QString> guardStrings;
 
-  //    for(JunctionArc const* juncTarget: declJunctionItem->targets())
-  //    {
-  //      QString guardString=juncTarget->getGuard().trimmed();
-  //      qDebug()<<"junction target guard:"<<guardString;
-  //      if(guardString==QLatin1String("else"))
-  //      {
-  //        if(elseSpenatTransItem)
-  //        {
-  //          utils::AddPtrString(errorString)<<QString(QStringLiteral("Junction '%1'  has more "
-  //                                                                   "than one 'else'-branch!"))
-  //                                            .arg(declJunctionItem->toString());
-  //          return false;
-  //        }
+//    foreach(JunctionArc const* juncTarget, declJunctionItem->targets())
+//    {
+//      QString guardString=juncTarget->getGuard().trimmed();
+//      qDebug()<<"junction target guard:"<<guardString;
+//      if(guardString==QLatin1String("else"))
+//      {
+//        if(elseSpenatTransItem)
+//        {
+//          utils::AddPtrString(errorString)<<QString(QStringLiteral("Junction '%1'  has more "
+//                                                                   "than one 'else'-branch!"))
+//                                            .arg(declJunctionItem->toString());
+//          return false;
+//        }
 
-  //        TransitionProperties transProperties;
-  //        bool result = BuildTransProperties()(junctionSourceArc->trigger(),&transProperties,
-  //                                             this->_spenatModel.data(), errorString);
-  //        if(!result)
-  //          return false;
+//        TransitionProperties transProperties;
+//        bool result = BuildTransProperties()(junctionSourceArc->trigger(),&transProperties,
+//                                             this->_spenatModel.data(), errorString);
+//        if(!result)
+//          return false;
 
-  //        elseSpenatTransItem=new TransitionItem(QString("t_%1").arg(QUuid::createUuid().toString()),
-  //                                               transProperties.trigger.take(),
-  //                                               QStringLiteral("")/*empty guard*/,
-  //                                               juncTarget->getActions(),
-  //                                               juncTarget->uuid());
+//        elseSpenatTransItem=new TransitionItem(QString("t_%1").arg(QUuid::createUuid().toString()),
+//                                               transProperties.trigger.take(),
+//                                               QStringLiteral("")/*empty guard*/,
+//                                               juncTarget->getActions(),
+//                                               juncTarget->uuid());
 
-  //        result = this->_spenatModel->addTransition(elseSpenatTransItem, errorString);
-  //        if(!result)
-  //        {
-  //          delete elseSpenatTransItem;
-  //          return false;
-  //        }
+//        result = this->_spenatModel->addTransition(elseSpenatTransItem, errorString);
+//        if(!result)
+//        {
+//          delete elseSpenatTransItem;
+//          return false;
+//        }
 
-  //        elseSpenatTransItem->addPrePlaceArc(preSpenatPlace, junctionSourceArc->uuid());
+//        elseSpenatTransItem->addPrePlaceArc(preSpenatPlace, junctionSourceArc->uuid());
 
-  //        PlaceItem const* postDeclPlace=juncTarget->place();
-  //        Q_ASSERT(postDeclPlace);
-  //        PlaceItem* postSpenatPlace=this->_spenatModel->place(postDeclPlace->uuid());
-  //        Q_ASSERT(postSpenatPlace);
-  //        elseSpenatTransItem->addPostPlaceArc(postSpenatPlace, juncTarget->uuid());
+//        PlaceItem const* postDeclPlace=juncTarget->place();
+//        Q_ASSERT(postDeclPlace);
+//        PlaceItem* postSpenatPlace=this->_spenatModel->place(postDeclPlace->uuid());
+//        Q_ASSERT(postSpenatPlace);
+//        elseSpenatTransItem->addPostPlaceArc(postSpenatPlace, juncTarget->uuid());
 
-  //        elseDeclJuncTarget=juncTarget;
-  //      }
-  //      else
-  //      {
-  //        guardStrings.push_back(juncTarget->getGuard());
+//        elseDeclJuncTarget=juncTarget;
+//      }
+//      else
+//      {
+//        guardStrings.push_back(juncTarget->getGuard());
 
-  //        TransitionProperties transProperties;
-  //        bool result = BuildTransProperties()(junctionSourceArc->trigger(),&transProperties,
-  //                                             this->_spenatModel.data(), errorString);
-  //        if(!result)
-  //          return false;
+//        TransitionProperties transProperties;
+//        bool result = BuildTransProperties()(junctionSourceArc->trigger(),&transProperties,
+//                                             this->_spenatModel.data(), errorString);
+//        if(!result)
+//          return false;
 
-  //        TransitionItem* newSpenatTrans=new TransitionItem(QString("t_%1").arg(QUuid::createUuid().toString()),
-  //                                                          transProperties.trigger.take(),
-  //                                                          juncTarget->getGuard(),
-  //                                                          juncTarget->getActions(),
-  //                                                          juncTarget->uuid());
+//        TransitionItem* newSpenatTrans=new TransitionItem(QString("t_%1").arg(QUuid::createUuid().toString()),
+//                                                          transProperties.trigger.take(),
+//                                                          juncTarget->getGuard(),
+//                                                          juncTarget->getActions(),
+//                                                          juncTarget->uuid());
 
-  //        result = this->_spenatModel->addTransition(newSpenatTrans, errorString);
-  //        if(!result)
-  //        {
-  //          delete newSpenatTrans;
-  //          return false;
-  //        }
+//        result = this->_spenatModel->addTransition(newSpenatTrans, errorString);
+//        if(!result)
+//        {
+//          delete newSpenatTrans;
+//          return false;
+//        }
 
-  //        newSpenatTrans->addPrePlaceArc(preSpenatPlace, junctionSourceArc->uuid());
+//        newSpenatTrans->addPrePlaceArc(preSpenatPlace, junctionSourceArc->uuid());
 
-  //        PlaceItem const* postDeclPlace=juncTarget->place();
-  //        Q_ASSERT(postDeclPlace);
-  //        PlaceItem* postSpenatPlace=this->_spenatModel->place(postDeclPlace->uuid());
-  //        Q_ASSERT(postSpenatPlace);
-  //        newSpenatTrans->addPostPlaceArc(postSpenatPlace,juncTarget->uuid());
+//        PlaceItem const* postDeclPlace=juncTarget->place();
+//        Q_ASSERT(postDeclPlace);
+//        PlaceItem* postSpenatPlace=this->_spenatModel->place(postDeclPlace->uuid());
+//        Q_ASSERT(postSpenatPlace);
+//        newSpenatTrans->addPostPlaceArc(postSpenatPlace,juncTarget->uuid());
 
-  //        this->_spenat2DeclMapping->addTransitionMapping(newSpenatTrans, declJunctionItem);
-  //        this->_spenat2DeclMapping->addTransitionMapping(newSpenatTrans, juncTarget);
-  //      }
-  //    }
+//        this->_spenat2DeclMapping->addTransitionMapping(newSpenatTrans, declJunctionItem);
+//        this->_spenat2DeclMapping->addTransitionMapping(newSpenatTrans, juncTarget);
+//      }
+//    }
 
-  //    if(!elseSpenatTransItem)
-  //      return true;
+//    if(!elseSpenatTransItem)
+//      return true;
 
-  //    ///build else-guard (not (guard1 or guard2 or ...))
-  //    QString elseGuardString;
-  //    if(guardStrings.size()==0)
-  //      elseGuardString=QLatin1String("");
-  //    else if(guardStrings.size()==1)
-  //      elseGuardString=QLatin1String("not(")
-  //                      +guardStrings.at(0)
-  //                      +QLatin1String(")");
-  //    else
-  //    {
-  //      QString orGuards;
-  //      std::size_t pos=0;
-  //      for(const QString& guard: guardStrings)
-  //      {
-  //        if(pos==0)
-  //          orGuards=QLatin1String("(")
-  //                   +guard
-  //                   +QLatin1String(")");
-  //        else
-  //          orGuards+=QLatin1String("or(")
-  //                    +guard
-  //                    +QLatin1String(")");
-  //        ++pos;
-  //      }
-  //      elseGuardString=QLatin1String("not(")
-  //                      +orGuards
-  //                      +QLatin1String(")");
-  //    }
-  //    qDebug()<<"transformed else-guard:"<<elseGuardString;
-  //    elseSpenatTransItem->setGuard(elseGuardString);
-  //    elseSpenatTransItem->setText(elseSpenatTransItem->toString());
+//    ///build else-guard (not (guard1 or guard2 or ...))
+//    QString elseGuardString;
+//    if(guardStrings.size()==0)
+//      elseGuardString=QLatin1String("");
+//    else if(guardStrings.size()==1)
+//      elseGuardString=QLatin1String("not(")
+//                      +guardStrings.at(0)
+//                      +QLatin1String(")");
+//    else
+//    {
+//      QString orGuards;
+//      std::size_t pos=0;
+//      foreach(const QString& guard, guardStrings)
+//      {
+//        if(pos==0)
+//          orGuards=QLatin1String("(")
+//                   +guard
+//                   +QLatin1String(")");
+//        else
+//          orGuards+=QLatin1String("or(")
+//                    +guard
+//                    +QLatin1String(")");
+//        ++pos;
+//      }
+//      elseGuardString=QLatin1String("not(")
+//                      +orGuards
+//                      +QLatin1String(")");
+//    }
+//    qDebug()<<"transformed else-guard:"<<elseGuardString;
+//    elseSpenatTransItem->setGuard(elseGuardString);
+//    elseSpenatTransItem->setText(elseSpenatTransItem->toString());
 
-  //    this->_spenat2DeclMapping->addTransitionMapping(elseSpenatTransItem, declJunctionItem);
-  //    this->_spenat2DeclMapping->addTransitionMapping(elseSpenatTransItem, elseDeclJuncTarget);
-  //  }
+//    this->_spenat2DeclMapping->addTransitionMapping(elseSpenatTransItem, declJunctionItem);
+//    this->_spenat2DeclMapping->addTransitionMapping(elseSpenatTransItem, elseDeclJuncTarget);
+//  }
 
-  //  return true;
+//  return true;
 }
 
 const SpenatModelPtr& ComCreateSpenatModel::spenatModel() const

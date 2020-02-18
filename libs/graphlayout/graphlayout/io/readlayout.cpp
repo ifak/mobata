@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "readlayout.hpp"
 #include "layoutgraph.hpp"
 #include "layoutnode.hpp"
@@ -56,7 +39,7 @@ void readNodes(const QJsonObject& jsonObject,
                     &jsonArray, errorMessage))
     return;
 
-  for(const QJsonValue& jsonValue: jsonArray)
+  foreach(const QJsonValue& jsonValue, jsonArray)
   {
     if(!jsonValue.isObject())
     {
@@ -157,7 +140,7 @@ void readEdges(const QJsonObject& jsonObject,
                     &jsonArray, errorMessage))
     return;
 
-  for(const QJsonValue& jsonValue: jsonArray)
+  foreach(const QJsonValue& jsonValue, jsonArray)
   {
     if(!jsonValue.isObject())
     {
@@ -234,7 +217,7 @@ void readEdge(const QJsonObject& jsonObject,
 
   edge->clearPoints();
 
-  for(const QJsonValue& jsonValue: jsonArray)
+  foreach(const QJsonValue& jsonValue, jsonArray)
   {
     if(!jsonValue.isObject())
     {
@@ -261,7 +244,7 @@ void readPorts(const QJsonObject& jsonObject,
                     &jsonArray, errorMessage))
     return;
 
-  for(const QJsonValue& jsonValue: jsonArray)
+  foreach(const QJsonValue& jsonValue, jsonArray)
   {
     if(!jsonValue.isObject())
     {
@@ -323,7 +306,7 @@ bool dependencyCheck(const QJsonObject& jsonObject,
                     &jsonArray, errorMessage))
     return false;
 
-  for(const QJsonValue& jsonValue: jsonArray)
+  foreach(const QJsonValue& jsonValue, jsonArray)
   {
     if(!jsonValue.isObject())
     {
@@ -347,7 +330,7 @@ bool dependencyCheck(const QJsonObject& jsonObject,
     QJsonArray jsonPortArray;
     if(readJsonArray(jsonObject, QStringLiteral("ports"),
                      &jsonPortArray, errorMessage)){
-      for(const QJsonValue& jsonValue: jsonPortArray)
+      foreach(const QJsonValue& jsonValue, jsonPortArray)
       {
         if(!jsonValue.isObject())
         {
@@ -375,7 +358,7 @@ bool dependencyCheck(const QJsonObject& jsonObject,
                     &jsonEdgeArray, errorMessage))
     return false;
 
-  for(const QJsonValue& jsonValue: jsonEdgeArray)
+  foreach(const QJsonValue& jsonValue, jsonEdgeArray)
   {
     if(!jsonValue.isObject())
     {

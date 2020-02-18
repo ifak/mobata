@@ -1,28 +1,11 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "propparams.hpp"
 
 #include "datatypeitem.hpp"
 #include "paramitem.hpp"
 
 #include "../../utils/functors.hpp"
+
+#include "../../memory_leak_start.hpp"
 
 using namespace utils;
 
@@ -34,7 +17,7 @@ class PropParams::Private
   friend class PropParams;
 
   Private()
-    : _paramsItem(nullptr)
+    : _paramsItem(0)
   {}
 
 public:
@@ -107,14 +90,14 @@ ParamItem* PropParams::addParameter(const QString &name,
   if(name.isEmpty())
   {
     utils::AddPtrString(errorString)<<QObject::tr("no name for parameter, parameter is not added!!");
-    return nullptr;
+    return 0;
   }
 
   if(this->parameter(name))
   {
     utils::AddPtrString(errorString)<<QObject::tr("There is already a parameter '%1' available!")
                                       .arg(name);
-    return nullptr;
+    return 0;
   }
 
   ParamItem* newParamItem=new ParamItem(name,

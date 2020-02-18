@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "writelayout.hpp"
 #include "layoutgraph.hpp"
 #include "layoutnode.hpp"
@@ -49,7 +32,7 @@ void writeNodes(LayoutGraph const* layout, QJsonObject& jsonObject)
     return;
 
   QJsonArray nodesArray;
-  for(LayoutNode const* node:
+  foreach (LayoutNode const* node,
            layout->allNodes())
   {
     QJsonObject nodeObject;
@@ -67,7 +50,7 @@ void writeEdges(LayoutGraph const* layout, QJsonObject& jsonObject)
     return;
 
   QJsonArray edgesArray;
-  for(LayoutEdge const* edge:
+  foreach (LayoutEdge const* edge,
            layout->edges())
   {
     QJsonObject edgeObject;
@@ -114,7 +97,7 @@ void writeNode(LayoutNode const* node, QJsonObject& jsonObject)
 
   if(!node->ports().isEmpty()){
     QJsonArray portsArray;
-    for(LayoutNodePort* port: node->ports()){
+    foreach(LayoutNodePort* port, node->ports()){
       QJsonObject portObject;
       writePort(port, portObject);
       portsArray.append(portObject);
@@ -148,7 +131,7 @@ void writeEdge(LayoutEdge const* edge, QJsonObject& jsonObject)
   jsonObject["staticLabel"] =  QString::number(edge->staticLabel());
 
   QJsonArray pointArray;
-  for(QPointF* point: edge->points()){
+  foreach(QPointF* point, edge->points()){
     QJsonObject pointObject;
     pointObject["pointPosX"] = QString::number(point->x());
     pointObject["pointPosY"] = QString::number(point->y());

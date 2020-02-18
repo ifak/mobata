@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "spenatbasemodel.hpp"
 
 #include "placeitem.hpp"
@@ -37,6 +18,8 @@
 #include <QJsonObject>
 
 #include <stdexcept>
+
+#include "../../memory_leak_start.hpp"
 
 using namespace utils;
 using namespace model::base;
@@ -362,7 +345,7 @@ bool SpenatBaseModel::addTransition(TransitionItem* transition, QString* errorSt
 
 PlaceItem* SpenatBaseModel::place(const QString &placeName) const
 {
-  for(PlaceItem* placeItem: this->places())
+  foreach(PlaceItem* placeItem, this->places())
     if(placeItem->name()==placeName)
       return placeItem;
 
@@ -371,7 +354,7 @@ PlaceItem* SpenatBaseModel::place(const QString &placeName) const
 
 PlaceItem* SpenatBaseModel::place(const QUuid& placeUuid) const
 {
-  for(PlaceItem* placeItem: this->places())
+  foreach(PlaceItem* placeItem, this->places())
     if(placeItem->uuid()==placeUuid)
       return placeItem;
 
@@ -454,10 +437,10 @@ graph::IGraph::ConstNodeSet SpenatBaseModel::nodes() const
 {
   ConstNodeSet nodes;
 
-  for(PlaceItem const* place: this->places())
+  foreach(PlaceItem const* place, this->places())
     nodes.append(place);
 
-  for(TransitionItem const* transition: this->transitions())
+  foreach(TransitionItem const* transition, this->transitions())
     nodes.append(transition);
 
   return nodes;
@@ -465,7 +448,8 @@ graph::IGraph::ConstNodeSet SpenatBaseModel::nodes() const
 
 ArcItem* SpenatBaseModel::arc(const QUuid &arcUuid)
 {
-  for(TransitionItem const* transitionItem: this->transitions())
+  foreach(TransitionItem const* transitionItem,
+          this->transitions())
   {
     if(PrePlaceArc const* prePlaceArc=transitionItem->prePlaceArc(arcUuid))
       return const_cast<PrePlaceArc*>(prePlaceArc);
@@ -480,12 +464,13 @@ graph::IGraph::ConstArcSet SpenatBaseModel::arcs() const
 {
   ConstArcSet arcs;
 
-  for(TransitionItem const* transitionItem: this->transitions())
+  foreach(TransitionItem const* transitionItem,
+          this->transitions())
   {
-    for(PrePlaceArc const* prePlaceArc: transitionItem->prePlaceArcs())
+    foreach(PrePlaceArc const* prePlaceArc, transitionItem->prePlaceArcs())
       arcs.append(prePlaceArc);
 
-    for(PostPlaceArc const* postPlaceArc:transitionItem->postPlaceArcs())
+    foreach(PostPlaceArc const* postPlaceArc,transitionItem->postPlaceArcs())
       arcs.append(postPlaceArc);
   }
 
@@ -523,7 +508,7 @@ TransitionItem* SpenatBaseModel::transition(const QString& name) const
 void serializePlaces(SpenatBaseModel const* baseModel, QJsonObject* json_baseModel)
 {
   QJsonArray json_places;
-  for(PlaceItem const* placeItem: baseModel->places())
+  foreach(PlaceItem const* placeItem, baseModel->places())
   {
     QJsonObject json_place;
     json_place["uuid"]=placeItem->uuid().toString();
@@ -539,7 +524,7 @@ void serializePlaces(SpenatBaseModel const* baseModel, QJsonObject* json_baseMod
 void serializeTransitions(SpenatBaseModel const* baseModel, QJsonObject* json_baseModel)
 {
   QJsonArray json_transitions;
-  for(TransitionItem const* transItem: baseModel->transitions())
+  foreach(TransitionItem const* transItem, baseModel->transitions())
   {
     QJsonObject json_transition;
     json_transition["name"]=transItem->name();
@@ -565,7 +550,7 @@ void serializeTransitions(SpenatBaseModel const* baseModel, QJsonObject* json_ba
         Q_ASSERT(timeoutTrigger);
 
         json_trigger["type"]=QLatin1String("TimeoutTrigger");
-        json_trigger["timeout"]=timeoutTrigger->value();
+        json_trigger["timeout"]=QString::number(timeoutTrigger->value());
       }
       json_transition["trigger"]=json_trigger;
     }
@@ -585,7 +570,7 @@ void serializeInitPlaces(SpenatBaseModel const* baseModel,
                          QJsonObject* json_baseModel)
 {
   QJsonArray json_initPlacesArray;
-  for(PlaceItem const* initPlaceItem: baseModel->initPlaces())
+  foreach(PlaceItem const* initPlaceItem, baseModel->initPlaces())
     json_initPlacesArray.push_back(initPlaceItem->uuid().toString());
   json_baseModel->insert("initPlaces", json_initPlacesArray);
 
@@ -606,7 +591,7 @@ JsonObjectPtr SpenatBaseModel::createJson() const
 
 void SpenatBaseModel::removePlace(const QUuid &placeUuid)
 {
-  for(PlaceItem* place: this->places())
+  foreach(PlaceItem* place, this->places())
   {
     if(place->uuid()==placeUuid)
       this->_d->_placesItem->removeRow(place->row());
@@ -630,7 +615,7 @@ void SpenatBaseModel::removePlace(PlaceItem *place)
 
 void SpenatBaseModel::removeTransition(const QUuid &transUuid)
 {
-  for(TransitionItem* transition: this->transitions())
+  foreach(TransitionItem* transition, this->transitions())
   {
     if(transition->uuid()==transUuid)
       this->_d->_transitionsItem->removeRow(transition->row());

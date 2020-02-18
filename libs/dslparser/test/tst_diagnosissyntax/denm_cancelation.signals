@@ -1,0 +1,8 @@
+Signals{
+Signal{					// Basistyp, wie normales Signal definiert. Hat "use"-Anweisungen und evtl. auch Checks. Soll mal in eigene Datei ausgelagert und von dort importiert werden.
+        name: V2X_DENM;
+        use DENM.causeCode as cause;	// Gemeint ist, jedes "cause" durch "DENM.causeCode" zu ersetzen, um spätere checks besser lesbar zu machen (evtl. noch besser als "cause: DENM.causeCode;").
+        use 30 as CyclistOnRoad;		// Kann man auch vordefinierte Werte speichern, um Autocompleter der CyclistWarning zu füttern? Z. B. CyclistOnRoad, PedestrianOnRoad...?
+        use DENM.cancelationFlag as canceled;
+}
+}

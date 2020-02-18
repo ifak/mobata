@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "comcreatelayoutedgesonly.hpp"
 
 #include "comcreategraphvizfile.hpp"
@@ -30,6 +13,8 @@
 #include <QDebug>
 
 #include <stdexcept>
+
+#include <mobata/memory_leak_start.hpp>
 
 using namespace graphlayout;
 using namespace graphvizparser;
@@ -95,16 +80,16 @@ QString ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::getGraphvizEx
 }
 
 void ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::tmpgraphToGraph(){
-  for (LayoutEdge* edge: _layoutGraph->edges()) {
+  foreach (LayoutEdge* edge, _layoutGraph->edges()) {
     edge->clearPoints();
     LayoutEdge* tmpedge = _tempLayoutGraph->edgeByExternUuid(edge->externUuid());
     edge->setLabelPos(tmpedge->labelPos());
     edge->setLabelTextSize(tmpedge->labelTextSize());
-    for (QPointF* point: tmpedge->points()) {
+    foreach (QPointF* point, tmpedge->points()) {
       edge->addPoint(QPointF(point->x(),point->y()));
     }
   }
-  for(LayoutNode* node: _layoutGraph->allNodes()) {
+  foreach (LayoutNode* node, _layoutGraph->allNodes()) {
     LayoutNode* tmpNode = _tempLayoutGraph->nodeByExternUuid(node->externUuid());
     if(tmpNode!=nullptr){
       node->setPos(tmpNode->pos());
@@ -115,7 +100,7 @@ void ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::tmpgraphToGraph(
       }
     }
   }
-  for(LayoutNodePort const* layoutPort: _layoutGraph->allUsedPorts()) {
+  foreach (LayoutNodePort const* layoutPort, _layoutGraph->allUsedPorts()) {
     LayoutNode* tmpNode = _tempLayoutGraph->nodeByExternUuid(layoutPort->externUuid());
     if(tmpNode!=nullptr){
       LayoutNodePort* port=const_cast<LayoutNodePort*>(layoutPort);
@@ -133,7 +118,7 @@ void ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::graphToTmpgraph(
   _tempLayoutGraph->setSplines(_layoutGraph->splines());
   _tempLayoutGraph->setOverlap(default0);
 
-  for(LayoutNode* node: _layoutGraph->nodes()) {
+  foreach (LayoutNode* node, _layoutGraph->nodes()) {
     LayoutNode* newNode = _tempLayoutGraph->addNode();
     newNode->setUuid(node->uuid());
     newNode->setExternUuid(node->externUuid());
@@ -146,7 +131,7 @@ void ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::graphToTmpgraph(
     newNode->setPos(tmpPoint);
     newNode->setSize(node->size()*_factor);
 
-    for(LayoutNode* intnode: node->nodes()) {
+    foreach (LayoutNode* intnode, node->nodes()) {
       LayoutNode* newIntNode = newNode->addNode();
       newIntNode->setUuid(intnode->uuid());
       newIntNode->setExternUuid(intnode->externUuid());
@@ -187,7 +172,7 @@ void ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::graphToTmpgraph(
       newNode->setSize(QSizeF(1,1));
     }
   }
-  for(LayoutEdge* edge: _layoutGraph->edges()) {
+  foreach (LayoutEdge* edge, _layoutGraph->edges()) {
     if(edge->sourcePort()==nullptr && edge->targetPort()==nullptr){
       LayoutEdge* newEdge = _tempLayoutGraph->addEdge(
                               _tempLayoutGraph->nodeByExternUuid(edge->source()->externUuid()),
@@ -309,7 +294,7 @@ bool ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::execute(QString*
   graphvizparser::ComCreateGraphvizGraph graphvizGraphCommand(outputString.toStdString(), _tempLayoutGraph);
   graphvizGraphCommand.execute(errorString);
 
-  for(LayoutNode* node: _tempLayoutGraph->allNodes()){
+  foreach(LayoutNode* node, _tempLayoutGraph->allNodes()){
     if(node->nodes().isEmpty()==true){
       if(node->shape()!=Point){
         node->setSize(node->size()/_factor);
@@ -323,7 +308,7 @@ bool ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::execute(QString*
 
   QPointF minPoint(10,70);
   QPointF relDist(0,0);
-  for(LayoutNode* node: _tempLayoutGraph->nodes()){
+  foreach(LayoutNode* node, _tempLayoutGraph->nodes()){
     if(node->pos().x()<minPoint.x()){
       if(minPoint.x()-node->pos().x()>relDist.x())
         relDist.setX(minPoint.x()-node->pos().x());
@@ -333,32 +318,32 @@ bool ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::execute(QString*
         relDist.setY(minPoint.y()-node->pos().y());
     }
   }
-  for(LayoutNode* node: _tempLayoutGraph->allNodes()){
+  foreach(LayoutNode* node, _tempLayoutGraph->allNodes()){
     node->setPos(node->pos()+relDist);
     node->setLabelPos(node->labelPos()+relDist);
   }
 
-  for(LayoutNode* node: _tempLayoutGraph->nodes()){
+  foreach(LayoutNode* node, _tempLayoutGraph->nodes()){
     ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::cluster(node);
   }
 
-  for(LayoutEdge* edge: _tempLayoutGraph->edges()) {
-    for(QPointF* point: edge->points()) {
+  foreach (LayoutEdge* edge, _tempLayoutGraph->edges()) {
+    foreach (QPointF* point, edge->points()) {
       point->setX(point->x() + relDist.x());
       point->setY(point->y() + relDist.y());
     }
     edge->setLabelPos(edge->labelPos()+relDist);
   }
   QPointF fullSize(0,0);
-  for(LayoutEdge* edge: _layoutGraph->edges()) {
-    for(QPointF* point: edge->points()) {
+  foreach (LayoutEdge* edge, _layoutGraph->edges()) {
+    foreach (QPointF* point, edge->points()) {
       if(point->x()>fullSize.x())
         fullSize.setX(point->x());
       if(point->y()>fullSize.y())
         fullSize.setY(point->y());
     }
   }
-  for(LayoutNode* node: _layoutGraph->allNodes()){
+  foreach(LayoutNode* node, _layoutGraph->allNodes()){
     if(node->pos().x()+node->size().width()>fullSize.x())
       fullSize.setX(node->pos().x()+node->size().width());
     if(node->pos().y()+node->size().height()>fullSize.y())
@@ -374,7 +359,7 @@ bool ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::execute(QString*
 }
 
 void ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::cluster(LayoutNode* layoutNode){
-  for(LayoutNode* intnode: layoutNode->nodes()){
+  foreach(LayoutNode* intnode, layoutNode->nodes()){
     ComCreateLayoutEdgesOnly::ComCreateLayoutEdgesOnlyPrivate::cluster(intnode);
     intnode->setPos(intnode->pos()-layoutNode->pos());
   }

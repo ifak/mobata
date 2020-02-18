@@ -1,5 +1,21 @@
+/*
+ * This file is part of mobata.
+ *
+ * mobata is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
 
-// Generated from C:/Users/j05kraus/Private/SWDevelop/mobata_oss_dev/libs/dslparser/dslparser/grammars/SimSystemDecl.g4 by ANTLR 4.7.2
+ * mobata is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+// Generated from C:/Users/mre/Documents/Repositories/tfvs/mbtcreator/3rd/mobata/libs/dslparser/dslparser/grammars/SimSystemDecl.g4 by ANTLR 4.7.2
 
 #pragma once
 
@@ -405,10 +421,7 @@ public:
     antlr4::tree::TerminalNode *AttributeID();
     antlr4::tree::TerminalNode *SignalID();
     antlr4::tree::TerminalNode *PortID();
-    antlr4::tree::TerminalNode *ImportID();
     antlr4::tree::TerminalNode *FromID();
-    antlr4::tree::TerminalNode *ToID();
-    antlr4::tree::TerminalNode *AsID();
     antlr4::tree::TerminalNode *ActorID();
     antlr4::tree::TerminalNode *SimSystemID();
     antlr4::tree::TerminalNode *ConnectionID();

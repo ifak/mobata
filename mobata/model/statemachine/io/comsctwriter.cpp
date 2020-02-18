@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "comsctwriter.hpp"
 
 #include "model/statemachine/simplestateitem.hpp"
@@ -76,7 +57,7 @@ bool ComSctWriter::writeSctXml(QIODevice* device, QString* errorString)
   bool ret = this->_d->writeStatemachine(device);
 
   if(errorString)
-    *errorString = this->_d->_errorString;
+     *errorString = this->_d->_errorString;
 
   return ret;
 }
@@ -153,19 +134,19 @@ bool ComSctWriter::Private::generateDomDocument()
   regionsElement.setAttribute("name", "main region");
 
   //states
-  for(AbstractStateItem* state : this->_stateMachine->states())
+  foreach(AbstractStateItem* state, this->_stateMachine->states())
   {
     if(!processState(state, &regionsElement)) return false;
   }
 
   //transitions
-  for (TransitionItem* transition : this->_stateMachine->transitions())
+  foreach (TransitionItem* transition, this->_stateMachine->transitions())
   {
     if(!processTransition(transition)) return false;
   }
 
   QString specification = "internal:\n\n";
-  for(QString str : _specificationList)
+  foreach(QString str, _specificationList)
   {
     specification += "event " + str + "\n";
   }
@@ -293,22 +274,22 @@ QString ComSctWriter::Private::stateNameCorrection(const QString &stateName)
 
 QString ComSctWriter::Private::getTransitionSpecification(TransitionItem *transitionItem)
 {
-  //  QString signalName = QStringLiteral("");
-  //  if(SignalItem* signalItem = transitionItem->signal())
-  //  {
-  //    signalName = signalItem->name();
-  //    transitionElement.setAttribute("event", signalName);
-  //  }
-  //  if(!transitionItem->guard().isEmpty())
-  //  {
-  //    transitionElement.setAttribute("cond", transitionItem->guard());
-  //  }
-  //  if(!transitionItem->action().isEmpty())
-  //  {
-  //    QDomElement sendElement = _doc.createElement("send");
-  //    sendElement.setAttribute("event", transitionItem->action());
-  //    transitionElement.appendChild(sendElement);
-  //  }
+//  QString signalName = QStringLiteral("");
+//  if(SignalItem* signalItem = transitionItem->signal())
+//  {
+//    signalName = signalItem->name();
+//    transitionElement.setAttribute("event", signalName);
+//  }
+//  if(!transitionItem->guard().isEmpty())
+//  {
+//    transitionElement.setAttribute("cond", transitionItem->guard());
+//  }
+//  if(!transitionItem->action().isEmpty())
+//  {
+//    QDomElement sendElement = _doc.createElement("send");
+//    sendElement.setAttribute("event", transitionItem->action());
+//    transitionElement.appendChild(sendElement);
+//  }
   QString specification;
 
   const ATriggerItem* trigger = transitionItem->trigger();

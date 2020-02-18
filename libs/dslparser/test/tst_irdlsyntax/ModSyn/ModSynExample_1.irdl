@@ -9,6 +9,11 @@ Requirement{
         //Signal setButtonFM(bool Gesamtanlage_Start);
         Signal checkByteValue_ActiveStep(int _Active, int timer);
         Attribute int test;
+        Component{
+                name: system;
+                description: "Produktionsanlage";
+                Attribute bool initialized = false;
+        }
     }
 
     State Init at modExample.user;

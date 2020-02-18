@@ -1,30 +1,13 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "irdldeclmodellistener.hpp"
 #include <mobata/model/base/attributeitem.hpp>
 #include <mobata/model/base/propattributes.hpp>
 #include <dslparser/common/combuildbasemodel.hpp>
 #include <dslparser/irdldecl/combuildirdldeclmodel.hpp>
 
-#include <mobata/model/irdl/requirementsmodel.hpp>
-#include <mobata/model/irdl/requirementitem.hpp>
-#include <mobata/model/irdl/reqactorcomponentitem.hpp>
-#include <mobata/model/irdl/reqcomponentitem.hpp>
+#include <mobata/model/requirement/requirementsmodel.hpp>
+#include <mobata/model/requirement/requirementitem.hpp>
+#include <mobata/model/requirement/reqactorcomponentitem.hpp>
+#include <mobata/model/requirement/reqcomponentitem.hpp>
 #include <mobata/model/msc/msccomponentitem.hpp>
 #include <mobata/model/msc/mscmessageitem.hpp>
 #include <mobata/model/msc/msccheckmessageitem.hpp>
@@ -35,11 +18,21 @@
 #include <mobata/model/base/modelitem.hpp>
 #include <mobata/model/msc/msctimeritem.hpp>
 
+//#include <mobata/model/requirement/transitionitem.hpp>
+//#include <mobata/model/requirement/simplestateitem.hpp>
+//#include <mobata/model/requirement/compositestateitem.hpp>
+//#include <mobata/model/requirement/parallelstateitem.hpp>
+//#include <mobata/model/requirement/junctionstateitem.hpp>
+//#include <mobata/model/requirement/finalstateitem.hpp>
+//#include <mobata/model/requirement/initstateitem.hpp>
+
 #include "combuildirdldeclmodel.hpp"
 #include "irdldeclmodellistener.hpp"
 
 #include <QStack>
 #include <QDebug>
+
+#include <mobata/memory_leak_start.hpp>
 
 namespace reg = model::irdl;
 using namespace antlr4;
@@ -190,7 +183,8 @@ void IrdlDeclModelListener::enterActorDecl(IrdlCommonDeclParser::ActorDeclContex
 
 void IrdlDeclModelListener::exitActorDecl(IrdlCommonDeclParser::ActorDeclContext *ctx)
 {
-  Q_UNUSED(ctx);
+  if(ctx->exception || _errors->size())
+    return;//an error occured! -> but still handled by error listener!
   _listenerStates.pop();
   setAttributesModel(_model);
   _d->_curActor = nullptr;
@@ -218,7 +212,8 @@ void IrdlDeclModelListener::enterComponentDecl(IrdlCommonDeclParser::ComponentDe
 
 void IrdlDeclModelListener::exitComponentDecl(IrdlCommonDeclParser::ComponentDeclContext *ctx)
 {
-  Q_UNUSED(ctx);
+  if(ctx->exception || _errors->size())
+    return;//an error occured! -> but still handled by error listener!
   _listenerStates.pop();
   setAttributesModel(_model);
   _d->_curComp = nullptr;
@@ -282,7 +277,7 @@ void IrdlDeclModelListener::exitNameDecl(IrdlCommonDeclParser::NameDeclContext* 
 {
   Q_ASSERT(ctx);
 
-  if(ctx->exception)
+  if(ctx->exception || _errors->size())
     return;//an error occured! -> but still handled by error listener!
 
   Q_ASSERT(ctx->contextID());
@@ -324,7 +319,7 @@ void IrdlDeclModelListener::exitDescriptionDecl(IrdlCommonDeclParser::Descriptio
 {
   Q_ASSERT(ctx);
 
-  if(ctx->exception)
+  if(ctx->exception || _errors->size())
     return;//an error occured! -> but still handled by error listener!
 
   Q_ASSERT(ctx->STRING());

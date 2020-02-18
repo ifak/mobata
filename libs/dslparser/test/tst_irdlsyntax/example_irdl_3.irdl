@@ -5,6 +5,11 @@ Requirement{
 		name: Gutverhalten;
     description: "Beschreibung des Gutverhaltens";
     Attribute int retValue = 0;
+    Component{
+            name: system;
+            description: "Produktionsanlage";
+            Attribute bool initialized = false;
+    }
 	}
   globalAttribute = 1;
 

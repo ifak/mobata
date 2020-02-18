@@ -36,6 +36,11 @@ HEADERS += \
     graphvizparser/DOTListener.h \
     graphvizparser/DOTParser.h \
     graphvizparser/DOTBaseListener.h \
+    graphvizparser/dotmodellistener.h \
+    comlayoutdeclmodel.hpp \
+    comlayoutdeclscene.hpp \
+    comlayoutgraphscene.hpp \
+    comlayoutspenatmodel.hpp \
     graphlayout_global.hpp \
     layoutnodeport.hpp \
     layoutglobal.hpp \
@@ -58,7 +63,7 @@ HEADERS += \
     comexportmscgraph.hpp \
     comexportgraph.hpp \
     layoutroles.hpp \
-    graphvizparser/dotmodellistener.hpp
+    comcheckmsc.hpp
 
 SOURCES += \
     comcreategraphvizfile.cpp \
@@ -69,8 +74,14 @@ SOURCES += \
     graphvizparser/comcreategraphvizgraph.cpp \
     graphvizparser/graphvizgraph.cpp \
     graphvizparser/DOTLexer.cpp \
+    graphvizparser/DOTListener.cpp \
     graphvizparser/DOTParser.cpp \
+    graphvizparser/DOTBaseListener.cpp \
     graphvizparser/dotmodellistener.cpp \
+    comlayoutdeclmodel.cpp \
+    comlayoutdeclscene.cpp \
+    comlayoutgraphscene.cpp \
+    comlayoutspenatmodel.cpp \
     layoutnodeport.cpp \
     comcreatelayoutedgesonly.cpp \
     comgraphts.cpp \
@@ -89,7 +100,8 @@ SOURCES += \
     qmledge.cpp \
     qmlnode.cpp \
     comexportmscgraph.cpp \
-    comexportgraph.cpp
+    comexportgraph.cpp \
+    comcheckmsc.cpp
 	
 DISTFILES += \
     graphvizparser/grammars/DOT.g4 \
@@ -99,6 +111,10 @@ DISTFILES += \
 #graphview files
     qml/graph_main.qml \
     qml/GraphText.qml \
+    qml/GraphEdge_old.qml \
+    qml/GraphEdge.qml \
+    qml/GraphNode_old.qml \
+    qml/GraphNode.qml \
 #mscview files
     qml/msc_main.qml \
     qml/msc_component.qml \
@@ -111,17 +127,14 @@ DISTFILES += \
     qml/msc_message_arrow.qml \
     qml/msc_message_end.qml \
     qml/msc_message_start.qml \
+    qml/msc_message_loop.qml \
     qml/msc_region.qml \
     qml/msc_region_end.qml \
     qml/msc_region_start.qml \
     qml/msc_regionline.qml \
     qml/msc_spacer.qml \
     qml/msc_statement.qml \
-    qml/msc_timer.qml \
-    qml/GraphEdge_old.qml \
-    qml/GraphEdge.qml \
-    qml/GraphNode_old.qml \
-    qml/GraphNode.qml
+    qml/msc_timer.qml
 
 RESOURCES += \
     graphlayout.qrc

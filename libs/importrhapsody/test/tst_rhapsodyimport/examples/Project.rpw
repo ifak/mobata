@@ -1,0 +1,193 @@
+I-Logix-RPY-Archive version 8.5.2 * 1159120
+{ CGEMdiWorkspace 
+	- stubList = { IRPYRawContainer 
+		- size = 0;
+	}
+	- myViewsWithID = { IRPYRawContainer 
+		- size = 6;
+		- value = 
+		{ CGEMdiDiagramParams 
+			- _placement = { CCommon_WINDOWPLACEMENT 
+				- m_nLength = 44;
+				- m_nFlags = 0;
+				- m_showCmd = 1;
+				- m_ptMinPositionX = -1;
+				- m_ptMinPositionY = -1;
+				- m_ptMaxPositionX = -8;
+				- m_ptMaxPositionY = -31;
+				- m_nLeft = 26;
+				- m_nTop = 26;
+				- m_nRight = 387;
+				- m_nBottom = 401;
+			}
+			- _wasOpenedOnCloseProject = 1;
+			- _theDiagram = { IHandle 
+				- _m2Class = "IStateChartDiagram";
+				- _filename = "SubPackage.sbs";
+				- _subsystem = "Design::SubPackage";
+				- _class = "AnotherWrongClass";
+				- _name = "StatechartDiagram";
+				- _id = GUID 9ac6462d-23d6-459d-9563-7120b818a0e7;
+			}
+			- _UpLeft = 0 0 ;
+			- _DownRight = 277 269 ;
+			- _instanceName = "";
+			- m_nDiagramIndex = 5;
+		}
+		{ CGEMdiDiagramParams 
+			- _placement = { CCommon_WINDOWPLACEMENT 
+				- m_nLength = 44;
+				- m_nFlags = 0;
+				- m_showCmd = 1;
+				- m_ptMinPositionX = -1;
+				- m_ptMinPositionY = -1;
+				- m_ptMaxPositionX = -8;
+				- m_ptMaxPositionY = -31;
+				- m_nLeft = 156;
+				- m_nTop = 156;
+				- m_nRight = 1542;
+				- m_nBottom = 944;
+			}
+			- _wasOpenedOnCloseProject = 1;
+			- _theDiagram = { IHandle 
+				- _m2Class = "IStateChartDiagram";
+				- _filename = "SubPackage.sbs";
+				- _subsystem = "Design::SubPackage";
+				- _class = "Test";
+				- _name = "StatechartDiagram.ROOT.CompositeState_Test.ROOT.CompositeState_Test.state_9";
+				- _id = GUID 3e87d127-0b67-43f3-9208-81f80e759dc9;
+			}
+			- _UpLeft = 0 0 ;
+			- _DownRight = 1349 728 ;
+			- _instanceName = "";
+			- m_nDiagramIndex = 2;
+		}
+		{ CGEMdiDiagramParams 
+			- _placement = { CCommon_WINDOWPLACEMENT 
+				- m_nLength = 44;
+				- m_nFlags = 0;
+				- m_showCmd = 1;
+				- m_ptMinPositionX = -1;
+				- m_ptMinPositionY = -1;
+				- m_ptMaxPositionX = -8;
+				- m_ptMaxPositionY = -31;
+				- m_nLeft = 78;
+				- m_nTop = 78;
+				- m_nRight = 1464;
+				- m_nBottom = 866;
+			}
+			- _wasOpenedOnCloseProject = 1;
+			- _theDiagram = { IHandle 
+				- _m2Class = "IStateChartDiagram";
+				- _filename = "SubPackage.sbs";
+				- _subsystem = "Design::SubPackage";
+				- _class = "Test";
+				- _name = "StatechartDiagram.ROOT.CompositeState_Test";
+				- _id = GUID 26961de8-1a37-4d89-8558-86b0f77274b6;
+			}
+			- _UpLeft = 498 0 ;
+			- _DownRight = 1825 2178 ;
+			- _instanceName = "";
+			- m_nDiagramIndex = 3;
+		}
+		{ CGEMdiDiagramParams 
+			- _placement = { CCommon_WINDOWPLACEMENT 
+				- m_nLength = 44;
+				- m_nFlags = 2;
+				- m_showCmd = 3;
+				- m_ptMinPositionX = -1;
+				- m_ptMinPositionY = -1;
+				- m_ptMaxPositionX = -8;
+				- m_ptMaxPositionY = -31;
+				- m_nLeft = 442;
+				- m_nTop = 442;
+				- m_nRight = 844;
+				- m_nBottom = 1230;
+			}
+			- _wasOpenedOnCloseProject = 1;
+			- _theDiagram = { IHandle 
+				- _m2Class = "IStateChartDiagram";
+				- _filename = "SubPackage.sbs";
+				- _subsystem = "Design::SubPackage";
+				- _class = "Test";
+				- _name = "StatechartDiagram";
+				- _id = GUID a61a6af2-1ff0-42dd-a904-375045233317;
+			}
+			- _UpLeft = 801 40 ;
+			- _DownRight = 1464 1129 ;
+			- _instanceName = "";
+			- m_nDiagramIndex = 4;
+		}
+		{ CGEMdiDiagramParams 
+			- _placement = { CCommon_WINDOWPLACEMENT 
+				- m_nLength = 44;
+				- m_nFlags = 0;
+				- m_showCmd = 1;
+				- m_ptMinPositionX = -1;
+				- m_ptMinPositionY = -1;
+				- m_ptMaxPositionX = -8;
+				- m_ptMaxPositionY = -31;
+				- m_nLeft = 156;
+				- m_nTop = 156;
+				- m_nRight = 1542;
+				- m_nBottom = 944;
+			}
+			- _wasOpenedOnCloseProject = 1;
+			- _theDiagram = { IHandle 
+				- _m2Class = "IStateChartDiagram";
+				- _filename = "SubPackage.sbs";
+				- _subsystem = "Design::SubPackage";
+				- _class = "simple";
+				- _name = "StatechartDiagram";
+				- _id = GUID e14b813e-ab6e-401d-9f33-359c3345b062;
+			}
+			- _UpLeft = 0 0 ;
+			- _DownRight = 8992 4853 ;
+			- _instanceName = "";
+			- m_nDiagramIndex = 1;
+		}
+		{ CGEMdiDiagramParams 
+			- _placement = { CCommon_WINDOWPLACEMENT 
+				- m_nLength = 44;
+				- m_nFlags = 0;
+				- m_showCmd = 1;
+				- m_ptMinPositionX = -1;
+				- m_ptMinPositionY = -1;
+				- m_ptMaxPositionX = -8;
+				- m_ptMaxPositionY = -31;
+				- m_nLeft = 182;
+				- m_nTop = 182;
+				- m_nRight = 474;
+				- m_nBottom = 970;
+			}
+			- _wasOpenedOnCloseProject = 1;
+			- _theDiagram = { IHandle 
+				- _m2Class = "IStateChartDiagram";
+				- _filename = "SubPackage.sbs";
+				- _subsystem = "Design::SubPackage";
+				- _class = "simple_with_substates";
+				- _name = "StatechartDiagram";
+				- _id = GUID e728e382-2685-4623-9904-98f3a9d68edc;
+			}
+			- _UpLeft = 0 0 ;
+			- _DownRight = 607 1733 ;
+			- _instanceName = "";
+			- m_nDiagramIndex = 0;
+		}
+	}
+	- _fullName = "C:\\Users\\mre\\Documents\\mobata\\libs\\importrhapsody\\test\\tst_rhapsodyimport\\examples\\Project";
+	- m_SearchScopeList = { IRPYRawContainer 
+		- size = 0;
+	}
+
+	- m_favoritesTree = {
+		count=1;
+		{ - favoritesItem
+			generation = 0;
+			name = Favorites;
+			idOrFolder = folder;
+		}
+	}
+
+}
+

@@ -5,6 +5,8 @@
 
 #include <mobata/model/ts/testsystemitem.hpp>
 
+#include <mobata/memory_leak_start.hpp>
+
 using namespace dslparser;
 using namespace dslparser::testsystem;
 using namespace model::ts;

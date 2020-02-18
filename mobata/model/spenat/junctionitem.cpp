@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "junctionitem.hpp"
 
 #include "junctionarc.hpp"
@@ -24,6 +5,8 @@
 #include "../graph/nodeitem.hpp"
 
 #include "../../utils/functors.hpp"
+
+#include "../../memory_leak_start.hpp"
 
 namespace model{
 namespace spenat{
@@ -71,7 +54,7 @@ JunctionArc *JunctionItem::addSource(NodeItem* sourceNode)
 
 JunctionArc const* JunctionItem::source(NodeItem const* sourceNode) const
 {
-  for(JunctionArc const* sourceArc: this->sources())
+  foreach(JunctionArc const* sourceArc, this->sources())
     if(sourceArc->source()==sourceNode)
       return sourceArc;
 
@@ -80,7 +63,7 @@ JunctionArc const* JunctionItem::source(NodeItem const* sourceNode) const
 
 const JunctionArc *JunctionItem::sourceArc(const QUuid &arcUuid) const
 {
-  for(JunctionArc const* sourceArc: this->sources())
+  foreach(JunctionArc const* sourceArc, this->sources())
     if(sourceArc->uuid()==arcUuid)
       return sourceArc;
 
@@ -125,7 +108,8 @@ JunctionItem::ConstJunctionSourceSet JunctionItem::sources() const
 
 void JunctionItem::removeSource(NodeItem const* sourceNode)
 {
-  for(JunctionArc const* sourceArc: this->sources())
+  foreach(JunctionArc const* sourceArc,
+          this->sources())
   {
     if(sourceArc->source()==sourceNode)
       this->_d->_sourcesItem->removeRow(sourceArc->row());
@@ -155,7 +139,7 @@ JunctionArc* JunctionItem::addTarget(NodeItem* targetNode)
 
 JunctionArc const* JunctionItem::target(NodeItem const* targetNode) const
 {
-  for(JunctionArc const* targetArc: this->targets())
+  foreach(JunctionArc const* targetArc, this->targets())
     if(targetArc->target()==targetNode)
       return targetArc;
 
@@ -164,7 +148,7 @@ JunctionArc const* JunctionItem::target(NodeItem const* targetNode) const
 
 const JunctionArc *JunctionItem::targetArc(const QUuid &arcUuid) const
 {
-  for(JunctionArc const* target: this->targets())
+  foreach(JunctionArc const* target, this->targets())
     if(target->uuid()==arcUuid)
       return target;
 
@@ -209,7 +193,8 @@ JunctionItem::ConstJunctionTargetSet JunctionItem::targets() const
 
 void JunctionItem::removeTarget(NodeItem const* targetNode)
 {
-  for(JunctionArc const* constTargetArc: this->targets())
+  foreach(JunctionArc const* constTargetArc,
+          this->targets())
   {
     if(constTargetArc->target()==targetNode)
       this->_d->_targetsItem->removeRow(constTargetArc->row());
@@ -222,10 +207,10 @@ void JunctionItem::updateText()
 {
   this->setText(this->toString());
 
-  for(JunctionArc* source: this->sources())
+  foreach(JunctionArc* source, this->sources())
     source->setText(source->toString());
 
-  for(JunctionArc* target: this->targets())
+  foreach(JunctionArc* target, this->targets())
     target->setText(target->toString());
 
   return;
@@ -240,7 +225,7 @@ QString JunctionItem::toString() const
     decl+=QLatin1String(" from ");
 
   int pos=0;
-  for(JunctionArc const* source: this->sources())
+  foreach(JunctionArc const* source, this->sources())
   {
     if(pos)
       decl+=QLatin1String(",");
@@ -251,7 +236,7 @@ QString JunctionItem::toString() const
      && this->_d->_targetsItem->rowCount())
     decl+=QLatin1String(" to ");
 
-  for(JunctionArc const* target: this->targets())
+  foreach(JunctionArc const* target, this->targets())
     decl+=target->toString();
 
   return decl;

@@ -29,7 +29,6 @@ namespace tree {
   template<typename V>
   class ANTLR4CPP_PUBLIC ParseTreeProperty {
   public:
-    virtual ~ParseTreeProperty() {}
     virtual V get(ParseTree *node) {
       return _annotations[node];
     }

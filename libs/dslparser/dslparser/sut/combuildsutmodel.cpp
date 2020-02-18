@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "combuildsutmodel.hpp"
 
 #include <mobata/model/ts/ts.hpp>
@@ -31,6 +14,8 @@
 #include "SutDeclParser.h"
 
 #include "sutmodellistener.hpp"
+
+#include <mobata/memory_leak_start.hpp>
 
 using namespace model::ts;
 using namespace utils;
@@ -142,8 +127,8 @@ bool ComBuildSutModel::execute(QString* errorString)
   parser.removeErrorListeners();
   parser.addErrorListener(&myErrorListener);
 
-  SutDeclParser::SutDeclContext* sutDeclCtx = nullptr;
-  //  auto start = std::chrono::steady_clock::now();
+  SutDeclParser::SutDeclContext* sutDeclCtx = 0;
+//  auto start = std::chrono::steady_clock::now();
   try
   {
     //parser.addParseListener(&this->_d->_sutModelListener);
@@ -176,15 +161,15 @@ bool ComBuildSutModel::execute(QString* errorString)
     antlr4::tree::ParseTreeWalker walker;
     walker.walk(&this->_d->_sutModelListener, sutDeclCtx);
 
-    //    qDebug()<<"Parse tree: " << sutDeclCtx->toStringTree(&parser).c_str();
+//    qDebug()<<"Parse tree: " << sutDeclCtx->toStringTree(&parser).c_str();
   }
 
-  //  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
-  //  qDebug() << "Parse time: " << duration.count() / 1000.0 << " ms";
+//  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
+//  qDebug() << "Parse time: " << duration.count() / 1000.0 << " ms";
 
   if(this->_d->_strictErrorHandling
      && this->_d->_sutErrors.count()){
-    for (DslError err: this->_d->_sutErrors) {
+    foreach (DslError err, this->_d->_sutErrors) {
       AddPtrString(errorString)<<err.message();
     }
     return false;

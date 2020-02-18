@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "layoutgraph.hpp"
 
 #include <QtAlgorithms>
@@ -26,6 +9,8 @@
 #include <QString>
 
 #include <stdexcept>
+
+#include <mobata/memory_leak_start.hpp>
 
 using namespace graphlayout;
 
@@ -66,22 +51,22 @@ void LayoutGraph::clearGraph()
 QString LayoutGraph::splinesString() const
 {
   switch (_d->_spline) {
-  case 0:
-    return "none";
-  case 1:
-    return "line";
-  case 2:
-    return "spline";
-  case 3:
-    return "ortho";
-  case 4:
-    return "polyline";
-  case 5:
-    return "curved";
-  case 6:
-    return "line";
-  default:
-    return "line";
+    case 0:
+      return "none";
+    case 1:
+      return "line";
+    case 2:
+      return "spline";
+    case 3:
+      return "ortho";
+    case 4:
+      return "polyline";
+    case 5:
+      return "curved";
+    case 6:
+      return "line";
+    default:
+      return "line";
   }
 }
 
@@ -117,24 +102,24 @@ void LayoutGraph::setSplines(const QString& splines)
 QString LayoutGraph::overlapString() const
 {
   switch (_d->_overlap) {
-  case 0:
-    return "default";
-  case 1:
-    return "scale";
-  case 2:
-    return "prism";
-  case 3:
-    return "prism0";
-  case 4:
-    return "voronoi";
-  case 5:
-    return "vpsc";
-  case 6:
-    return "ortho";
-  case 7:
-    return "true";
-  default:
-    return "default";
+    case 0:
+      return "default";
+    case 1:
+      return "scale";
+    case 2:
+      return "prism";
+    case 3:
+      return "prism0";
+    case 4:
+      return "voronoi";
+    case 5:
+      return "vpsc";
+    case 6:
+      return "ortho";
+    case 7:
+      return "true";
+    default:
+      return "default";
   }
 }
 const OverlapEnum& LayoutGraph::overlap() const
@@ -187,7 +172,7 @@ LayoutNode* LayoutGraph::addNode()
 
 LayoutNode const* LayoutGraph::node(const QUuid& nodeUuid) const
 {
-  for(LayoutNode const* layoutNode: this->_d->_nodes)
+  foreach(LayoutNode const* layoutNode, this->_d->_nodes)
     if(layoutNode->uuid() == nodeUuid){
       return layoutNode;
     }
@@ -198,7 +183,7 @@ LayoutNode const* LayoutGraph::node(const QUuid& nodeUuid) const
 int LayoutGraph::nodePos(const QUuid &nodeUuid) const
 {
   std::size_t pos=0;
-  for(LayoutNode const* layoutNode: this->_d->_nodes)
+  foreach(LayoutNode const* layoutNode, this->_d->_nodes)
   {
     if(layoutNode->uuid()==nodeUuid)
       return (int)pos;
@@ -224,7 +209,7 @@ const QList<LayoutNode*>& LayoutGraph::nodes() const
 QList<LayoutNode*> LayoutGraph::nodesFromList(QList<LayoutNode *> list) const
 {
   QList<LayoutNode*> tmp;
-  for(LayoutNode* node: list){
+  foreach(LayoutNode* node, list){
     tmp.append(node);
     if(node->nodes().isEmpty()==false){
       tmp.append(LayoutGraph::nodesFromList(node->nodes()));
@@ -241,7 +226,7 @@ QList<LayoutNode*> LayoutGraph::allNodes() const
 QList<LayoutNodePort*> LayoutGraph::allPorts() const
 {
   QList<LayoutNodePort*> tmp;
-  for (LayoutNode* node: this->allNodes()) {
+  foreach (LayoutNode* node, this->allNodes()) {
     if(node->ports().isEmpty()==false){
       tmp.append(node->ports());
     }
@@ -251,7 +236,7 @@ QList<LayoutNodePort*> LayoutGraph::allPorts() const
 QList<LayoutNodePort const*> LayoutGraph::allUsedPorts() const
 {
   QList<LayoutNodePort const*> tmp;
-  for (LayoutEdge* edge: this->_d->_edges){
+  foreach (LayoutEdge* edge, this->_d->_edges){
     if(tmp.contains(edge->targetPort())==false && edge->targetPort()!=nullptr){
       tmp.append(edge->targetPort());
     }
@@ -274,9 +259,9 @@ QList<LayoutNodePort const*> LayoutGraph::allUnusedPorts() const
 }
 LayoutNode* LayoutGraph::portParentNode(QUuid portQUuid)
 {
-  for (LayoutNode* node: this->allNodes()) {
+  foreach (LayoutNode* node, this->allNodes()) {
     if(node->ports().isEmpty()==false){
-      for (LayoutNodePort* port: node->ports()) {
+      foreach (LayoutNodePort* port, node->ports()) {
         if(port->externUuid()==portQUuid){
           return node;
         }
@@ -286,7 +271,7 @@ LayoutNode* LayoutGraph::portParentNode(QUuid portQUuid)
   return nullptr;
 }
 LayoutNodePort* LayoutGraph::port(QUuid portUuid) {
-  for (LayoutNodePort* port: allPorts()) {
+  foreach (LayoutNodePort* port, allPorts()) {
     if(port->externUuid()==portUuid){
       return port;
     }
@@ -296,7 +281,7 @@ LayoutNodePort* LayoutGraph::port(QUuid portUuid) {
 
 LayoutNode* LayoutGraph::nodeByXLabel(QString xLabel)
 {
-  for (LayoutNode* node: this->allNodes()) {
+  foreach (LayoutNode* node, this->allNodes()) {
     if(node->xLabel()==xLabel)
       return node;
   }
@@ -304,7 +289,7 @@ LayoutNode* LayoutGraph::nodeByXLabel(QString xLabel)
 }
 LayoutNode* LayoutGraph::nodeByLabel(QString Label)
 {
-  for (LayoutNode* node: this->allNodes()) {
+  foreach (LayoutNode* node, this->allNodes()) {
     if(node->label()==Label)
       return node;
   }
@@ -312,7 +297,7 @@ LayoutNode* LayoutGraph::nodeByLabel(QString Label)
 }
 LayoutNode* LayoutGraph::nodeByAnyLabel(QString Label)
 {
-  for (LayoutNode* node: this->allNodes()) {
+  foreach (LayoutNode* node, this->allNodes()) {
     if(node->label()==Label || node->xLabel() == Label)
       return node;
   }
@@ -321,12 +306,12 @@ LayoutNode* LayoutGraph::nodeByAnyLabel(QString Label)
 
 LayoutNode* LayoutGraph::nodeParentNode(QUuid nodeQUuid)
 {
-  for (LayoutNode* node: this->_d->_nodes) {
+  foreach (LayoutNode* node, this->_d->_nodes) {
     if(node->uuid()==nodeQUuid || node->externUuid()==nodeQUuid)
       return nullptr;
   }
-  for (LayoutNode* parentNode: this->allNodes()) {
-    for (LayoutNode* node: parentNode->nodes()) {
+  foreach (LayoutNode* parentNode, this->allNodes()) {
+    foreach (LayoutNode* node, parentNode->nodes()) {
       if(node->uuid()==nodeQUuid || node->externUuid()==nodeQUuid)
         return parentNode;
     }
@@ -346,17 +331,13 @@ LayoutNode* LayoutGraph::nodeByExternUuid(const QUuid &nodeExternUuid)
 
 LayoutNode *LayoutGraph::nodeByExternUuidRec(const QUuid &nodeExternUuid, QList<LayoutNode*> list)
 {
-  for(LayoutNode* node: list)
-  {
-    if(node->externUuid()==nodeExternUuid)
-    {
+  foreach (LayoutNode* node, list) {
+    if(node->externUuid()==nodeExternUuid){
       return node;
     }
-    if(node->nodes().length()!=0)
-    {
+    if(node->nodes().length()!=0){
       LayoutNode* tmp = LayoutGraph::nodeByExternUuidRec(nodeExternUuid,node->nodes());
-      if(tmp!=0)
-      {
+      if(tmp!=0){
         return tmp;
       }
     }
@@ -371,10 +352,10 @@ LayoutNode* nodeByNameImpl(const QString& nodeName, const QList<LayoutNode*>& no
     if(currNode->name() == nodeName)
       return currNode;
 
-    /* The following code was replaced by the method 'nodeByPath()' because the recursive getter implemented here will not always return the correct node.
+/* The following code was replaced by the method 'nodeByPath()' because the recursive getter implemented here will not always return the correct node.
  * Two or more nested nodes can have the same name. Therefore, a path definition is necesarry to retrieve the correct node*/
-    //    if(LayoutNode* subNode = nodeByNameImpl(nodeName, currNode->nodes()))
-    //      return subNode;
+//    if(LayoutNode* subNode = nodeByNameImpl(nodeName, currNode->nodes()))
+//      return subNode;
   }
 
   return nullptr;
@@ -438,7 +419,7 @@ LayoutEdge const* LayoutGraph::edge(const std::size_t pos) const
 
 LayoutEdge const* LayoutGraph::edge(const QUuid &edgeUuid) const
 {
-  for(LayoutEdge const* layoutEdge: this->_d->_edges)
+  foreach(LayoutEdge const* layoutEdge, this->_d->_edges)
     if(layoutEdge->uuid()==edgeUuid)
       return layoutEdge;
 
@@ -446,7 +427,7 @@ LayoutEdge const* LayoutGraph::edge(const QUuid &edgeUuid) const
 }
 LayoutEdge* LayoutGraph::edgeByExternUuid(const QUuid& edgeUuid)
 {
-  for(LayoutEdge* layoutEdge: this->_d->_edges)
+  foreach(LayoutEdge* layoutEdge, this->_d->_edges)
     if(layoutEdge->externUuid()==edgeUuid)
       return layoutEdge;
 
@@ -467,7 +448,7 @@ LayoutEdge* LayoutGraph::edgeByName(const QString& edgeName) const
 int LayoutGraph::edgePos(const QUuid &edgeUuid) const
 {
   std::size_t pos=0;
-  for(LayoutEdge * layoutEdge: this->_d->_edges)
+  foreach(LayoutEdge * layoutEdge, this->_d->_edges)
   {
     if(layoutEdge->uuid()==edgeUuid)
       return (int)pos;
@@ -480,7 +461,7 @@ int LayoutGraph::edgePos(const QUuid &edgeUuid) const
 LayoutEdge const* LayoutGraph::edge(const QUuid &sourceUuid,
                                     const QUuid &targetUuid)
 {
-  for(LayoutEdge const* edge: this->_d->_edges)
+  foreach(LayoutEdge const* edge, this->_d->_edges)
     if(edge->source()->uuid()==sourceUuid
        && edge->target()->uuid()==targetUuid)
       return edge;
@@ -491,7 +472,7 @@ LayoutEdge const* LayoutGraph::edge(const QUuid &sourceUuid,
 LayoutEdge const* LayoutGraph::edgeByExternNodeUuid(const QUuid &sourceExternUuid,
                                                     const QUuid &targetExternUuid)
 {
-  for(LayoutEdge const* edge: this->_d->_edges)
+  foreach(LayoutEdge const* edge, this->_d->_edges)
     if(edge->source()->externUuid()==sourceExternUuid
        && edge->target()->externUuid()==targetExternUuid)
       return edge;
@@ -534,7 +515,7 @@ void LayoutGraph::save(const QString& path)
 
   //////nodes//////////////////
   QJsonArray json_graph_nodes;
-  for(LayoutNode const* node: layoutGraph->nodes())
+  foreach(LayoutNode const* node, layoutGraph->nodes())
   {
     QJsonObject json_node;
 
@@ -557,7 +538,7 @@ void LayoutGraph::save(const QString& path)
 
   //////edges//////////////////
   QJsonArray json_graph_edges;
-  for(LayoutEdge const* edge, layoutGraph->edges())
+  foreach(LayoutEdge const* edge, layoutGraph->edges())
   {
     QJsonObject json_edge;
 
@@ -565,7 +546,7 @@ void LayoutGraph::save(const QString& path)
     json_edge.insert(QStringLiteral("target_uuid"),edge->target()->uuid().toString());
 
     QJsonArray json_edge_points;
-    for(const QPointF& point: edge->getPoints())
+    foreach(const QPointF& point, edge->getPoints())
     {
       QJsonObject json_point;
       json_point.insert(QStringLiteral("x"), point.x());
@@ -616,7 +597,7 @@ void read_nodes(LayoutGraph* layoutGraph, const QJsonArray& nodesArray)
   if(!layoutGraph)
     return;
 
-  for(const QJsonValue& nodeValue: nodesArray)
+  foreach(const QJsonValue& nodeValue, nodesArray)
   {
     QJsonObject nodeObject=nodeValue.toObject();
 
@@ -665,7 +646,7 @@ void read_edges(LayoutGraph* layoutGraph, const QJsonArray& edgesArray)
   if(!layoutGraph)
     return;
 
-  for(const QJsonValue& edgeValue: edgesArray)
+  foreach(const QJsonValue& edgeValue, edgesArray)
   {
     QJsonObject edgeObject=edgeValue.toObject();
 
@@ -703,7 +684,7 @@ void read_edges(LayoutGraph* layoutGraph, const QJsonArray& edgesArray)
     find_it=edgeObject.find(QStringLiteral("control_points"));
     if(find_it!=edgeObject.end())
     {
-      for(const QJsonValue& pointValue: find_it.value().toArray())
+      foreach(const QJsonValue& pointValue, find_it.value().toArray())
       {
         QPointF point;
         readPos(pointValue.toObject(), &point);

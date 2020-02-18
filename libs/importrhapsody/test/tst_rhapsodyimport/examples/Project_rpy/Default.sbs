@@ -1,0 +1,99 @@
+I-Logix-RPY-Archive version 8.5.2 C++ 1159120
+{ ISubsystem 
+	- _id = GUID 96357296-4e78-4107-811b-30ed229d0b8f;
+	- _myState = 8192;
+	- _name = "Default";
+	- _lastID = 4;
+	- weakCGTime = 12.11.2017::14:23:0;
+	- strongCGTime = 12.11.2017::14:23:0;
+	- _defaultComposite = GUID ff121501-b57d-4a45-a778-4acadb675ac7;
+	- _eventsBaseID = -1;
+	- Classes = { IRPYRawContainer 
+		- size = 1;
+		- value = 
+		{ IClass 
+			- _id = GUID ff121501-b57d-4a45-a778-4acadb675ac7;
+			- _myState = 40960;
+			- _name = "TopLevel";
+			- weakCGTime = 12.11.2017::14:23:0;
+			- strongCGTime = 12.11.2017::14:23:0;
+			- _multiplicity = "";
+			- _itsStateChart = { IHandle 
+				- _m2Class = "";
+			}
+			- Associations = { IRPYRawContainer 
+				- size = 2;
+				- value = 
+				{ IPart 
+					- _id = GUID f96baf18-16cc-460b-960c-30fdba920a33;
+					- _myState = 10240;
+					- _name = "object_1";
+					- _multiplicity = "1";
+					- _otherClass = { IClassifierHandle 
+						- _m2Class = "IClass";
+						- _id = GUID 99b40fe6-064a-46e2-b06e-56686ce96d71;
+					}
+					- _inverse = { IHandle 
+						- _m2Class = "";
+					}
+					- _implicitClass = { IClass 
+						- _id = GUID 99b40fe6-064a-46e2-b06e-56686ce96d71;
+						- _myState = 10240;
+						- _name = "object_1";
+						- _theMainDiagram = { IHandle 
+							- _m2Class = "IDiagram";
+							- _filename = "";
+							- _subsystem = "";
+							- _class = "";
+							- _name = "objectmodeldiagram_7";
+							- _id = GUID 297a55f6-4df3-4579-8801-ba1f1c0978e3;
+						}
+						- weakCGTime = 12.11.2017::14:21:23;
+						- strongCGTime = 12.11.2017::14:21:23;
+						- _multiplicity = "";
+						- _itsStateChart = { IHandle 
+							- _m2Class = "";
+						}
+						- _classModifier = Unspecified;
+					}
+				}
+				{ IPart 
+					- _id = GUID 19bad411-6f8a-4168-a9ad-399996ddc3ca;
+					- _myState = 10240;
+					- _name = "object_2";
+					- _multiplicity = "1";
+					- _otherClass = { IClassifierHandle 
+						- _m2Class = "IClass";
+						- _id = GUID fef0029a-4c9d-488b-9293-5f254bb555dd;
+					}
+					- _inverse = { IHandle 
+						- _m2Class = "";
+					}
+					- _implicitClass = { IClass 
+						- _id = GUID fef0029a-4c9d-488b-9293-5f254bb555dd;
+						- _myState = 10240;
+						- _name = "object_2";
+						- _theMainDiagram = { IHandle 
+							- _m2Class = "IDiagram";
+							- _filename = "";
+							- _subsystem = "";
+							- _class = "";
+							- _name = "objectmodeldiagram_7";
+							- _id = GUID 297a55f6-4df3-4579-8801-ba1f1c0978e3;
+						}
+						- weakCGTime = 12.11.2017::14:21:49;
+						- strongCGTime = 12.11.2017::14:21:49;
+						- _multiplicity = "";
+						- _itsStateChart = { IHandle 
+							- _m2Class = "";
+						}
+						- _classModifier = Unspecified;
+					}
+				}
+			}
+			- _classModifier = Unspecified;
+		}
+	}
+	- _configurationRelatedTime = 12.11.2017::14:22:22;
+}
+

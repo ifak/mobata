@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>view::spenat::DeclGraphEditView</class>
+ <widget class="QWidget" name="view::spenat::DeclGraphEditView">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>603</width>
+    <height>579</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="view::spenat::DeclGraphView" name="_declGraphView">
+     <property name="styleSheet">
+      <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(200, 200, 200);
+border-color: darkbrown;
+border-style: outset;
+border-width: 2px;
+border-radius: 10px;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QToolButton" name="_showToolbarButton">
+        <property name="styleSheet">
+         <string notr="true">QToolButton {
+	color: rgb(0, 0, 0);
+	background-color: rgb(200, 200, 200);
+	 border-color: darkbrown;
+     border-style: outset;
+     border-width: 2px;
+     border-radius: 10px;
+     font: 10px;
+     padding: 6px;
+	image: url(:/mobata/images/right.png)
+ }
+QToolButton:checked {
+	color: rgb(0, 0, 0);
+	background-color: rgb(200, 200, 200);
+	 border-color: darkbrown;
+     border-style: inset;
+	image: url(:/mobata/images/left.png)
+ }</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="arrowType">
+         <enum>Qt::NoArrow</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="_declEditToolbar" native="true">
+        <property name="styleSheet">
+         <string notr="true">QToolButton {
+	color: rgb(255, 255, 255);
+	background-color: rgb(100, 100, 100);
+     border-style: outset;
+     border-width: 2px;
+     border-radius: 10px;
+     border-color: beige;
+     font: 10px;
+     padding: 6px;
+ }
+QToolButton:checked {
+	color: rgb(0, 0, 0);
+	background-color: rgb(200, 200, 200);
+	 border-color: darkbrown;
+     border-style: inset;
+ }</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QToolButton" name="_selectButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>select</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>:/mobata/images/select.png</normaloff>:/mobata/images/select.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="_addPlaceButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>add place</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>:/mobata/images/spenat/place.png</normaloff>:/mobata/images/spenat/place.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="_addTransButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>add transition</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>:/mobata/images/spenat/transition.png</normaloff>:/mobata/images/spenat/transition.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="_addJunctionButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>add junction</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>:/mobata/images/spenat/junction.png</normaloff>:/mobata/images/spenat/junction.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="_addArcButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>add arc</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>:/mobata/images/spenat/arc.png</normaloff>:/mobata/images/spenat/arc.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="_initMarkingButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>init marking</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>:/mobata/images/spenat/marking.png</normaloff>:/mobata/images/spenat/marking.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>view::spenat::DeclGraphView</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">mobatawidgets/spenat/declgraphview.hpp</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>_showToolbarButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>_declEditToolbar</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>496</x>
+     <y>27</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>530</x>
+     <y>50</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

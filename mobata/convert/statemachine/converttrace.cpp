@@ -1,23 +1,4 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-#include "converttrace.hpp"
+#include "converttrace.h"
 #include "mobata/model/base/io/readhelpers.hpp"
 #include "mobata/utils/functors.hpp"
 
@@ -109,6 +90,10 @@ bool ConvertTrace::loadStatemachineTraceFromFile(QString* errorString)
 
 bool ConvertTrace::appendPlaceTrace(const QString placeName, QString* errorString)
 {
+  //init states are not part of the tracefile
+  if(placeName == QStringLiteral("init"))
+    return true;
+
   for(const QJsonValue& jsonValue : this->_d->_states)
   {
     if(!jsonValue.isObject())
@@ -120,7 +105,10 @@ bool ConvertTrace::appendPlaceTrace(const QString placeName, QString* errorStrin
                                                          &stateName,
                                                          errorString);
     if(!result)
+    {
+      utils::AddPtrString(errorString) << "Can't read property name from statemachine trace file json!";
       return false;
+    }
 
     if(stateName == placeName)
     {
@@ -129,6 +117,7 @@ bool ConvertTrace::appendPlaceTrace(const QString placeName, QString* errorStrin
     }
   }
 
+  utils::AddPtrString(errorString) << "Can't find place" <<  placeName << " in statemachine trace!";
   return false;
 }
 

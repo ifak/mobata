@@ -1,0 +1,32 @@
+// Version 05
+import <denm_cancelation.components> as stations		// components importieren, Synonym "stations". Haben Checks als Guard-Strings.
+import <denm_cancelation.signals> as signals		// signals importieren, Synonym "stations". Haben Checks als Guard-Strings.
+
+Rule {
+        name: DENM_Cancelation;
+        //type: Sequence;
+        description: "Abkündigung einer DENM prüfen";
+        enabled: true;				// (Könnte Auswahl (Haken, Markierung oder dergleichen) in GUI setzen)
+
+        Declaration {							// Zusätzliche Components und Signals definierbar (zusätzlich zu Dateien), ist optional
+                Signal {
+                        name: CyclistWarning;
+                        basetype: signals.V2X_DENM;				// Optional. Um zuvor definierte Synonyme nutzen zu können. Aktuelle Lösung: Zuvor als normales Signal definiert.
+                        necessaryCheck: cause == CyclistOnRoad and canceled == false;	// Check (optional?) als Guard-String des Signals speichern. Beliebiger boolescher Ausdruck.
+                }
+
+                Component {
+                    name: RSU_456;
+                    basetype: stations.RoadSideUnit;
+                }
+
+                // Optionale Synonym-Definitionen
+                use stations.RSU_123 as rsu1;
+                use stations.RSU_456 as rsu2;
+        }
+
+        // Beginn des eigentlichen Regel-Inhalts, hier einer Soll-Sequenz
+
+        Sequence {							// Erst mal nur "sequence"-Knoten, später auch "availability" und ggf. weitere
+                Loop [3] {						// Auswahl: Loop, Par. Bei Loop zusätzlich in Klammern die Anzahl der Wiederholungen angeben.
+                        Message CyclistWarning(from ==

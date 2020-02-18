@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 grammar Irdl;
 import CommonDecl;
 
@@ -126,15 +109,20 @@ checkDecl
    ;
 
 checkDeclBody
-   : LBRACKET expression RBRACKET (COMMA timeOutDecl| SEMI)
+   : LBRACKET (expression|) RBRACKET (attributeAssign|)
+               (  COMMA timeOutDecl | ) SEMI
    ;
 
 timerDecl
    : TimerID AtID (componentIdPath) contextID ASSIGN ( REAL | INT) (MilliSekID | SekID) SEMI
    ;
 
+attributeAssign
+  : COMMA attributeIdPath ASSIGN signalParamName (attributeAssign|)
+  ;
+
 timeOutDecl
-   : TimeOutID COLON ( REAL | INT) (MilliSekID | SekID) SEMI
+   : TimeOutID COLON ( REAL | INT) (MilliSekID | SekID)
    ;
 
 altDecl
@@ -142,7 +130,7 @@ altDecl
    ;
 
 altBody
-   : LBRACKET (expression|) RBRACKET LBRACE sequenceDecl RBRACE
+   : LBRACKET (expression| ) RBRACKET LBRACE sequenceDecl RBRACE
    ;
 
 altBodyOptional
@@ -153,7 +141,12 @@ altBodyOptional
 durationDecl
    : DurationID LPAREN ( REAL | INT)  (MilliSekID | SekID)  RPAREN
          LBRACE sequenceDecl RBRACE
+//         durationElseDecl
    ;
+
+//durationElseDecl
+//   : (ElseID LBRACE sequenceDecl RBRACE |)
+//   ;
 
 contextID
     : ID
@@ -209,10 +202,12 @@ AllID
 
 MessageID
    : 'Message'
+   | 'SendMessage'
    ;
 
 CheckID
    : 'Check'
+   | 'ReceiveMessage'
    ;
 
 TimerID

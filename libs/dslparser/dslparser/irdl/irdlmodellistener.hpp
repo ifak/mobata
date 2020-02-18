@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #pragma once
 
 #include "IrdlBaseListener.h"
@@ -30,6 +29,7 @@ class RequirementsModel;
                  namespace msc{
                  class MscComponentItem;
                  class MscTimerItem;
+                 class MscCheckMessageItem;
                  }
                                   namespace base {
                                   class PortItem;
@@ -107,6 +107,8 @@ protected:
   void enterCheckDeclBody(IrdlParser::CheckDeclBodyContext * ctx) override;
   void exitCheckDecl(IrdlParser::CheckDeclContext * ctx) override;
 
+  void addCheckAssign(model::msc::MscCheckMessageItem* check, IrdlParser::AttributeAssignContext *ctx);
+
   void enterAltDecl(IrdlParser::AltDeclContext * ctx) override;
   void exitAltDecl(IrdlParser::AltDeclContext * ctx) override;
 
@@ -115,6 +117,8 @@ protected:
 
   void enterDurationDecl(IrdlParser::DurationDeclContext * ctx) override;
   void exitDurationDecl(IrdlParser::DurationDeclContext * ctx) override;
+  //void enterDurationElseDecl(IrdlParser::DurationElseDeclContext * ctx) override;
+  //void exitDurationElseDecl(IrdlParser::DurationElseDeclContext * ctx) override;
 
   void enterImportPathBody(IrdlParser::ImportPathBodyContext *ctx) override;
   void exitImportPathBody(IrdlParser::ImportPathBodyContext *ctx) override;
@@ -125,8 +129,9 @@ protected:
   void exitAtom(IrdlParser::AtomContext* ctx) override;
 
   void exitSignalParamName(IrdlParser::SignalParamNameContext *ctx) override;
-  void exitSignalIdPath(IrdlParser::SignalIdPathContext *ctx);
+  void exitSignalIdPath(IrdlParser::SignalIdPathContext *ctx) override;
 
+  void exitDeclarations(IrdlParser::DeclarationsContext *ctx) override;
   //    void exitIdPath(IrdlParser::IdPathContext *ctx) override;
 
 protected:
@@ -134,6 +139,7 @@ protected:
 
   //private:
   //  void addState(antlr4::ParserRuleContext* ctx);
+  const model::msc::MscComponentItem *getSystem();
   const model::msc::MscComponentItem *getAlias(QString name);
   const model::base::PortItem *getComponentFromPath(IrdlParser::ComponentIdPathContext *compPath);
   const model::base::SignalItem *getSignalFromPath(IrdlParser::SignalIdPathContext *signalPath);

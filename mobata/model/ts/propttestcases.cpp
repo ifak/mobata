@@ -1,27 +1,10 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "propttestcases.hpp"
 
 #include "testcaseitem.hpp"
 
 #include "../../utils/functors.hpp"
+
+#include "../../memory_leak_start.hpp"
 
 namespace model {
 namespace ts {
@@ -31,7 +14,7 @@ class PropTestCases::Private
   friend class PropTestCases;
 
   Private()
-    : _testCasesItem(nullptr)
+    : _testCasesItem(0)
   {}
 
 public:
@@ -140,7 +123,7 @@ void PropTestCases::removeTestCase(const QUuid& testCaseId)
 
 TestCaseItem* PropTestCases::testCase(const QUuid& testCaseUuid) const
 {
-  for(TestCaseItem* testCaseItem : this->testCases())
+  foreach(TestCaseItem* testCaseItem, this->testCases())
     if(testCaseItem->uuid()==testCaseUuid)
       return testCaseItem;
 

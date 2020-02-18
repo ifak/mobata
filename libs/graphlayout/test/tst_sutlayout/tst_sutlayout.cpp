@@ -107,17 +107,17 @@ void SutLayoutTest::LayoutGraphCreationTest()
   //! SUT -> Graph test
   //!--------------------------------------------------------------------------
 
-  for (graphlayout::LayoutNode* node: graph->allNodes()) {
+  foreach (graphlayout::LayoutNode* node, graph->allNodes()) {
     QVERIFY(node->pos().x() != 0 && node->pos().y() != 0);
   }
 
-  for (graphlayout::LayoutEdge* edge: graph->edges()) {
+  foreach (graphlayout::LayoutEdge* edge, graph->edges()) {
     QVERIFY(edge->points().length()>=2);
   }
 
-  for (graphlayout::LayoutNode* node: graph->allNodes()) {
+  foreach (graphlayout::LayoutNode* node, graph->allNodes()) {
     int exist = 0;
-    for (QQuickItem* item: widget->rootObject()->findChildren<QQuickItem*>("node")) {
+    foreach (QQuickItem* item, widget->rootObject()->findChildren<QQuickItem*>("node")) {
       if(item->property("uuid")==node->externUuid().toString()){
         exist=1;
         break;
@@ -126,9 +126,9 @@ void SutLayoutTest::LayoutGraphCreationTest()
     QCOMPARE(exist,1);
   }
 
-  for (graphlayout::LayoutEdge* edge: graph->edges()) {
+  foreach (graphlayout::LayoutEdge* edge, graph->edges()) {
     int exist = 0;
-    for (QQuickItem* item: widget->rootObject()->findChildren<QQuickItem*>("edge")) {
+    foreach (QQuickItem* item, widget->rootObject()->findChildren<QQuickItem*>("edge")) {
       if(item->property("uuid")==edge->externUuid().toString()){
         exist=1;
         break;
@@ -138,7 +138,7 @@ void SutLayoutTest::LayoutGraphCreationTest()
   }
 
 
-  for (QQuickItem* item: widget->rootObject()->findChildren<QQuickItem*>("node")) {
+  foreach (QQuickItem* item, widget->rootObject()->findChildren<QQuickItem*>("node")) {
     QVERIFY(item->x()!=0);
     QVERIFY(item->y()!=0);
   }

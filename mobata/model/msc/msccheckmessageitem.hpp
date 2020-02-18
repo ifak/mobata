@@ -1,8 +1,6 @@
 /*
  * This file is part of mobata.
  *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
  * mobata is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,8 +14,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#pragma once
+#ifndef MODEL_MSC_MSCCHECKMESSAGEITEM_HPP
+#define MODEL_MSC_MSCCHECKMESSAGEITEM_HPP
 
 #include "mscmessageitem.hpp"
 
@@ -30,7 +28,8 @@ public:
   MscCheckMessageItem(PortItem const* sourcePort,
                       PortItem const* targetPort,
                       const QString& guard=QStringLiteral(""),
-                      const int timeout = -1);
+                      const int timeout = -1,
+                      const double accuracy = 0.0);
   virtual ~MscCheckMessageItem();
 
 public:
@@ -42,6 +41,10 @@ public:
   void            setGuard(const QString& guard);
   int             timeout() const;
   void            setTimeout(const int timeout);
+  double          accuracy() const;
+  void            setAccuracy(const double accuracy);
+  QHash<QString,QString> assign() const;
+  void            appendAssign(QString attribute, QString signalParam);
   QString         toString() const;
 
 private:
@@ -52,3 +55,5 @@ private:
 
 } // namespace msc
 } // namespace model
+
+#endif // MODEL_MSC_CHECKMESSAGEITEM_HPP

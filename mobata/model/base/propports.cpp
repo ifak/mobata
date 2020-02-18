@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "propports.hpp"
 
 #include "portitem.hpp"
@@ -25,6 +6,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDebug>
+
+#include "../../memory_leak_start.hpp"
 
 namespace model {
 namespace base {
@@ -35,7 +18,7 @@ class PropPorts::Private
 
   Private(QStandardItem* parent)
     : _parentItem(parent),
-      _portsItem(nullptr)
+      _portsItem(0)
   {}
 
 public:
@@ -124,7 +107,7 @@ PortItem* PropPorts::portById(const QUuid &portUuid)
     if(portItem->uuid()==portUuid)
       return portItem;
 
-  return nullptr;
+  return 0;
 }
 
 PortItem* PropPorts::port(const QString& portName)
@@ -133,7 +116,7 @@ PortItem* PropPorts::port(const QString& portName)
     if(port->name()==portName)
       return port;
 
-  return nullptr;
+  return 0;
 }
 
 PortItem const* PropPorts::portById(const QUuid &portUuid) const
@@ -142,7 +125,7 @@ PortItem const* PropPorts::portById(const QUuid &portUuid) const
     if(portItem->uuid()==portUuid)
       return portItem;
 
-  return nullptr;
+  return 0;
 }
 
 PortItem const* PropPorts::port(const QString &portName) const
@@ -151,7 +134,7 @@ PortItem const* PropPorts::port(const QString &portName) const
     if(portItem->name()==portName)
       return portItem;
 
-  return nullptr;
+  return 0;
 }
 
 bool PropPorts::addPort(PortItem *port,
@@ -172,6 +155,10 @@ bool PropPorts::addPort(PortItem *port,
 
   if(this->port(port->name()))
   {
+    if(port->name() == QStringLiteral("_defaultPort")){
+      this->port(port->name())->setUuid(port->uuid());
+      return true;
+    }
     if(errorString)
       *errorString+=QObject::tr((QLatin1String("There is already a port '")
                                  +port->name()
@@ -199,11 +186,14 @@ PortItem* PropPorts::addPort(const QString& portName,
 
   if(this->port(portName))
   {
+    if(portName == QStringLiteral("_defaultPort")){
+      return this->port(portName);
+    }
     if(errorString)
       *errorString+=QObject::tr((QLatin1String("There is already a port '")
                                  +portName
                                  +QLatin1String("' available!")).toLatin1());
-    return nullptr;
+    return 0;
   }
 
   PortItem* newPort=new PortItem(portName);
@@ -222,7 +212,7 @@ void PropPorts::removePortById(const QUuid& portUuid)
   if(this->_d->_portsItem->rowCount() == 0)
   {
     this->_d->_parentItem->removeRow(this->_d->_portsItem->row());
-    this->_d->_portsItem = nullptr;
+    this->_d->_portsItem = 0;
   }
 
   return;
@@ -237,7 +227,7 @@ void PropPorts::removePort(const QString& portName)
   if(this->_d->_portsItem->rowCount() == 0)
   {
     this->_d->_parentItem->removeRow(this->_d->_portsItem->row());
-    this->_d->_portsItem = nullptr;
+    this->_d->_portsItem = 0;
   }
 
   return;

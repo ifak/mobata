@@ -57,17 +57,6 @@
     typedef __int32 ssize_t;
   #endif
 
-  #if _MSC_VER >= 1900 && _MSC_VER < 2000
-    // VS 2015 has a known bug when using std::codecvt_utf8<char32_t>
-    // so we have to temporarily use __int32 instead.
-    // https://connect.microsoft.com/VisualStudio/feedback/details/1403302/unresolved-external-when-using-codecvt-utf8
-    typedef std::basic_string<__int32> i32string;
-
-    typedef i32string UTF32String;
-  #else
-    typedef std::u32string UTF32String;
-  #endif
-
   #ifdef ANTLR4CPP_EXPORTS
     #define ANTLR4CPP_PUBLIC __declspec(dllexport)
   #else
@@ -78,11 +67,21 @@
     #endif
   #endif
 
-  #if defined(_MSC_VER) && !defined(__clang__)
-    // clang-cl should escape this to prevent [ignored-attributes].
-    namespace std {
-      class ANTLR4CPP_PUBLIC exception; // Prevents warning C4275 from MSVC.
-    } // namespace std
+  #if _MSC_VER >= 1900 && _MSC_VER < 2000
+    // VS 2015 has a known bug when using std::codecvt_utf8<char32_t>
+    // so we have to temporarily use __int32 instead.
+    // https://connect.microsoft.com/VisualStudio/feedback/details/1403302/unresolved-external-when-using-codecvt-utf8
+    typedef std::basic_string<__int32> i32string;
+
+    typedef i32string UTF32String;
+
+    namespace std{
+      class ANTLR4CPP_PUBLIC exception; // Needed for VS 2015.
+    }
+
+//    class ANTLR4CPP_PUBLIC std::exception; // Needed for VS 2015.
+  #else
+    typedef std::u32string UTF32String;
   #endif
 
 #elif defined(__APPLE__)

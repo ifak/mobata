@@ -1,27 +1,10 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "comcreateirdlproposals.hpp"
 
 #include "combuildirdlmodel.hpp"
 
-#include <mobata/model/irdl/requirementsmodel.hpp>
-#include <mobata/model/irdl/reqactorcomponentitem.hpp>
-#include <mobata/model/irdl/requirementitem.hpp>
+#include <mobata/model/requirement/requirementsmodel.hpp>
+#include <mobata/model/requirement/reqactorcomponentitem.hpp>
+#include <mobata/model/requirement/requirementitem.hpp>
 #include <mobata/model/msc/msc_types.hpp>
 #include <mobata/model/msc/msccomponentitem.hpp>
 #include <mobata/model/msc/msctimeritem.hpp>
@@ -38,6 +21,8 @@
 #include "IrdlParser.h"
 #include "IrdlLexer.h"
 #include "IrdlBaseListener.h"
+
+#include <mobata/memory_leak_start.hpp>
 
 #include <QDir>
 
@@ -217,6 +202,9 @@ protected:
       pathStr.remove('\t');
       calcImportOptions(pathStr, _requirementProposals);
     }
+    else if(ruleIndex == IrdlParser::RuleCheckDeclBody){
+      calcAttributes(QStringList(),_requirementProposals);
+    }
     else
     {//keywords
       const dfa::Vocabulary& vocabulary = parser->getVocabulary();
@@ -341,7 +329,7 @@ protected:
           if(!alreadyGotContextID){
             QStringList path = QString::fromStdString(stream->getText(ruleCtx->start,lastToken))
                 .remove(QChar('\b')).remove(QChar('\t')).remove(QChar('\n')).remove(QChar('\r'))
-                .remove(QChar('\\')).remove(QChar(' ')).split(QChar('.'));
+                .remove(QChar('\\')).remove(QChar(' ')).remove('[').remove(']').split(QChar('.'));
             calcAttributes(path,_requirementProposals);
             if(path.size()<2) calcLiteralValues(_requirementProposals);
             alreadyGotContextID = true;
@@ -460,8 +448,12 @@ protected:
           displayName.remove(0,1);
         if(displayName.endsWith("'"))
           displayName.remove(displayName.size()-1,1);
-
-        addUniqueProposal(_requirementProposals,DslProposal(displayName,requirementTokenType(token)));
+        if(displayName == "CheckID")
+          addUniqueProposal(_requirementProposals,DslProposal("ReceiveMessage",requirementTokenType(token)));
+        else if(displayName == "MessageID")
+          addUniqueProposal(_requirementProposals,DslProposal("SendMessage",requirementTokenType(token)));
+        else
+          addUniqueProposal(_requirementProposals,DslProposal(displayName,requirementTokenType(token)));
       }
     }
     ///sort alphabetically
@@ -774,7 +766,7 @@ protected:
 
     int sz = curPath.size();
     QStringList list = homeDir.entryList();
-    for(QString option: list) {
+    foreach (QString option, list) {
       QString test = option;
       test.resize(sz);
       if(test == curPath)

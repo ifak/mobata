@@ -1,0 +1,66 @@
+import <declaration.decl> as decl
+import <example1.testsystem> as testsystem
+
+TestCase{
+  Declaration {
+    name:     testcase_4;
+    enabled:  false;
+    
+    Component testsystem.car2X.pRseApp as device_1;
+    
+    Attribute int internAttribute = 0;
+    Attribute real internAttribute1 = 3.14;
+    Attribute bool internAttribute2 = true;
+    Attribute string testResult = "";
+
+    Signal stimuli (int x, int y);
+    Signal winmodVar(string value);
+    Signal response (bool res, int value);
+  }
+  
+  
+
+  Timer@testsystem.car2X defaultTimer = 500;
+  this.internAttribute = 10;
+  
+  Message{
+  }
+  
+  Check{
+    from: sut.RSE_App.pEvaluation;
+    to:   device_1;
+    result: response(res==true and
+                    (value >=10)
+                    and value<=20
+                    and (value<=15
+                          or value>=12) and (internAttribute < 10));
+    TimeOut: 300;//optional
+  }
+  
+  Alt{
+    [this.internAttribute<10]{
+      Check{
+        from: sut.sut_comp_2.ext_port;
+        to:   testsystem.monitoring.pRseApp;
+        result: response(res==true and
+                        value>=10
+                        and value<=20
+                        and (value<=15
+                              or value>=12) and internAttribute < 10);
+      }
+
+      this.testResult = "Pass";
+    }
+    []{
+      Check{
+        from: sut.sut_comp_2.ext_port;
+        to:   testsystem.car2X.pRseApp;
+        result: winmodVar(value == "expected");
+      }
+      this.testResult = "Pass";
+    }
+    [defaultTimer.timeout()]{
+      this.testResult = "Fail";
+    }
+  }
+}

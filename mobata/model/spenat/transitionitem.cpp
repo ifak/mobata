@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "transitionitem.hpp"
 
 #include "placeitem.hpp"
@@ -45,7 +26,7 @@ QString placesString(const PlaceArcSet& placeArcs)
   QString placesString=QLatin1String("");
 
   int pos=0;
-  for(const typename PlaceArcSet::value_type& placeArc : placeArcs)
+  foreach(const typename PlaceArcSet::value_type& placeArc, placeArcs)
   {
     if(!placeArc->place())
       continue;
@@ -249,7 +230,7 @@ void TransitionItem::removePrePlace(const PlaceItem *prePlace)
   if(!prePlace)
     return;
 
-  for(PrePlaceArc const* prePlaceArc : this->prePlaceArcs())
+  foreach(PrePlaceArc const* prePlaceArc, this->prePlaceArcs())
   {
     if(prePlaceArc->place()==prePlace)
       this->_d->_prePlacesItem->removeRow(prePlaceArc->row());
@@ -310,7 +291,7 @@ void TransitionItem::removePostPlace(const PlaceItem *postPlace)
   if(!postPlace)
     return;
 
-  for(PostPlaceArc const* postPlaceArc : this->postPlaceArcs())
+  foreach(PostPlaceArc const* postPlaceArc, this->postPlaceArcs())
   {
     if(postPlaceArc->place()==postPlace)
       this->_d->_postPlacesItem->removeRow(postPlaceArc->row());

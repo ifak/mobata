@@ -21,22 +21,25 @@ win64-msvc*:QMAKE_CXXFLAGS += -wd4267
 # next lines should only be un-commented if antlr-grammars are changed
 # variable ANTLR_HOME has to be set!
 
-#win*{
-#  ANTLR_JAR = $$ANTLR_HOME\bin\antlr-4.7.2-complete.jar
-#}else{
-#  ANTLR_JAR = $$ANTLR_HOME/bin/antlr-4.7.2-complete.jar
-#}
+win*{
+  ANTLR_JAR = $$ANTLR_HOME\bin\antlr-4.7-complete.jar
+}else{
+  ANTLR_JAR = $$ANTLR_HOME/bin/antlr-4.7-complete.jar
+}
 
 #ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/CommonLexer.g4 -o $$PWD/common)
 #ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/CommonDecl.g4 -o $$PWD/common)
 #ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/Spenat.g4 -o $$PWD/spenat)
 #ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/SutDecl.g4 -o $$PWD/sut)
 #ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/TestSystemDecl.g4 -o $$PWD/testsystem)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/TrafficSimDecl.g4 -o $$PWD/trafficsim)
 #ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/TestCaseDecl.g4 -o $$PWD/testcase)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/DiagnosisDecl.g4 -o $$PWD/diagnosis)
 #ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/ImportReader.g4 -o $$PWD/importreader)
 #ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/StateMachine.g4 -o $$PWD/statemachine)
 #ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/Irdl.g4 -o $$PWD/irdl)
 #ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/IrdlCommonDecl.g4 -o $$PWD/irdldecl)
+#ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/Isrdl.g4 -o $$PWD/isrdl)
 #ParserError = $$system(java -jar $$ANTLR_JAR -Dlanguage=Cpp $$PWD/grammars/SimSystemDecl.g4 -o $$PWD/simsystem)
 
 DISTFILES += \
@@ -50,13 +53,17 @@ DISTFILES += \
     common/CommonDecl.tokens \
     common/CommonDeclLexer.tokens \
     grammars/SutDecl.g4 \
+    grammars/TrafficSimDecl.g4 \
     sut/SutDecl.tokens \
     sut/SutDeclLexer.tokens \
+    trafficsim/TrafficSimDecl.tokens \
+    trafficsim/TrafficSimDeclLexer.tokens \
     testcase/TestCaseDeclLexer.tokens \
     testcase/TestCaseDecl.tokens \
     grammars/TestSystemDecl.g4 \
     grammars/TestCaseDecl.g4 \
     grammars/ImportReader.g4 \
+    grammars/DiagnosisDecl.g4 \
     grammars/StateMachine.g4 \
     grammars/Irdl.g4 \
     statemachine/StateMachine.tokens \
@@ -67,6 +74,9 @@ DISTFILES += \
     grammars/IrdlCommonDecl.g4 \
     irdldecl/IrdlCommonDecl.tokens \
     irdldecl/IrdlCommonDeclLexer.tokens \
+    grammars/Isrdl.g4 \
+    isrdl/Isrdl.tokens \
+    isrdl/IsrdlLexer.tokens \
     grammars/SimSystemDecl.g4 \
     simsystem/SimSystemDecl.tokens \
     simsystem/SimSystemDeclLexer.tokens
@@ -158,6 +168,13 @@ HEADERS += \
     spenat/combuildspenatfile.hpp \
     statement/combuildstatementmodel.hpp \
     statement/statementmodellistener.hpp \
+    isrdl/combuildisrdlmodel.hpp \
+    isrdl/comcreateisrdlproposals.hpp \
+    isrdl/IsrdlBaseListener.h \
+    isrdl/IsrdlLexer.h \
+    isrdl/IsrdlListener.h \
+    isrdl/isrdlmodellistener.hpp \
+    isrdl/IsrdlParser.h \
     simsystem/SimSystemDeclBaseListener.h \
     simsystem/SimSystemDeclListener.h \
     simsystem/SimSystemDeclParser.h \
@@ -166,6 +183,7 @@ HEADERS += \
 
 SOURCES += \
     spenat/SpenatLexer.cpp \
+    spenat/SpenatListener.cpp \
     spenat/SpenatParser.cpp \
     spenat/combuildspenatmodel.cpp \
     spenat/comcreatespenatproposals.cpp \
@@ -175,6 +193,7 @@ SOURCES += \
     dslparser_types.cpp \
     common/combuildbasemodel.cpp \
     common/CommonDeclLexer.cpp \
+    common/CommonDeclListener.cpp \
     common/CommonDeclParser.cpp \
     sut/SutDeclLexer.cpp \
     sut/SutDeclParser.cpp \
@@ -209,11 +228,13 @@ SOURCES += \
     statemachine/combuildstatemachinemodel.cpp \
     statemachine/comcreatestatemachineproposals.cpp \
     statemachine/StateMachineLexer.cpp \
+    statemachine/StateMachineListener.cpp \
     statemachine/statemachinemodellistener.cpp \
     statemachine/StateMachineParser.cpp \
     irdl/combuildirdlmodel.cpp \
     irdl/comcreateirdlproposals.cpp \
     irdl/IrdlLexer.cpp \
+    irdl/IrdlListener.cpp \
     irdl/IrdlParser.cpp \
     irdl/irdlmodellistener.cpp \
     statemachine/combuildstatemachinefile.cpp \ #\
@@ -227,5 +248,11 @@ SOURCES += \
     statement/combuildstatementmodel.cpp \
     statement/statementmodellistener.cpp \
     simsystem/SimSystemDeclParser.cpp \
-    simsystem/SimSystemDeclLexer.cpp
+    simsystem/SimSystemDeclLexer.cpp \
 #    testcase/combuildtestcasefile.cpp
+    isrdl/combuildisrdlmodel.cpp \
+    isrdl/comcreateisrdlproposals.cpp \
+    isrdl/IsrdlLexer.cpp \
+    isrdl/IsrdlListener.cpp \
+    isrdl/isrdlmodellistener.cpp \
+    isrdl/IsrdlParser.cpp

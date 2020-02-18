@@ -25,5 +25,6 @@
         <file>qml/graph_main.qml</file>
         <file>qml/GraphEdge_old.qml</file>
         <file>qml/GraphNode_old.qml</file>
+        <file>qml/msc_message_loop.qml</file>
     </qresource>
 </RCC>

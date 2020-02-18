@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
@@ -53,7 +36,7 @@ bool saveSpecificationModel(QString* content, const QString& filePath, QString* 
 
   QFile file(filePath);
   QString output = (*content);
-  if(file.open(QIODevice::ReadWrite))
+  if(file.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
   {
     QTextStream stream(&file);
     stream << output << endl;
@@ -161,6 +144,21 @@ void attributeDecl(const BaseModel* model, QString* content, int tabCount)
           AddPtrString(content) << QStringLiteral(" = false");
         else if(attribute->initValue() == QStringLiteral("1"))
           AddPtrString(content) << QStringLiteral(" = true");
+        else if(attribute->initValue() == QStringLiteral("True"))
+          AddPtrString(content) << QStringLiteral(" = true");
+        else if(attribute->initValue() == QStringLiteral("False"))
+          AddPtrString(content) << QStringLiteral(" = false");
+        else if(attribute->initValue() == QStringLiteral("true"))
+          AddPtrString(content) << QStringLiteral(" = true");
+        else if(attribute->initValue() == QStringLiteral("false"))
+          AddPtrString(content) << QStringLiteral(" = false");
+      }
+      else if(attribute->dataType() == QStringLiteral("string")){
+        QString val = attribute->initValue();
+        if( !val.size() || val[0] != '\"'){
+          val = QStringLiteral("\"%0\"").arg(val);
+        }
+        AddPtrString(content) << QStringLiteral(" = ") + val;
       }
       else
         AddPtrString(content) << QStringLiteral(" = ") + attribute->initValue();
@@ -273,19 +271,27 @@ void writeMultiLineString(QString* content, const QString& token, const QString&
   if(body.isEmpty())
     return;
 
+  QString newBody = body;
+  newBody = newBody.replace("\r\n","\n");
+  newBody = newBody.replace(";",";\n");
+  newBody = newBody.replace("\n\n","\n");
+  if(newBody.right(1) == "\n"){
+    newBody = newBody.left(newBody.length()-1);
+  }
+
   AddPtrString(content) << nextLine(tabCount) +
                            token +
                            QStringLiteral(": ");
-  if(newLines(body) > 1){
+  if(newLines(newBody) > 1){
     AddPtrString(content) <<  QStringLiteral("{") +
                               nextLine(0) +
-                              newLineTabHandler(body, tabCount + 2) +
+                              newLineTabHandler(newBody, tabCount + 2) +
                               nextLine(tabCount) +
                               QStringLiteral("}");
   }
   else{
-    AddPtrString(content) << body;
-    if(body.right(1) != QStringLiteral(";") && body.right(1) != QStringLiteral("}"))
+    AddPtrString(content) << newBody;
+    if(newBody.right(1) != QStringLiteral(";") && newBody.right(1) != QStringLiteral("}"))
       AddPtrString(content) << QStringLiteral(";");
   }
 }

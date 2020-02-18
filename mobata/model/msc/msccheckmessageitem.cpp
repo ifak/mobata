@@ -1,24 +1,8 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "msccheckmessageitem.hpp"
-#include "../msc/msctimeoutitem.hpp"
+#include <mobata/model/msc/msctimeoutitem.hpp>
+#include <QDebug>
+
+#include "../../memory_leak_start.hpp"
 
 namespace model {
 namespace msc {
@@ -29,20 +13,25 @@ class MscCheckMessageItem::Private
 
   QString _guard;
   int     _timeout;
+  double  _accuracy;
+  QHash<QString,QString> _assign;
 
   Private(const QString& guard,
-          const int timeout)
+          const int timeout,
+          const double accuracy)
     : _guard(guard),
-      _timeout(timeout)
+      _timeout(timeout),
+      _accuracy(accuracy)
   {}
 };
 
 MscCheckMessageItem::MscCheckMessageItem(const PortItem* sourcePort,
                                          const PortItem* targetPort,
                                          const QString& guard,
-                                         const int timeout)
+                                         const int timeout,
+                                         const double accuracy)
   : MscMessageItem(sourcePort, targetPort),
-    _d(new Private(guard, timeout))
+    _d(new Private(guard, timeout, accuracy))
 {
   this->setText(this->toString());
 }
@@ -76,6 +65,28 @@ void MscCheckMessageItem::setTimeout(const int timeOut)
   return;
 }
 
+double MscCheckMessageItem::accuracy() const
+{
+  return _d->_accuracy;
+}
+
+void MscCheckMessageItem::setAccuracy(const double accuracy)
+{
+  this->_d->_accuracy = accuracy;
+
+  return;
+}
+
+QHash<QString, QString> MscCheckMessageItem::assign() const
+{
+  return this->_d->_assign;
+}
+
+void MscCheckMessageItem::appendAssign(QString attribute, QString signalParam)
+{
+  this->_d->_assign.insert(attribute, signalParam);
+}
+
 QString MscCheckMessageItem::toString() const
 {
   QString messageString;
@@ -88,8 +99,18 @@ QString MscCheckMessageItem::toString() const
                      + this->_d->_guard
                      +QLatin1Char(']');
 
+    if(!this->paramValues().isEmpty()){
+      messageString = messageString.replace("(", "[");
+      messageString = messageString.replace(")", "]");
+      messageString = messageString.replace("=", "==");
+    }
+
+    if(this->_d->_accuracy > 0)
+      messageString +=QLatin1String(" +- ")
+                      + QString::number(this->_d->_accuracy);
+
     if(this->_d->_timeout > 0)
-      messageString +=QLatin1String(" after ")
+      messageString +=QLatin1String(" during ")
                       + QString::number(this->_d->_timeout)
                       + QLatin1String(" ms");
   }

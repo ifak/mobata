@@ -1,22 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "mscsequence.hpp"
 
 #include "mscmessageitem.hpp"
@@ -33,6 +14,8 @@
 #include "../../utils/functors.hpp"
 
 #include <QSet>
+
+#include "../../memory_leak_start.hpp"
 
 namespace model{
 namespace msc{
@@ -291,8 +274,8 @@ void sequTypeItems(MscSequence const* sequence,
   if(!sequence)
     return;
 
-  for(MscSequenceItem const* sequItem:
-      sequence->sequenceItems())
+  foreach(MscSequenceItem const* sequItem,
+          sequence->sequenceItems())
   {
     if(MscSequence const* innerSequence=dynamic_cast<MscSequence const*>(sequItem))
       sequTypeItems<SequType>(innerSequence, sequTypeList);
@@ -305,8 +288,8 @@ void sequTypeItems(MscSequence const* sequence,
 
 MscTimerItem const* MscSequence::timer(const QString& timerName)
 {
-  for(MscTimerItem const* timer:
-      this->timers())
+  foreach(MscTimerItem const* timer,
+          this->timers())
   {
     if(timer->name()==timerName)
       return timer;
@@ -317,8 +300,8 @@ MscTimerItem const* MscSequence::timer(const QString& timerName)
 
 const MscTimerItem*MscSequence::timer(const QUuid& timerUuid)
 {
-  for(MscTimerItem const* timer:
-      this->timers())
+  foreach(MscTimerItem const* timer,
+          this->timers())
   {
     if(timer->uuid()==timerUuid)
       return timer;
@@ -342,15 +325,15 @@ MscSequence::ConstComponentItems MscSequence::componentItems() const
   ConstComponentItems components;
   for(MscSequenceItem const* sequItem : this->sequenceItems())
   {
-    if(sequItem->stepType()==MessageStep)
+    if(sequItem->stepType()==MessageStep || sequItem->stepType()==CheckMessageStep)
     {
-      MscMessageItem const* messageItem=simple_cast<MscMessageItem const*>(sequItem);
+      MscMessageItem const* messageItem=dynamic_cast<MscMessageItem const*>(sequItem);
       Q_ASSERT(messageItem);
 
       ///component for source port
       PortItem const* portItem=messageItem->sourcePort();
       Q_ASSERT(portItem->ownerType()==PortItem::Component);
-      MscComponentItem const* ownerComponent=simple_cast<MscComponentItem const*>(portItem->owner());
+      MscComponentItem const* ownerComponent=dynamic_cast<MscComponentItem const*>(portItem->owner());
       Q_ASSERT(ownerComponent);
       if(!components.contains(ownerComponent))
         components.append(ownerComponent);
@@ -358,14 +341,14 @@ MscSequence::ConstComponentItems MscSequence::componentItems() const
       ///component for target port
       portItem=messageItem->targetPort();
       Q_ASSERT(portItem->ownerType()==PortItem::Component);
-      ownerComponent=simple_cast<MscComponentItem const*>(portItem->owner());
+      ownerComponent=dynamic_cast<MscComponentItem const*>(portItem->owner());
       Q_ASSERT(ownerComponent);
       if(!components.contains(ownerComponent))
         components.append(ownerComponent);
     }
     else if(sequItem->stepType()==StatementStep)
     {
-      MscStatementItem const* statementItem=simple_cast<MscStatementItem const*>(sequItem);
+      MscStatementItem const* statementItem=dynamic_cast<MscStatementItem const*>(sequItem);
       Q_ASSERT(statementItem);
 
       ///component
@@ -376,7 +359,7 @@ MscSequence::ConstComponentItems MscSequence::componentItems() const
     }
     else if(sequItem->stepType()==TimerStep)
     {
-      MscTimerItem const* timerItem=simple_cast<MscTimerItem const*>(sequItem);
+      MscTimerItem const* timerItem=dynamic_cast<MscTimerItem const*>(sequItem);
       Q_ASSERT(timerItem);
 
       ///component
@@ -387,7 +370,7 @@ MscSequence::ConstComponentItems MscSequence::componentItems() const
     }
     else if(sequItem->stepType()==FragmentStep)
     {
-      MscFragmentItem const* fragmentItem=simple_cast<MscFragmentItem const*>(sequItem);
+      MscFragmentItem const* fragmentItem=dynamic_cast<MscFragmentItem const*>(sequItem);
       Q_ASSERT(fragmentItem);
 
       ConstComponentItems fragmentComponents=fragmentItem->componentItems();

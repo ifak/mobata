@@ -1,8 +1,6 @@
 /*
  * This file is part of mobata.
  *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
  * mobata is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #pragma once
 
 #include <QList>
@@ -42,9 +39,9 @@ public:
   
 public:
   virtual bool      addPort(PortItem* port,
-                            QString* errorString=nullptr);
+                            QString* errorString=0);
   virtual PortItem* addPort(const QString &portName,
-                            QString* errorString=nullptr);
+                            QString* errorString=0);
 
 public:
   void            removePortById(const QUuid& portUuid);
@@ -70,7 +67,7 @@ private:
 
 bool readPorts(QJsonObject const* json_propPortsObject,
                PropPorts* propPorts,
-               QString* errorString = nullptr);
+               QString* errorString = 0);
 
 void writePorts(PropPorts const* propPorts,
                 QJsonObject* json_propPortsObject);

@@ -1,0 +1,39 @@
+import <sutExample.sut> as sut
+Testsystem {
+  name: rse_testsystem;
+  Attribute string address = "192.168.227.46";
+
+  TestComponent{
+      name: trafficSim;
+      Attribute string address = "192.168.227.31";
+      Attribute int port = 5959;
+    }
+    TestComponent{
+      name: car2X;
+      enabled: false;
+      Attribute string car2xGenAddress = "192.168.222.25";
+      Attribute int car2xGenPort = 45454;
+      Attribute string bicycleGenAddress = "192.168.222.25";
+      Attribute int bicycleGenPort = 9930;
+
+
+      Port pRseApp;
+    }
+    TestComponent{
+      name: monitoring;
+
+      enabled: false;
+      Attribute string address = "192.168.222.30";
+      Attribute int port = 9930;
+      Attribute int networkInterface = 0;
+
+      Port pRseApp;
+    }
+
+  Link{
+      source: car2X.pRseApp;
+      target: sut.RSE_App.pTestSystem;
+      label: "test data stimulation and results";
+    }
+   Link{
+     source: monitoris.

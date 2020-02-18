@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "testsystemmodellistener.hpp"
 #include "TestSystemDeclLexer.h"
 
@@ -26,6 +9,8 @@
 #include <QDebug>
 #include <QFile>
 #include <QFileInfo>
+
+#include <mobata/memory_leak_start.hpp>
 
 using namespace model::ts;
 using namespace model::base;
@@ -55,10 +40,10 @@ class TestSystemModelListener::Private
           const QString& praefix)
     : _importedSutFile(importedSutFile),
       _praefix(praefix),
-      _currentComponentItem(0),
+      _currentComponentItem(nullptr),
       _importedModelItems(),
-      _linkSourcePort(0),
-      _linkTargetPort(0)
+      _linkSourcePort(nullptr),
+      _linkTargetPort(nullptr)
   {}
 };
 
@@ -107,8 +92,8 @@ PortItem const* portItemFromIdPath(typename ParserClass::IdPathContext* idPathCt
         Q_ASSERT(startToken);
         if(dslErrors)
           dslErrors->append(DslError(QString(QLatin1String("Component '%1' is not available!")).arg(currPathItemName),
-                                     startToken->getLine(),
-                                     startToken->getCharPositionInLine()));
+                                     static_cast<int>(startToken->getLine()),
+                                     static_cast<int>(startToken->getCharPositionInLine())));
         return nullptr;
       }
 
@@ -124,8 +109,8 @@ PortItem const* portItemFromIdPath(typename ParserClass::IdPathContext* idPathCt
       Q_ASSERT(startToken);
       if(dslErrors)
         dslErrors->append(DslError(QString(QLatin1String("Port '%1' is not available!")).arg(currPathItemName),
-                                   startToken->getLine(),
-                                   startToken->getCharPositionInLine()));
+                                   static_cast<int>(startToken->getLine()),
+                                   static_cast<int>(startToken->getCharPositionInLine())));
       return nullptr;
     }
 
@@ -286,14 +271,14 @@ void TestSystemModelListener::exitPortDecl(TestSystemDeclParser::PortDeclContext
     {
       if(this->_errors)
         this->_errors->append(DslError(errorString,
-                                       portToken->getLine(),
-                                       portToken->getCharPositionInLine()));
+                                       static_cast<int>(portToken->getLine()),
+                                       static_cast<int>(portToken->getCharPositionInLine())));
     }
     else
     {
       this->_modelTextLocations->insert(newPort->index(),
-                                        TokenTextLocation(portToken->getStartIndex(),
-                                                          portToken->getStopIndex(),
+                                        TokenTextLocation(static_cast<int>(portToken->getStartIndex()),
+                                                          static_cast<int>(portToken->getStopIndex()),
                                                           Port));
     }
   }
@@ -312,7 +297,7 @@ void TestSystemModelListener::exitImportPathBody(TestSystemDeclParser::ImportPat
 
   QString path = QString::fromStdString(ctx->importFileBody()->getText());
   path = _d->_praefix + path;
-  qDebug()<<path;
+  qDebug()<<"TS-Listener"<<path;
   QFile file(path);
   if(!file.open(QFile::ReadOnly))
     qDebug()<<"imported file '"<<path<<"' could not be opened!";
@@ -384,8 +369,8 @@ void TestSystemModelListener::exitTestCompDecl(TestSystemDeclParser::TestCompDec
   Q_ASSERT(this->_d->_currentComponentItem);
 
   this->_modelTextLocations->insert(this->_d->_currentComponentItem->index(),
-                                    TokenTextLocation(ctx->getStart()->getStartIndex(),
-                                                      ctx->getStop()->getStopIndex(),
+                                    TokenTextLocation(static_cast<int>(ctx->getStart()->getStartIndex()),
+                                                      static_cast<int>(ctx->getStop()->getStopIndex()),
                                                       TestComponent));
 
   this->_d->_currentComponentItem.take();
@@ -512,8 +497,8 @@ void TestSystemModelListener::exitLinkDecl(TestSystemDeclParser::LinkDeclContext
     {
       newLinkItem->setNotation(this->_d->_linkLabel);
       this->_modelTextLocations->insert(newLinkItem->index(),
-                                        TokenTextLocation(ctx->getStart()->getStartIndex(),
-                                                          ctx->getStop()->getStopIndex(),
+                                        TokenTextLocation(static_cast<int>(ctx->getStart()->getStartIndex()),
+                                                          static_cast<int>(ctx->getStop()->getStopIndex()),
                                                           Link));
     }
   }

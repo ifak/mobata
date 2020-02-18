@@ -1,20 +1,3 @@
-/*
- * This file is part of mobata.
- *
- * mobata is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
-
- * mobata is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
-
- * You should have received a copy of the GNU Lesser General Public License
- * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #include "combuildtestcasemodel.hpp"
 
 #include <mobata/model/ts/ts.hpp>
@@ -31,6 +14,8 @@
 #include "TestCaseDeclParser.h"
 
 #include "testcasemodellistener.hpp"
+
+#include <mobata/memory_leak_start.hpp>
 
 using namespace model::ts;
 using namespace utils;
@@ -61,8 +46,8 @@ protected:
     if(this->_errors)
     {
       DslError testcaseError(QString::fromStdString(msg),
-                             line,
-                             charPositionInLine);
+                           static_cast<int>(line),
+                           static_cast<int>(charPositionInLine));
       if(offendingSymbol)
         testcaseError.setOffendingText(offendingSymbol->getText().c_str());
       this->_errors->append(testcaseError);
@@ -82,21 +67,21 @@ class ComBuildTestCaseModel::Private
   DslErrorList              _testCaseErrors;
   TokenTextLocations        _keywordTextLocations;
   ModelTextLocations        _modelTextLocations;
-  QString                   _importedSutFile;
-  QString                   _importedTestSystemFile;
+  model::ts::TestSystemItem* _testSystemItem;
   TestCaseModelListener     _testCaseModelListener;
 
   Private(const QString& testcaseDocText,
           model::ts::TestCaseItem* testCaseDeclModel,
+          model::ts::TestSystemItem* testSystemItem,
           const QString& praefix,
           bool strictErrorHandling)
     : _testcaseDocText(testcaseDocText),
       _testCaseDeclModel(testCaseDeclModel),
       _strictErrorHandling(strictErrorHandling),
+      _testSystemItem(testSystemItem),
       _testCaseModelListener(this->_testCaseDeclModel,
                              &this->_testCaseErrors,
-                             &this->_importedSutFile,
-                             &this->_importedTestSystemFile,
+                             this->_testSystemItem,
                              praefix,
                              &this->_keywordTextLocations,
                              &this->_modelTextLocations)
@@ -105,10 +90,11 @@ class ComBuildTestCaseModel::Private
 
 ComBuildTestCaseModel::ComBuildTestCaseModel(const QString& testCaseDocText,
                                              model::ts::TestCaseItem* testCaseDeclModel,
+                                             model::ts::TestSystemItem* testSystemItem,
                                              const QString& praefix,
                                              bool strictErrorHandling,
                                              QObject* parent)
-  : QObject(parent), _d(new Private(testCaseDocText, testCaseDeclModel, praefix, strictErrorHandling))
+  : QObject(parent), _d(new Private(testCaseDocText, testCaseDeclModel, testSystemItem, praefix, strictErrorHandling))
 {}
 
 ComBuildTestCaseModel::~ComBuildTestCaseModel()
@@ -149,7 +135,7 @@ bool ComBuildTestCaseModel::execute(QString* errorString)
   parser.addErrorListener(&myErrorListener);
 
   TestCaseDeclParser::TestCaseDeclContext* TestCaseDeclCtx = nullptr;
-  //  auto start = std::chrono::steady_clock::now();
+//  auto start = std::chrono::steady_clock::now();
   try
   {
     //parser.addParseListener(&this->_d->_TestCaseModelListener);
@@ -198,15 +184,15 @@ bool ComBuildTestCaseModel::execute(QString* errorString)
     antlr4::tree::ParseTreeWalker walker;
     walker.walk(&this->_d->_testCaseModelListener, TestCaseDeclCtx);
 
-    //    qDebug()<<"Parse tree: " << TestCaseDeclCtx->toStringTree(&parser).c_str();
+//    qDebug()<<"Parse tree: " << TestCaseDeclCtx->toStringTree(&parser).c_str();
   }
 
-  //  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
-  //  qDebug() << "Parse time: " << duration.count() / 1000.0 << " ms";
+//  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - start);
+//  qDebug() << "Parse time: " << duration.count() / 1000.0 << " ms";
 
   if(this->_d->_strictErrorHandling
      && this->_d->_testCaseErrors.count()){
-    for(DslError err: this->_d->_testCaseErrors) {
+    foreach (DslError err, this->_d->_testCaseErrors) {
       AddPtrString(errorString)<<err.message();
     }
     return false;
@@ -228,16 +214,6 @@ const TokenTextLocations& ComBuildTestCaseModel::keywordTextLocations() const
 const ModelTextLocations &ComBuildTestCaseModel::modelTextLocations() const
 {
   return this->_d->_modelTextLocations;
-}
-
-const QString& ComBuildTestCaseModel::importedSutFile() const
-{
-  return this->_d->_importedSutFile;
-}
-
-const QString& ComBuildTestCaseModel::importedTestSystemFile() const
-{
-  return this->_d->_importedTestSystemFile;
 }
 
 const QHash<QString, model::base::ModelItem*>& ComBuildTestCaseModel::testCaseItems()

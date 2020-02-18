@@ -1,8 +1,6 @@
 /*
  * This file is part of mobata.
  *
- * Copyright (C) 2019 ifak, https://www.ifak.eu/
- *
  * mobata is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,10 +14,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#pragma once
-
-#include <QUuid>
+#ifndef MODEL_GRAPH_IGRAPH_HPP
+#define MODEL_GRAPH_IGRAPH_HPP
 
 namespace model{
 namespace graph{
@@ -34,8 +30,8 @@ public:
   typedef QList<ArcItem const*>   ConstArcSet;
   
 public:
-  explicit IGraph() {}
-  virtual ~IGraph() {}
+  explicit IGraph() {};
+  virtual ~IGraph() {};
   
 public:
   virtual NodeItem const* node(const QUuid& nodeUuid) const =0;
@@ -48,3 +44,5 @@ public:
   
 } // namespace graph
 } // namespace model
+
+#endif // MODEL_GRAPH_IGRAPH_HPP

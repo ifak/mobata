@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #pragma once
 
 #include "TestCaseDeclBaseListener.h"
@@ -40,7 +39,7 @@ namespace dslparser {
 namespace testcase {
 
 typedef QHash<QString, model::base::ModelItem*> ImportModelItem;
-
+typedef QHash<QString, model::base::BaseModel*> ImportModelModel;
 class TestCaseModelListener
     : public common::CommonModelListener< TestCaseDeclBaseListener, TestCaseDeclParser, model::ts::TestCaseItem>
 {
@@ -56,12 +55,11 @@ protected:
 public:
   TestCaseModelListener(model::ts::TestCaseItem* testCaseDeclModel,
                         DslErrorList* dslErrors,
-                        QString* importedSutFileName,
-                        QString* importedTestSystemFileName,
+                        model::ts::TestSystemItem* testSystemItem,
                         const QString& praefix = QStringLiteral(""),
-                        TokenTextLocations* keywordTextLocations = 0,
-                        ModelTextLocations* modelTextLocations = 0);
-  virtual ~TestCaseModelListener();
+                        TokenTextLocations* keywordTextLocations = nullptr,
+                        ModelTextLocations* modelTextLocations = nullptr);
+  virtual ~TestCaseModelListener() override;
 
 public:
   QPair<model::base::ModelItem*,int>            currentPathItem();
@@ -77,6 +75,8 @@ protected:
   void exitDeclarations(TestCaseDeclParser::DeclarationsContext *ctx) override;
   void enterNameDecl(TestCaseDeclParser::NameDeclContext* ctx) override;
   void exitNameDecl(TestCaseDeclParser::NameDeclContext *ctx) override;
+  void enterUuidDecl(TestCaseDeclParser::UuidDeclContext* ctx) override;
+  void exitUuidDecl(TestCaseDeclParser::UuidDeclContext *ctx) override;
   void enterEnabledDecl(TestCaseDeclParser::EnabledDeclContext *ctx) override;
   void exitEnabledDecl(TestCaseDeclParser::EnabledDeclContext *ctx) override;
   void enterImportPathBody(TestCaseDeclParser::ImportPathBodyContext *ctx) override;
@@ -88,7 +88,6 @@ protected:
   void enterAltDecl(TestCaseDeclParser::AltDeclContext *ctx) override;
   void exitTimerDecl(TestCaseDeclParser::TimerDeclContext *ctx) override;
   void exitMessageDecl(TestCaseDeclParser::MessageDeclContext *ctx) override;
-  void enterCheckDeclBody(TestCaseDeclParser::CheckDeclBodyContext *ctx) override;
   void exitCheckDecl(TestCaseDeclParser::CheckDeclContext *ctx) override;
   void exitTimeOutDecl(TestCaseDeclParser::TimeOutDeclContext *ctx) override;
   void exitIdStatement(TestCaseDeclParser::IdStatementContext *ctx) override;
@@ -99,7 +98,7 @@ protected:
 
 private:
   bool                          getItemFromPath(TestCaseDeclParser::IdPathContext *path,
-                                                model::base::ModelItem* item = 0);
+                                                model::base::ModelItem* item = nullptr);
   QString                       getExpression(TestCaseDeclParser::ExpressionContext* ctx);
   model::msc::MscComponentItem* getOwner(model::base::AttributeItem* item);
 

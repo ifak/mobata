@@ -1,0 +1,174 @@
+I-Logix-RPY-Archive version 8.5.2 C++ 1159120
+{ IComponent 
+	- _id = GUID 0cf94720-1c65-43fc-94ec-fe56e88e69b6;
+	- _myState = 139264;
+	- _name = "DefaultComponent";
+	- m_buildType = Executable;
+	- m_libraries = "";
+	- m_additionalSources = "";
+	- m_standardHeaders = "";
+	- m_includePath = "";
+	- m_initializationCode = "";
+	- m_folder = { IFolder 
+		- _id = GUID a3d62e7c-18a7-4a67-ad04-f1476fb4d058;
+		- _myState = 73728;
+		- _name = "Files";
+		- m_path = "";
+		- Elements = { IRPYRawContainer 
+			- size = 0;
+		}
+		- Files = { IRPYRawContainer 
+			- size = 0;
+		}
+	}
+	- m_configActive = { ICodeGenConfigInfoHandle 
+		- _m2Class = "ICodeGenConfigInfo";
+		- _id = GUID bcac5fe4-1ac0-48bf-8dea-0b12716e43fc;
+	}
+	- Configs = { IRPYRawContainer 
+		- size = 1;
+		- value = 
+		{ ICodeGenConfigInfo 
+			- _id = GUID bcac5fe4-1ac0-48bf-8dea-0b12716e43fc;
+			- _myState = 8192;
+			- _name = "DefaultConfig";
+			- HyperLinks = { IRPYRawContainer 
+				- size = 2;
+				- value = 
+				{ IMHyperLink 
+					- _id = GUID 89895975-56e0-47c8-b6bc-3c6c086d4166;
+					- _dependsOn = { INObjectHandle 
+						- _m2Class = "";
+					}
+					- _linkDispName = "Edit Makefile";
+					- _linkType = "FREE";
+					- _linkTarget = "C:\\Users\\mre\\Documents\\mbtcreator\\3rd\\mobata\\libs\\importrhapsody\\test\\tst_rhapsodyimport\\examples\\DefaultComponent\\DefaultConfig\\DefaultComponent.mak";
+					- isConfigurationFileHyperLink = 1;
+				}
+				{ IMHyperLink 
+					- _id = GUID 4a93c184-b7ae-49b5-a70e-f6fd6c98aea4;
+					- _dependsOn = { INObjectHandle 
+						- _m2Class = "";
+					}
+					- _linkDispName = "Edit Main File";
+					- _linkType = "FREE";
+					- _linkTarget = "C:\\Users\\mre\\Documents\\mbtcreator\\3rd\\mobata\\libs\\importrhapsody\\test\\tst_rhapsodyimport\\examples\\DefaultComponent\\DefaultConfig\\MainDefaultComponent";
+					- isConfigurationFileHyperLink = 1;
+				}
+			}
+			- _scopeType = Explicit;
+			- _libraries = "";
+			- _additionalSources = "";
+			- _standardHeaders = "";
+			- _includePath = "";
+			- _targetMain = "";
+			- _instrumentation = Animation;
+			- _timeModel = RealTime;
+			- m_generateActors = 1;
+			- _statechartImplementation = Flat;
+			- _initializationCode = "";
+			- _checksList = 0 ;
+			- ScopeElements = { IRPYRawContainer 
+				- size = 0;
+			}
+			- InitialInstances = { IRPYRawContainer 
+				- size = 0;
+			}
+			- _root = { IFolder 
+				- _id = GUID 17c45d81-3928-40fd-ab56-0e0825c0db2e;
+				- _myState = 8192;
+				- _name = "DefaultConfig";
+				- m_path = "";
+				- Elements = { IRPYRawContainer 
+					- size = 0;
+				}
+				- Files = { IRPYRawContainer 
+					- size = 0;
+				}
+			}
+			- weakCGTime = 1.2.1990::0:0:0;
+			- strongCGTime = 1.2.1990::0:0:0;
+			- AnimScopeElements = { IRPYRawContainer 
+				- size = 0;
+			}
+			- m_allInAnimScope = 1;
+		}
+	}
+	- HandlesInMe = { IRPYRawContainer 
+		- size = 8;
+		- value = 
+		{ IHandle 
+			- _m2Class = "ISubsystem";
+			- _filename = "Default.sbs";
+			- _subsystem = "";
+			- _class = "";
+			- _name = "Default";
+			- _id = GUID 96357296-4e78-4107-811b-30ed229d0b8f;
+		}
+		{ IHandle 
+			- _m2Class = "ISubsystem";
+			- _filename = "ATestPackage.sbs";
+			- _subsystem = "";
+			- _class = "";
+			- _name = "ATestPackage";
+			- _id = GUID 9726d35d-6659-4c12-9c22-73fef9f7e262;
+		}
+		{ IHandle 
+			- _m2Class = "ISubsystem";
+			- _filename = "Event_Collection.sbs";
+			- _subsystem = "";
+			- _class = "";
+			- _name = "Event_Collection";
+			- _id = GUID 89b676b1-668b-4911-90f0-d456c9f7e35b;
+		}
+		{ IHandle 
+			- _m2Class = "ISubsystem";
+			- _filename = "package_4.sbs";
+			- _subsystem = "";
+			- _class = "";
+			- _name = "package_4";
+			- _id = GUID f00e89bd-cdb1-4458-9ccb-1cd0e8d37a01;
+		}
+		{ IHandle 
+			- _m2Class = "ISubsystem";
+			- _filename = "package_5.sbs";
+			- _subsystem = "";
+			- _class = "";
+			- _name = "package_5";
+			- _id = GUID 19506ea3-974d-4d23-8d71-768b3058a20c;
+		}
+		{ IHandle 
+			- _m2Class = "ISubsystem";
+			- _filename = "Design.sbs";
+			- _subsystem = "";
+			- _class = "";
+			- _name = "Design";
+			- _id = GUID 0a061b39-84dd-48ff-931a-591527f14839;
+		}
+		{ IHandle 
+			- _m2Class = "ISubsystem";
+			- _filename = "SubPackage.sbs";
+			- _subsystem = "Design";
+			- _class = "";
+			- _name = "SubPackage";
+			- _id = GUID 60f9773e-d5d2-40c1-94de-11b50dc744aa;
+		}
+		{ IHandle 
+			- _m2Class = "ISubsystem";
+			- _filename = "package_0.sbs";
+			- _subsystem = "Design";
+			- _class = "";
+			- _name = "package_0";
+			- _id = GUID 7094b5b8-3f44-4012-81a9-5a2507e354de;
+		}
+	}
+	- VariationPoints = { IRPYRawContainer 
+		- size = 0;
+	}
+	- SelectedVariants = { IRPYRawContainer 
+		- size = 0;
+	}
+	- weakCGTime = 11.27.2017::13:45:8;
+	- strongCGTime = 1.2.1990::0:0:0;
+}
+

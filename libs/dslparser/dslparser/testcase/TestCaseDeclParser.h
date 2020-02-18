@@ -1,5 +1,21 @@
+/*
+ * This file is part of mobata.
+ *
+ * mobata is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
 
-// Generated from C:/Users/j05kraus/Private/SWDevelop/mobata_oss_dev/libs/dslparser/dslparser/grammars/TestCaseDecl.g4 by ANTLR 4.7.2
+ * mobata is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with mobata.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+// Generated from C:/Users/s_phs.DESKTOP-9GA53KK/Documents/mobata/libs/dslparser/dslparser/grammars/TestCaseDecl.g4 by ANTLR 4.7
 
 #pragma once
 
@@ -12,46 +28,47 @@
 class  TestCaseDeclParser : public antlr4::Parser {
 public:
   enum {
-    MessageID = 1, TimeOutID = 2, CheckID = 3, AltID = 4, TimerID = 5, ComponentID = 6, 
-    DeclarationID = 7, TestCaseID = 8, MilliSekID = 9, SekID = 10, IGNORE_NEWLINE = 11, 
-    NameID = 12, LabelID = 13, EnabledID = 14, TypeID = 15, IntID = 16, 
-    RealID = 17, BoolID = 18, StringID = 19, TriggerID = 20, MessageTrigger = 21, 
-    ThisID = 22, ReturnID = 23, SignalTransitionID = 24, TimeoutTransitionID = 25, 
-    EnumID = 26, DescriptionID = 27, AttributeID = 28, SignalID = 29, PortID = 30, 
-    ImportID = 31, FromID = 32, ToID = 33, SendID = 34, FunctionID = 35, 
-    SwitchID = 36, CaseID = 37, DefaultID = 38, IfID = 39, ElseID = 40, 
-    AsID = 41, AtID = 42, NotIdSymbol = 43, AndIdSymbol = 44, OrIdSymbol = 45, 
-    NotIdWord = 46, AndIdWord = 47, OrIdWord = 48, TrueID = 49, FalseID = 50, 
-    BREAK = 51, ASSIGN = 52, DoubleArrow = 53, RightArrow = 54, LeftArrow = 55, 
-    RANGE = 56, INT = 57, REAL = 58, STRING = 59, ID = 60, LINE_COMMENT = 61, 
-    COMMENT = 62, LPAREN = 63, RPAREN = 64, LBRACE = 65, RBRACE = 66, LBRACKET = 67, 
-    RBRACKET = 68, LESSTHAN = 69, GREATERTHAN = 70, COLON = 71, SEMI = 72, 
-    COMMA = 73, UNDER = 74, DOT = 75, PLUS = 76, MINUS = 77, MULT = 78, 
-    DIV = 79, PIPE = 80, REF = 81, CONST = 82, NEWLINE = 83, WS = 84
+    MessageID = 1, TimeOutID = 2, CheckID = 3, UuidID = 4, AltID = 5, TimerID = 6, 
+    AccuracyID = 7, ComponentID = 8, DeclarationID = 9, TestCaseID = 10, 
+    MilliSekID = 11, SekID = 12, IGNORE_NEWLINE = 13, NameID = 14, LabelID = 15, 
+    EnabledID = 16, TypeID = 17, IntID = 18, RealID = 19, BoolID = 20, StringID = 21, 
+    TriggerID = 22, MessageTrigger = 23, ThisID = 24, ReturnID = 25, SignalTransitionID = 26, 
+    TimeoutTransitionID = 27, EnumID = 28, DescriptionID = 29, AttributeID = 30, 
+    SignalID = 31, PortID = 32, ImportID = 33, FromID = 34, ToID = 35, SendID = 36, 
+    FunctionID = 37, SwitchID = 38, CaseID = 39, DefaultID = 40, IfID = 41, 
+    ElseID = 42, AsID = 43, AtID = 44, NotIdSymbol = 45, AndIdSymbol = 46, 
+    OrIdSymbol = 47, NotIdWord = 48, AndIdWord = 49, OrIdWord = 50, TrueID = 51, 
+    FalseID = 52, BREAK = 53, ASSIGN = 54, DoubleArrow = 55, RightArrow = 56, 
+    LeftArrow = 57, RANGE = 58, INT = 59, REAL = 60, STRING = 61, ID = 62, 
+    LINE_COMMENT = 63, COMMENT = 64, LPAREN = 65, RPAREN = 66, LBRACE = 67, 
+    RBRACE = 68, LBRACKET = 69, RBRACKET = 70, LESSTHAN = 71, GREATERTHAN = 72, 
+    COLON = 73, SEMI = 74, COMMA = 75, UNDER = 76, DOT = 77, PLUS = 78, 
+    MINUS = 79, MULT = 80, DIV = 81, PIPE = 82, REF = 83, CONST = 84, NEWLINE = 85, 
+    WS = 86
   };
 
   enum {
     RuleTestCaseDecl = 0, RuleTestCaseBody = 1, RuleDeclarations = 2, RuleAliasDef = 3, 
     RuleSteps = 4, RuleIdStatement = 5, RuleAssignmentDef = 6, RuleMessageDecl = 7, 
-    RuleCheckDecl = 8, RuleCheckDeclBody = 9, RuleTimerDecl = 10, RuleTimeOutDecl = 11, 
-    RuleAltDecl = 12, RuleAltBody = 13, RuleAltBodyOptional = 14, RuleEnabledDecl = 15, 
-    RuleContextID = 16, RuleFunctionCall = 17, RuleComponentIdPath = 18, 
-    RuleSignalIdPath = 19, RuleAttributeIdPath = 20, RuleSignalSend = 21, 
-    RuleCommonDecl = 22, RuleImportPathDecl = 23, RuleImportPathBody = 24, 
-    RuleImportFileBody = 25, RuleImportAs = 26, RuleTypeDefDecl = 27, RuleTypeDecl = 28, 
-    RuleIntTypeDecl = 29, RuleRealTypeDecl = 30, RuleEnumTypeDecl = 31, 
-    RuleAttributeDecl = 32, RuleLiteralValue = 33, RuleSignalParamName = 34, 
-    RuleAttributeName = 35, RuleToPortName = 36, RuleAttributeAssignStatement = 37, 
-    RuleLocalAssignStatement = 38, RuleSendToStatement = 39, RuleSingleAssignment = 40, 
-    RuleMultiAssignment = 41, RuleSignalDecl = 42, RuleParamDecl = 43, RuleFunctionDecl = 44, 
-    RuleFunctionParameters = 45, RuleFunctionCallBody = 46, RuleFunctionCallBodyOptional = 47, 
-    RuleTriggerDecl = 48, RuleThisDecl = 49, RulePortDecl = 50, RuleNameDecl = 51, 
-    RuleIdPath = 52, RuleStatementDecl = 53, RuleStatementBody = 54, RuleFunctionCallStatement = 55, 
-    RuleNestedStatementBody = 56, RuleReturnStatement = 57, RuleBreakStatement = 58, 
-    RuleOperation = 59, RuleOperationOptional = 60, RuleExpression = 61, 
-    RuleExpressionOptional = 62, RuleConditionalStatement = 63, RuleIfStatement = 64, 
-    RuleIfEuT = 65, RuleElseStatement = 66, RuleSwitchStatement = 67, RuleSwitchPuT = 68, 
-    RuleCaseStatement = 69, RuleDefaultStatement = 70, RuleAtom = 71
+    RuleCheckDecl = 8, RuleTimerDecl = 9, RuleTimeOutDecl = 10, RuleAccuracyDecl = 11, 
+    RuleAltDecl = 12, RuleAltBody = 13, RuleAltBodyOptional = 14, RuleUuidDecl = 15, 
+    RuleEnabledDecl = 16, RuleContextID = 17, RuleFunctionCall = 18, RuleFunctionCall2 = 19, 
+    RuleComponentIdPath = 20, RuleSignalIdPath = 21, RuleAttributeIdPath = 22, 
+    RuleSignalSend = 23, RuleCommonDecl = 24, RuleImportPathDecl = 25, RuleImportPathBody = 26, 
+    RuleImportFileBody = 27, RuleImportAs = 28, RuleTypeDefDecl = 29, RuleTypeDecl = 30, 
+    RuleIntTypeDecl = 31, RuleRealTypeDecl = 32, RuleEnumTypeDecl = 33, 
+    RuleAttributeDecl = 34, RuleLiteralValue = 35, RuleSignalParamName = 36, 
+    RuleAttributeName = 37, RuleToPortName = 38, RuleAttributeAssignStatement = 39, 
+    RuleLocalAssignStatement = 40, RuleSendToStatement = 41, RuleSingleAssignment = 42, 
+    RuleMultiAssignment = 43, RuleSignalDecl = 44, RuleParamDecl = 45, RuleFunctionDecl = 46, 
+    RuleFunctionParameters = 47, RuleFunctionCallBody = 48, RuleFunctionCallBodyOptional = 49, 
+    RuleTriggerDecl = 50, RuleThisDecl = 51, RulePortDecl = 52, RuleNameDecl = 53, 
+    RuleIdPath = 54, RuleStatementDecl = 55, RuleStatementBody = 56, RuleFunctionCallStatement = 57, 
+    RuleNestedStatementBody = 58, RuleReturnStatement = 59, RuleBreakStatement = 60, 
+    RuleOperation = 61, RuleOperationOptional = 62, RuleExpression = 63, 
+    RuleExpressionOptional = 64, RuleConditionalStatement = 65, RuleIfStatement = 66, 
+    RuleIfEuT = 67, RuleElseStatement = 68, RuleSwitchStatement = 69, RuleSwitchPuT = 70, 
+    RuleCaseStatement = 71, RuleDefaultStatement = 72, RuleAtom = 73
   };
 
   TestCaseDeclParser(antlr4::TokenStream *input);
@@ -73,15 +90,17 @@ public:
   class AssignmentDefContext;
   class MessageDeclContext;
   class CheckDeclContext;
-  class CheckDeclBodyContext;
   class TimerDeclContext;
   class TimeOutDeclContext;
+  class AccuracyDeclContext;
   class AltDeclContext;
   class AltBodyContext;
   class AltBodyOptionalContext;
+  class UuidDeclContext;
   class EnabledDeclContext;
   class ContextIDContext;
   class FunctionCallContext;
+  class FunctionCall2Context;
   class ComponentIdPathContext;
   class SignalIdPathContext;
   class AttributeIdPathContext;
@@ -178,6 +197,7 @@ public:
     AttributeDeclContext *attributeDecl();
     DeclarationsContext *declarations();
     NameDeclContext *nameDecl();
+    UuidDeclContext *uuidDecl();
     EnabledDeclContext *enabledDecl();
     SignalDeclContext *signalDecl();
     CheckDeclContext *checkDecl();
@@ -291,8 +311,12 @@ public:
     antlr4::tree::TerminalNode *RightArrow();
     antlr4::tree::TerminalNode *RPAREN();
     antlr4::tree::TerminalNode *COLON();
-    ContextIDContext *contextID();
-    CheckDeclBodyContext *checkDeclBody();
+    FunctionCall2Context *functionCall2();
+    antlr4::tree::TerminalNode *SEMI();
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+    TimeOutDeclContext *timeOutDecl();
+    AccuracyDeclContext *accuracyDecl();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -300,24 +324,6 @@ public:
   };
 
   CheckDeclContext* checkDecl();
-
-  class  CheckDeclBodyContext : public antlr4::ParserRuleContext {
-  public:
-    CheckDeclBodyContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *LBRACKET();
-    ExpressionContext *expression();
-    antlr4::tree::TerminalNode *RBRACKET();
-    antlr4::tree::TerminalNode *COMMA();
-    TimeOutDeclContext *timeOutDecl();
-    antlr4::tree::TerminalNode *SEMI();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  CheckDeclBodyContext* checkDeclBody();
 
   class  TimerDeclContext : public antlr4::ParserRuleContext {
   public:
@@ -347,7 +353,6 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *TimeOutID();
     antlr4::tree::TerminalNode *COLON();
-    antlr4::tree::TerminalNode *SEMI();
     antlr4::tree::TerminalNode *REAL();
     antlr4::tree::TerminalNode *INT();
     antlr4::tree::TerminalNode *MilliSekID();
@@ -359,6 +364,22 @@ public:
   };
 
   TimeOutDeclContext* timeOutDecl();
+
+  class  AccuracyDeclContext : public antlr4::ParserRuleContext {
+  public:
+    AccuracyDeclContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *AccuracyID();
+    antlr4::tree::TerminalNode *COLON();
+    antlr4::tree::TerminalNode *REAL();
+    antlr4::tree::TerminalNode *INT();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  AccuracyDeclContext* accuracyDecl();
 
   class  AltDeclContext : public antlr4::ParserRuleContext {
   public:
@@ -409,6 +430,23 @@ public:
 
   AltBodyOptionalContext* altBodyOptional();
 
+  class  UuidDeclContext : public antlr4::ParserRuleContext {
+  public:
+    antlr4::Token *val = nullptr;;
+    UuidDeclContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *UuidID();
+    antlr4::tree::TerminalNode *COLON();
+    antlr4::tree::TerminalNode *SEMI();
+    antlr4::tree::TerminalNode *STRING();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  UuidDeclContext* uuidDecl();
+
   class  EnabledDeclContext : public antlr4::ParserRuleContext {
   public:
     EnabledDeclContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -432,6 +470,7 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *ID();
     antlr4::tree::TerminalNode *NameID();
+    antlr4::tree::TerminalNode *UuidID();
     antlr4::tree::TerminalNode *LabelID();
     antlr4::tree::TerminalNode *EnabledID();
     antlr4::tree::TerminalNode *TypeID();
@@ -471,6 +510,22 @@ public:
   };
 
   FunctionCallContext* functionCall();
+
+  class  FunctionCall2Context : public antlr4::ParserRuleContext {
+  public:
+    FunctionCall2Context(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    IdPathContext *idPath();
+    antlr4::tree::TerminalNode *LBRACKET();
+    FunctionCallBodyContext *functionCallBody();
+    antlr4::tree::TerminalNode *RBRACKET();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  FunctionCall2Context* functionCall2();
 
   class  ComponentIdPathContext : public antlr4::ParserRuleContext {
   public:

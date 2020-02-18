@@ -1,0 +1,152 @@
+I-Logix-RPY-Archive version 8.5.2 C++ 1159120
+{ ISubsystem 
+	- _id = GUID 89b676b1-668b-4911-90f0-d456c9f7e35b;
+	- _myState = 8192;
+	- _name = "Event_Collection";
+	- _lastID = 7;
+	- weakCGTime = 12.12.2017::10:30:20;
+	- strongCGTime = 12.11.2017::13:44:20;
+	- _defaultComposite = GUID a2f1f80e-11b3-4f28-9f91-25defe6619ad;
+	- _eventsBaseID = 28401;
+	- Classes = { IRPYRawContainer 
+		- size = 1;
+		- value = 
+		{ IClass 
+			- _id = GUID a2f1f80e-11b3-4f28-9f91-25defe6619ad;
+			- _myState = 40960;
+			- _name = "TopLevel";
+			- weakCGTime = 12.12.2017::10:30:20;
+			- strongCGTime = 12.11.2017::13:44:20;
+			- _multiplicity = "";
+			- _itsStateChart = { IHandle 
+				- _m2Class = "";
+			}
+			- _classModifier = Unspecified;
+		}
+	}
+	- Events = { IRPYRawContainer 
+		- size = 2;
+		- value = 
+		{ IEvent 
+			- _id = GUID b87ad52e-9b4c-4bb4-98f5-8489e7ad1822;
+			- _myState = 8192;
+			- _name = "test_event9";
+			- _lastID = 2;
+			- _virtual = 0;
+			- Args = { IRPYRawContainer 
+				- size = 2;
+				- value = 
+				{ IArgument 
+					- _id = GUID 3bb86d77-0337-4b24-bd71-c7b8ce87544b;
+					- _name = "a";
+					- _typeOf = { IHandle 
+						- _m2Class = "IType";
+						- _id = GUID 7f511296-679d-46d9-ace3-17eb99125639;
+					}
+					- _isOrdered = 0;
+					- _argumentDirection = In;
+				}
+				{ IArgument 
+					- _id = GUID 330dc45f-3b30-4ea3-a83b-0707084a3ea5;
+					- _name = "b";
+					- _typeOf = { IHandle 
+						- _m2Class = "IType";
+						- _filename = "PredefinedTypes.sbs";
+						- _subsystem = "PredefinedTypes";
+						- _class = "";
+						- _name = "long";
+						- _id = GUID 8d6ece2f-4774-4e46-a346-b71b55717d33;
+					}
+					- _isOrdered = 0;
+					- _argumentDirection = In;
+				}
+			}
+		}
+		{ IEvent 
+			- _id = GUID 7886508f-788b-4d1d-b797-e1a4ad26ccd2;
+			- _myState = 8192;
+			- _name = "test_event10";
+			- _lastID = 3;
+			- _virtual = 0;
+			- Args = { IRPYRawContainer 
+				- size = 3;
+				- value = 
+				{ IArgument 
+					- _id = GUID f1bcb334-5146-4146-8155-9f17e67c5462;
+					- _name = "first";
+					- _typeOf = { IHandle 
+						- _m2Class = "IType";
+						- _id = GUID 8e77a4d3-bf56-4c1e-80c4-e8a8e68ee3c2;
+					}
+					- _isOrdered = 0;
+					- _argumentDirection = In;
+				}
+				{ IArgument 
+					- _id = GUID 6cfbd238-f614-479a-bd12-a5f81e1ebd6a;
+					- _name = "second";
+					- _typeOf = { IHandle 
+						- _m2Class = "IType";
+						- _id = GUID 7f511296-679d-46d9-ace3-17eb99125639;
+					}
+					- _isOrdered = 0;
+					- _argumentDirection = In;
+				}
+				{ IArgument 
+					- _id = GUID 75b51289-be06-49e7-b380-ddbff0cd4cca;
+					- _name = "third";
+					- _typeOf = { IHandle 
+						- _m2Class = "IType";
+						- _filename = "PredefinedTypes.sbs";
+						- _subsystem = "PredefinedTypes";
+						- _class = "";
+						- _name = "bool";
+						- _id = GUID e6c263cc-4bc5-4a11-b32d-02148c93add0;
+					}
+					- _isOrdered = 0;
+					- _argumentDirection = In;
+				}
+			}
+		}
+	}
+	- Types = { IRPYRawContainer 
+		- size = 5;
+		- value = 
+		{ IType 
+			- _id = GUID 8e77a4d3-bf56-4c1e-80c4-e8a8e68ee3c2;
+			- _myState = 8192;
+			- _name = "test_type6";
+			- _declaration = "";
+			- _kind = Language;
+		}
+		{ IType 
+			- _id = GUID fd0e59c3-9be0-46fc-a3e1-84db8724ffbe;
+			- _myState = 8192;
+			- _name = "test_type7";
+			- _declaration = "";
+			- _kind = Language;
+		}
+		{ IType 
+			- _id = GUID 7f511296-679d-46d9-ace3-17eb99125639;
+			- _myState = 8192;
+			- _name = "test_type8";
+			- _declaration = "";
+			- _kind = Language;
+		}
+		{ IType 
+			- _id = GUID 5e10e0a2-673f-4df7-9dd7-d2d250fb5817;
+			- _myState = 8192;
+			- _name = "test_type9";
+			- _declaration = "";
+			- _kind = Language;
+		}
+		{ IType 
+			- _id = GUID 38233174-c41f-4eb0-adf5-872021f4ee62;
+			- _myState = 8192;
+			- _name = "test_type10";
+			- _declaration = "";
+			- _kind = Language;
+		}
+	}
+	- _configurationRelatedTime = 1.2.1990::0:0:0;
+}
+

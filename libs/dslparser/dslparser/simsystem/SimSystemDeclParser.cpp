@@ -1,5 +1,5 @@
 
-// Generated from C:/Users/j05kraus/Private/SWDevelop/mobata_oss_dev/libs/dslparser/dslparser/grammars/SimSystemDecl.g4 by ANTLR 4.7.2
+// Generated from C:/Users/mre/Documents/Repositories/tfvs/mbtcreator/3rd/mobata/libs/dslparser/dslparser/grammars/SimSystemDecl.g4 by ANTLR 4.7.2
 
 
 #include "SimSystemDeclListener.h"
@@ -1063,10 +1063,7 @@ SimSystemDeclParser::MessageSignalContext* SimSystemDeclParser::messageSignal() 
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::TrueID:
       case SimSystemDeclParser::FalseID:
       case SimSystemDeclParser::INT:
@@ -1289,20 +1286,8 @@ tree::TerminalNode* SimSystemDeclParser::ContextIDContext::PortID() {
   return getToken(SimSystemDeclParser::PortID, 0);
 }
 
-tree::TerminalNode* SimSystemDeclParser::ContextIDContext::ImportID() {
-  return getToken(SimSystemDeclParser::ImportID, 0);
-}
-
 tree::TerminalNode* SimSystemDeclParser::ContextIDContext::FromID() {
   return getToken(SimSystemDeclParser::FromID, 0);
-}
-
-tree::TerminalNode* SimSystemDeclParser::ContextIDContext::ToID() {
-  return getToken(SimSystemDeclParser::ToID, 0);
-}
-
-tree::TerminalNode* SimSystemDeclParser::ContextIDContext::AsID() {
-  return getToken(SimSystemDeclParser::AsID, 0);
 }
 
 tree::TerminalNode* SimSystemDeclParser::ContextIDContext::ActorID() {
@@ -1377,10 +1362,7 @@ SimSystemDeclParser::ContextIDContext* SimSystemDeclParser::contextID() {
       | (1ULL << SimSystemDeclParser::AttributeID)
       | (1ULL << SimSystemDeclParser::SignalID)
       | (1ULL << SimSystemDeclParser::PortID)
-      | (1ULL << SimSystemDeclParser::ImportID)
       | (1ULL << SimSystemDeclParser::FromID)
-      | (1ULL << SimSystemDeclParser::ToID)
-      | (1ULL << SimSystemDeclParser::AsID)
       | (1ULL << SimSystemDeclParser::ID))) != 0))) {
     _errHandler->recoverInline(this);
     }
@@ -2303,10 +2285,7 @@ SimSystemDeclParser::TypeDeclContext* SimSystemDeclParser::typeDecl() {
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::ID: {
         enterOuterAlt(_localctx, 6);
         setState(336);
@@ -2417,10 +2396,7 @@ SimSystemDeclParser::IntTypeDeclContext* SimSystemDeclParser::intTypeDecl() {
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::ID: {
         break;
       }
@@ -2528,10 +2504,7 @@ SimSystemDeclParser::RealTypeDeclContext* SimSystemDeclParser::realTypeDecl() {
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::ID: {
         break;
       }
@@ -2835,10 +2808,7 @@ SimSystemDeclParser::LiteralValueContext* SimSystemDeclParser::literalValue() {
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::ID: {
         enterOuterAlt(_localctx, 6);
         setState(383);
@@ -2978,10 +2948,7 @@ SimSystemDeclParser::AttributeNameContext* SimSystemDeclParser::attributeName() 
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::ID: {
         break;
       }
@@ -3349,10 +3316,7 @@ SimSystemDeclParser::SingleAssignmentContext* SimSystemDeclParser::singleAssignm
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::ID: {
         enterOuterAlt(_localctx, 1);
         setState(420);
@@ -3451,11 +3415,8 @@ SimSystemDeclParser::MultiAssignmentContext* SimSystemDeclParser::multiAssignmen
       | (1ULL << SimSystemDeclParser::AttributeID)
       | (1ULL << SimSystemDeclParser::SignalID)
       | (1ULL << SimSystemDeclParser::PortID)
-      | (1ULL << SimSystemDeclParser::ImportID)
       | (1ULL << SimSystemDeclParser::FromID)
-      | (1ULL << SimSystemDeclParser::ToID)
       | (1ULL << SimSystemDeclParser::SendID)
-      | (1ULL << SimSystemDeclParser::AsID)
       | (1ULL << SimSystemDeclParser::ID))) != 0)) {
       setState(425);
       singleAssignment();
@@ -3577,10 +3538,7 @@ SimSystemDeclParser::SignalDeclContext* SimSystemDeclParser::signalDecl() {
           case SimSystemDeclParser::AttributeID:
           case SimSystemDeclParser::SignalID:
           case SimSystemDeclParser::PortID:
-          case SimSystemDeclParser::ImportID:
           case SimSystemDeclParser::FromID:
-          case SimSystemDeclParser::ToID:
-          case SimSystemDeclParser::AsID:
           case SimSystemDeclParser::ID: {
             setState(436);
             paramDecl();
@@ -3776,10 +3734,7 @@ SimSystemDeclParser::FunctionDeclContext* SimSystemDeclParser::functionDecl() {
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::ID: {
         setState(460);
         functionParameters();
@@ -4531,13 +4486,10 @@ SimSystemDeclParser::StatementDeclContext* SimSystemDeclParser::statementDecl() 
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
       case SimSystemDeclParser::SendID:
       case SimSystemDeclParser::SwitchID:
       case SimSystemDeclParser::IfID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::BREAK:
       case SimSystemDeclParser::ID: {
         enterOuterAlt(_localctx, 1);
@@ -4832,13 +4784,10 @@ SimSystemDeclParser::NestedStatementBodyContext* SimSystemDeclParser::nestedStat
       | (1ULL << SimSystemDeclParser::AttributeID)
       | (1ULL << SimSystemDeclParser::SignalID)
       | (1ULL << SimSystemDeclParser::PortID)
-      | (1ULL << SimSystemDeclParser::ImportID)
       | (1ULL << SimSystemDeclParser::FromID)
-      | (1ULL << SimSystemDeclParser::ToID)
       | (1ULL << SimSystemDeclParser::SendID)
       | (1ULL << SimSystemDeclParser::SwitchID)
       | (1ULL << SimSystemDeclParser::IfID)
-      | (1ULL << SimSystemDeclParser::AsID)
       | (1ULL << SimSystemDeclParser::BREAK)
       | (1ULL << SimSystemDeclParser::ID))) != 0)) {
       setState(542);
@@ -5055,10 +5004,7 @@ SimSystemDeclParser::OperationContext* SimSystemDeclParser::operation() {
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::TrueID:
       case SimSystemDeclParser::FalseID:
       case SimSystemDeclParser::INT:
@@ -5518,10 +5464,7 @@ SimSystemDeclParser::ExpressionOptionalContext* SimSystemDeclParser::expressionO
               case SimSystemDeclParser::AttributeID:
               case SimSystemDeclParser::SignalID:
               case SimSystemDeclParser::PortID:
-              case SimSystemDeclParser::ImportID:
               case SimSystemDeclParser::FromID:
-              case SimSystemDeclParser::ToID:
-              case SimSystemDeclParser::AsID:
               case SimSystemDeclParser::NotIdSymbol:
               case SimSystemDeclParser::NotIdWord:
               case SimSystemDeclParser::TrueID:
@@ -5570,10 +5513,7 @@ SimSystemDeclParser::ExpressionOptionalContext* SimSystemDeclParser::expressionO
               case SimSystemDeclParser::AttributeID:
               case SimSystemDeclParser::SignalID:
               case SimSystemDeclParser::PortID:
-              case SimSystemDeclParser::ImportID:
               case SimSystemDeclParser::FromID:
-              case SimSystemDeclParser::ToID:
-              case SimSystemDeclParser::AsID:
               case SimSystemDeclParser::NotIdSymbol:
               case SimSystemDeclParser::NotIdWord:
               case SimSystemDeclParser::TrueID:
@@ -5765,13 +5705,10 @@ SimSystemDeclParser::IfStatementContext* SimSystemDeclParser::ifStatement() {
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
       case SimSystemDeclParser::SendID:
       case SimSystemDeclParser::SwitchID:
       case SimSystemDeclParser::IfID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::BREAK:
       case SimSystemDeclParser::ID:
       case SimSystemDeclParser::LBRACE: {
@@ -6176,15 +6113,12 @@ SimSystemDeclParser::CaseStatementContext* SimSystemDeclParser::caseStatement() 
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
       case SimSystemDeclParser::SendID:
       case SimSystemDeclParser::SwitchID:
       case SimSystemDeclParser::CaseID:
       case SimSystemDeclParser::DefaultID:
       case SimSystemDeclParser::IfID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::BREAK:
       case SimSystemDeclParser::ID:
       case SimSystemDeclParser::RBRACE: {
@@ -6213,13 +6147,10 @@ SimSystemDeclParser::CaseStatementContext* SimSystemDeclParser::caseStatement() 
           | (1ULL << SimSystemDeclParser::AttributeID)
           | (1ULL << SimSystemDeclParser::SignalID)
           | (1ULL << SimSystemDeclParser::PortID)
-          | (1ULL << SimSystemDeclParser::ImportID)
           | (1ULL << SimSystemDeclParser::FromID)
-          | (1ULL << SimSystemDeclParser::ToID)
           | (1ULL << SimSystemDeclParser::SendID)
           | (1ULL << SimSystemDeclParser::SwitchID)
           | (1ULL << SimSystemDeclParser::IfID)
-          | (1ULL << SimSystemDeclParser::AsID)
           | (1ULL << SimSystemDeclParser::BREAK)
           | (1ULL << SimSystemDeclParser::ID))) != 0)) {
           setState(657);
@@ -6332,13 +6263,10 @@ SimSystemDeclParser::DefaultStatementContext* SimSystemDeclParser::defaultStatem
       case SimSystemDeclParser::AttributeID:
       case SimSystemDeclParser::SignalID:
       case SimSystemDeclParser::PortID:
-      case SimSystemDeclParser::ImportID:
       case SimSystemDeclParser::FromID:
-      case SimSystemDeclParser::ToID:
       case SimSystemDeclParser::SendID:
       case SimSystemDeclParser::SwitchID:
       case SimSystemDeclParser::IfID:
-      case SimSystemDeclParser::AsID:
       case SimSystemDeclParser::BREAK:
       case SimSystemDeclParser::ID:
       case SimSystemDeclParser::RBRACE: {
@@ -6367,13 +6295,10 @@ SimSystemDeclParser::DefaultStatementContext* SimSystemDeclParser::defaultStatem
           | (1ULL << SimSystemDeclParser::AttributeID)
           | (1ULL << SimSystemDeclParser::SignalID)
           | (1ULL << SimSystemDeclParser::PortID)
-          | (1ULL << SimSystemDeclParser::ImportID)
           | (1ULL << SimSystemDeclParser::FromID)
-          | (1ULL << SimSystemDeclParser::ToID)
           | (1ULL << SimSystemDeclParser::SendID)
           | (1ULL << SimSystemDeclParser::SwitchID)
           | (1ULL << SimSystemDeclParser::IfID)
-          | (1ULL << SimSystemDeclParser::AsID)
           | (1ULL << SimSystemDeclParser::BREAK)
           | (1ULL << SimSystemDeclParser::ID))) != 0)) {
           setState(668);
@@ -6684,7 +6609,7 @@ SimSystemDeclParser::Initializer::Initializer() {
     0x56, 0x58, 0x5a, 0x5c, 0x5e, 0x60, 0x62, 0x64, 0x66, 0x68, 0x6a, 0x6c, 
     0x6e, 0x70, 0x72, 0x74, 0x76, 0x78, 0x7a, 0x7c, 0x7e, 0x80, 0x82, 0x84, 
     0x86, 0x88, 0x8a, 0x8c, 0x8e, 0x90, 0x2, 0x5, 0x7, 0x2, 0x3, 0x9, 0xb, 
-    0xe, 0x1c, 0x21, 0x29, 0x29, 0x3c, 0x3c, 0x3, 0x2, 0x13, 0x14, 0x3, 
+    0xe, 0x1c, 0x1e, 0x20, 0x20, 0x3c, 0x3c, 0x3, 0x2, 0x13, 0x14, 0x3, 
     0x2, 0x4c, 0x4f, 0x2, 0x2c0, 0x2, 0x92, 0x3, 0x2, 0x2, 0x2, 0x4, 0x99, 
     0x3, 0x2, 0x2, 0x2, 0x6, 0x9e, 0x3, 0x2, 0x2, 0x2, 0x8, 0xa3, 0x3, 0x2, 
     0x2, 0x2, 0xa, 0xa8, 0x3, 0x2, 0x2, 0x2, 0xc, 0xaf, 0x3, 0x2, 0x2, 0x2, 
