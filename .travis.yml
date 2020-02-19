@@ -1,0 +1,30 @@
+dist: xenial
+language: generic
+services: xvfb
+
+#compiler: gcc
+
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-8']
+      env:
+        - CXX=g++-8
+        - CC=gcc-8
+
+install:
+# For Qt 5.12
+    - sudo add-apt-repository --yes ppa:beineri/opt-qt-5.12.1-xenial
+    - sudo apt-get update
+    - sudo apt-get install -qq qt512-meta-minimal qt512quickcontrols qt512quickcontrols2 qt512scxml libglu1-mesa-dev graphviz
+    
+before_script: source /opt/qt512/bin/qt512-env.sh
+
+script:
+  - $CXX --version
+  - qmake
+  - make CXX=g++-8 CC=gcc-8
+  - make check

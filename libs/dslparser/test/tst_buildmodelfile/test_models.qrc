@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/test_models">
+        <file>test_model.spenat</file>
+        <file>test_model.statemachine</file>
+    </qresource>
+</RCC>

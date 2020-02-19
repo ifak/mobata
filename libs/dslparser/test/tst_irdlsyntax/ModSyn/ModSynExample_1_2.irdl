@@ -1,0 +1,19 @@
+import <ModSynExample_1.irdldecl> as modExample
+import <ModSynExample_1.irdldecl>
+
+Requirement{
+    Declaration {
+        name: Gutverhalten;
+        description: "Beschreibung des Gutverhaltens";
+
+
+        //Signal setButtonFM(bool Gesamtanlage_Start);
+        Signal checkByteValue_ActiveStep(int _Active, int timer);
+        Attribute int test;
+    }
+
+    State Init at modExample.user;
+    Message(modExample.user->system): setButtonFM(true);
+    State Auto at modExample.system, modExample.user;
+    Check(modExample.user->modExample.system): checkByteValue_ActiveStep[msg._Active == 1 and msg.timer == 30], timeout: 30s;
+}

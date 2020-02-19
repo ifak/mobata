@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/testdata">
+        <file>FSDeviceDriver.statemachine</file>
+        <file>FSMasterDriver.statemachine</file>
+        <file>IOLS_Statemachine.decl</file>
+    </qresource>
+</RCC>

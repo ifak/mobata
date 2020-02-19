@@ -1,0 +1,33 @@
+// Version 05
+Components {
+        // In Zukunft hier ggf. weitere Parameter, bisher aber noch keine festgelegt.
+        // Zur Vorbereitung bleibt daher der alles umschließende Components-Tag.
+
+        Component {	// Zur Nutzung als Basistyp
+                name: RoadSideUnit;
+                // Synonyme
+                use V2X.protocolVersion as version;
+                use 1 as standard;
+                // Parameter-Überprüfung
+                check: CAM.mobile == false and CAM.private == false;
+        }
+
+        Component {
+                name: RSU_123;			// Pflicht, beliebiger String. Dient der Verwendung in .rule-Datei.
+                basetype: RoadSideUnit;		// Optional. Übernimmt Synonyme und Checks des Basistyps. Auswahl über Autocompletion möglich? Dann aus: Any, RoadSideUnit, TrafficLight, PrivateCar, SpecialCar
+                check: version == standard;	// Beliebig viele Checks (optional?), die als Guard-Strings zu speichern sind
+        }
+
+        Component {
+                name: car1;
+        }
+
+        // Später soll die DSL auch für andere Domänen als V2X verwendet werden können.
+        /*
+        Component {
+                name: RFC470_1;
+                basetype: Controller;		// Auswahl: Controller, Device
+                check: ip == "192.168.0.1";
+        }
+        */
+}

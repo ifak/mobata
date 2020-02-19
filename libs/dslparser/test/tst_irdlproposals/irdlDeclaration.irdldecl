@@ -1,0 +1,12 @@
+Actor{
+        name: user;
+        description: "Nutzer der Anlage";
+}
+
+Component{
+        name: system;
+        description: "Produktionsanlage";
+        Attribute bool initialized = false;
+}
+
+Attribute int globalIrdlAttribute = 0;

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/Examples">
+        <file>example1.testsystem</file>
+        <file>sutExample.sut</file>
+    </qresource>
+</RCC>

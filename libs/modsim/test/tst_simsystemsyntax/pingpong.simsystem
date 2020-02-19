@@ -1,0 +1,19 @@
+import <Ping.statemachine> as ping
+import <Pong.statemachine> as pong
+
+SimSystem ping_pong{
+  Connection{
+    ping.p_pong <-> pong.p_ping;
+  }
+
+  Config{
+    Actor user{
+      Port port;
+    }
+    startSequence: pong, ping;
+    Startup{
+      Message(user.port->pong.p_ext): pong.start();
+      Message(user.port->ping.p_ext): ping.start();
+    }
+  }
+}

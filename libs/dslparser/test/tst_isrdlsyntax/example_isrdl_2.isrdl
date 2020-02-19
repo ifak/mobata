@@ -1,0 +1,32 @@
+import <declaration.decl> as decl
+
+Requirement{
+	Declaration {
+		name: Gutverhalten;
+                description: "Beschreibung des Gutverhaltens";
+                Attribute int retValue = 0;
+
+		Actor{
+			name: user;
+			description: "Nutzer der Anlage";
+		}
+
+		Component{
+                        name: system1;
+			description: "Produktionsanlage";
+			Attribute bool initialized = false;
+		}
+                use system1 as system;
+	}
+	
+        State Init at system;
+        Message(user->system): decl.setButtonFM(true);
+        Check(system->user): 	decl.sendResponse[retValue==true],
+                                                        timeout: 3s;
+        State Auto at system;
+        Duration(3000ms){
+                Message(user->system): decl.setButtonFM(true);
+                Check(system->user): decl.sendResponse[retValue==true];
+	}
+        State Init at system;
+}

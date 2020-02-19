@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2005/07/scxml https://www.w3.org/2011/04/SCXML/scxml.xsd" qt:editorversion="4.6.2" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" initial="defaultInit">
+    <qt:editorinfo initialGeometry="-32.88;-264.66;-20;-20;40;40"/>
+    <state id="defaultInit">
+        <qt:editorinfo geometry="594.88;-264.66;-60.38;-50;120.77;100" scenegeometry="594.88;-264.66;534.50;-314.66;120.77;100"/>
+        <onentry/>
+        <onexit/>
+        <transition type="internal" target="PrepareSPDU_1">
+            <script>Initialize(PDin_Length,PDout_Length,PortNum,MTime);</script>
+        </transition>
+    </state>
+    <state id="PrepareSPDU_1">
+        <qt:editorinfo geometry="594.88;-123.66;-79.10;-50;158.20;100" scenegeometry="594.88;-123.66;515.78;-173.66;158.20;100"/>
+        <onentry>
+            <script>BuildSPDU();</script>
+        </onentry>
+        <onexit/>
+        <transition type="internal" target="WaitOnResponse_2">
+            <script>evSendSPDU(PDout,PortNum,MCount,setSD,ChFAckReq,CRCout);</script>
+        </transition>
+    </state>
+    <state id="WaitOnResponse_2">
+        <qt:editorinfo geometry="318.16;-123.66;-152.97;-50;191.92;100" scenegeometry="318.16;-123.66;165.19;-173.66;191.92;100"/>
+        <onentry/>
+        <onexit/>
+        <transition type="internal" target="CheckSPDU_3" event="evResponseReceived">
+            <assign location="PDin" expr="msg.evFsPdIn"/>
+        </transition>
+        <transition type="internal" target="WaitOnResponse_2" event="evMasterApp">
+            <assign location="PDout_M" expr="msg.evPDout_M"/>
+        </transition>
+    </state>
+    <state id="CheckSPDU_3">
+        <qt:editorinfo geometry="-64.88;-123.66;-72.13;-50;144.25;100" scenegeometry="-64.88;-123.66;-137.01;-173.66;144.25;100"/>
+        <onentry>
+            <script>CheckResponse(mCommErr,mTimeout);</script>
+        </onentry>
+        <onexit/>
+        <transition type="internal" target="SetPD" cond="! (mTimeout or mCommErr or dTimeout or dCommErr)"/>
+        <transition type="internal" target="SetSD_IncrMCount" cond="(mTimeout or mCommErr or dTimeout or dCommErr)"/>
+    </state>
+    <state id="PrepareSPDU_4">
+        <qt:editorinfo geometry="-256.05;-123.66;-79.10;-50;158.20;100" scenegeometry="-256.05;-123.66;-335.15;-173.66;158.20;100"/>
+        <onentry>
+            <script>BuildSPDU();</script>
+        </onentry>
+        <onexit/>
+        <transition type="internal" target="WaitOnResponse_5">
+            <script>evSendSPDU(PDout,PortNum,MCount,setSD,ChFAckReq,CRCout);</script>
+        </transition>
+    </state>
+    <state id="WaitOnResponse_5">
+        <qt:editorinfo geometry="-199.04;-361.26;-152.97;-50;191.92;100" scenegeometry="-199.04;-361.26;-352.01;-411.26;191.92;100"/>
+        <onentry/>
+        <onexit/>
+        <transition type="internal" target="CheckSPDU_3" cond="old_MCount != Inverse(msg.evDCount)" event="evResponseReceived">
+            <assign location="PDin" expr="msg.evFsPdIn"/>
+        </transition>
+        <transition type="internal" target="PrepareSPDU_6" event="evMTimerExpired">
+            <assign location="mTimeout" expr="1"/>
+        </transition>
+        <transition type="internal" target="WaitOnResponse_5" event="evMasterApp">
+            <assign location="PDout_M" expr="msg.evPDout_M"/>
+        </transition>
+    </state>
+    <state id="PrepareSPDU_6">
+        <qt:editorinfo geometry="843.15;-361.26;-79.10;-50;158.20;100" scenegeometry="843.15;-361.26;764.05;-411.26;158.20;100"/>
+        <onentry>
+            <script>BuildSPDU();</script>
+        </onentry>
+        <onexit/>
+        <transition type="internal" target="WaitOnResponse_7">
+            <script>evSendSPDU(PDout,PortNum,MCount,setSD,ChFAckReq,CRCout);</script>
+        </transition>
+    </state>
+    <state id="WaitOnResponse_7">
+        <qt:editorinfo geometry="900.16;443.40;-152.97;-50;191.92;100" scenegeometry="900.16;443.40;747.19;393.40;191.92;100"/>
+        <onentry/>
+        <onexit/>
+        <transition type="internal" target="PrepareSPDU_6" event="evMTimerExpired">
+            <assign location="mTimeout" expr="1"/>
+        </transition>
+        <transition type="internal" target="CheckSPDU_8" cond="MCount == Inverse(msg.evDCount)" event="evResponseReceived">
+            <assign location="PDin" expr="msg.evFsPdIn"/>
+        </transition>
+        <transition type="internal" target="WaitOnResponse_7" event="evMasterApp">
+            <assign location="PDout_M" expr="msg.evPDout_M"/>
+        </transition>
+    </state>
+    <state id="CheckSPDU_8">
+        <qt:editorinfo geometry="-256.05;443.40;-72.13;-50;144.25;100" scenegeometry="-256.05;443.40;-328.18;393.40;144.25;100"/>
+        <onentry>
+            <script>CheckResponse(mCommErr,mTimeout);</script>
+        </onentry>
+        <onexit/>
+        <transition type="internal" target="SetPD" cond="( ! (mTimeout or mCommErr or dTimeout or dCommErr)) and (      ChFAck_C == 1 ) and      ( ChFAck_C_e == 1 )">
+            <assign location="ChFAckReq" expr="0"/>
+        </transition>
+        <transition type="internal" target="SetSD_IncrMCount" cond="(mTimeout or mCommErr or dTimeout or dCommErr)">
+            <assign location="ChFAckReq" expr="0"/>
+        </transition>
+        <transition type="internal" target="CheckChFAck_C_e" cond="( ! (mTimeout or mCommErr or dTimeout or dCommErr)) and      ( ( ChFAck_C == 0 ) ||      ( ChFAck_C_e == 0 ) )">
+            <assign location="ChFAckReq" expr="1"/>
+        </transition>
+    </state>
+    <state id="SetSD_IncrMCount">
+        <qt:editorinfo geometry="670.99;115.16;-90.25;-50;180.50;100" scenegeometry="670.99;115.16;580.74;65.16;180.50;100"/>
+        <onentry/>
+        <onexit/>
+        <transition type="internal" target="PrepareSPDU_6" cond="MCount == 8">
+            <script>UseSD();</script>
+            <assign location="MCount" expr="1"/>
+        </transition>
+        <transition type="internal" target="PrepareSPDU_6" cond="!(MCount == 8)">
+            <script>UseSD();</script>
+        </transition>
+    </state>
+    <state id="IncrMCount">
+        <qt:editorinfo geometry="-256.05;46.98;-64.44;-50;128.88;100" scenegeometry="-256.05;46.98;-320.49;-3.02;128.88;100"/>
+        <onentry/>
+        <onexit/>
+        <transition type="internal" target="PrepareSPDU_4" cond="MCount == 8">
+            <assign location="old_MCount" expr="MCount"/>
+            <assign location="MCount" expr="1"/>
+        </transition>
+        <transition type="internal" target="PrepareSPDU_4" cond="!(MCount == 8)">
+            <assign location="old_MCount" expr="MCount"/>
+        </transition>
+    </state>
+    <state id="SetPD">
+        <qt:editorinfo geometry="-256.05;277.04;-60;-50;120;100" scenegeometry="-256.05;277.04;-316.05;227.04;120;100"/>
+        <onentry/>
+        <onexit/>
+        <transition type="internal" target="IncrMCount" cond="setSD_C == 1">
+            <script>UseSDin();</script>
+        </transition>
+        <transition type="internal" target="IncrMCount" cond="( setSD_C == 0 )        and ( SDset == 1 )">
+            <script>UseSDin();</script>
+        </transition>
+        <transition type="internal" target="IncrMCount" cond="!(setSD_C == 1) and !(( setSD_C == 0 )        and ( SDset == 1 ))">
+            <script>UsePDin();</script>
+        </transition>
+    </state>
+    <state id="CheckChFAck_C_e">
+        <qt:editorinfo geometry="670.99;277.04;-87.18;-50;174.36;100" scenegeometry="670.99;277.04;583.81;227.04;174.36;100"/>
+        <onentry/>
+        <onexit/>
+        <transition type="internal" target="SetSD_IncrMCount" cond="ChFAck_C == 0">
+            <assign location="ChFAck_C_e" expr="1"/>
+        </transition>
+        <transition type="internal" target="SetSD_IncrMCount" cond="!(ChFAck_C == 0)"/>
+    </state>
+</scxml>

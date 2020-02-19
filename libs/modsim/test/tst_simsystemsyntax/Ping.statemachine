@@ -1,0 +1,52 @@
+StateMachine{
+  name: pingStateMachine;
+
+  Signal start();
+  Signal end();
+  Signal ping();
+  Signal pong();
+
+  Port p_ext;
+  Port p_pong;
+
+  initState: init;
+
+  SimpleState{
+    name: init;
+  }
+
+  SimpleState{
+    name: ping;
+  }
+
+  FinalState{
+    name: final;
+  }
+
+  SignalTransition{
+    name: t_start;
+    signal: start;
+    port: p_ext;
+    action: send ping() to p_pong;
+    source: init;
+    target: ping;
+  }
+
+  SignalTransition{
+    name: t_pingpong;
+    signal: pong;
+    port: p_pong;
+    action: send ping() to p_pong;
+    source: ping;
+    target: ping;
+  }
+
+  SignalTransition{
+    name: t_final;
+    signal: end;
+    port: p_ext;
+    source: ping;
+    target: final;
+  }
+}
+

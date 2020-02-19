@@ -1,0 +1,226 @@
+
+<testsuite name="iolinksafety_master">
+
+  <types>
+    <base_type name="int" uuid="362cea9b-d87c-42f6-992e-f2e3973c5d9f"/>
+    <base_type name="real" uuid="296103d5-1200-4485-b448-e11e160a39c5"/>
+    <base_type name="bool" uuid="2454e8ba-59db-49fa-8d32-dc4f81208c4a"/>
+    <base_type name="string" uuid="a5a423c5-3fdd-4343-baa6-62e435b84990"/>
+    <enumeration name="MCountType" uuid="c8f0bfc9-cab4-42bc-80e4-13deaffbdcd1">
+      <literal value="MCountHighest"/>
+      <literal value="MCountIncremented"/>
+      <literal value="MCountStart"/>
+    </enumeration>
+  </types>
+
+  <signals>
+    <signal name="evInitialize" uuid="955f7cd4-4443-4ec6-b2b5-b6f7ea9efa7a"/>
+    <signal name="evSendSPDU" uuid="0c369bff-a3e4-4fdc-8948-b5413a209b4f">
+      <parameter name="evFsPdOut" type="int"/>
+      <parameter name="evPortNum" type="int"/>
+      <parameter name="evMCount" type="MCountType"/>
+      <parameter name="evSetSD" type="bool"/>
+      <parameter name="evChFAckReq" type="bool"/>
+      <parameter name="evCrc" type="int"/>
+    </signal>
+    <signal name="evMasterApp" uuid="c880c3ea-a0c4-4401-9ea3-6e99bd81ed7b">
+      <parameter name="evPDout_M" type="int"/>
+      <parameter name="evSetSD_C" type="bool"/>
+      <parameter name="evChFAck_C" type="bool"/>
+    </signal>
+    <signal name="evResponseReceived" uuid="dcc1e479-66c8-41f4-bc98-b1e162da649f">
+      <parameter name="evFsPdIn" type="int"/>
+      <parameter name="evPortNum" type="int"/>
+      <parameter name="evDCountInvMCount" type="bool"/>
+      <parameter name="evSDset" type="bool"/>
+      <parameter name="evDCommError" type="bool"/>
+      <parameter name="evDTimeoutError" type="bool"/>
+      <parameter name="evCrc" type="int"/>
+    </signal>
+    <signal name="evTimerExpired" uuid="f6a9c664-efac-4489-89fe-be46f0fd483d"/>
+  </signals>
+
+  <sut name="iolinksafety_master_sut">
+    <components>
+      <component name="iolinksafety_master_sut" uuid="a9c9576b-194a-4a59-a0b3-7b8681efe311">
+        <ports>
+          <port name="env" uuid="c14bd15b-0f3b-47c7-a9a4-da550a72968a"/>
+          <port name="app_port" uuid="05913b39-6a45-4091-a1a2-ac0eedd8ee04"/>
+          <port name="device_port" uuid="3e052151-51bd-4f30-a0c5-65b62d695f74"/>
+        </ports>
+      </component>
+    </components>
+  </sut>
+
+  <testsystem name="iolinksafety_master_testsystem">
+    <components>
+      <component name="iolinksafety_master_mtc" uuid="c4487cac-714b-492c-9792-1776df64c98f">
+        <ports>
+          <port name="env" uuid="b4986f2a-30bb-40c4-ba46-fe8f4f48c051"/>
+          <port name="app_port" uuid="9703d438-0e82-447c-a7d3-0448f0d476be"/>
+          <port name="device_port" uuid="8eb53cac-a1d3-450a-bae9-a349bb0661be"/>
+        </ports>
+      </component>
+    </components>
+  </testsystem>
+
+  <testcases>
+    <testcase name="tc_0" uuid="e2e382ec-a8d7-4f65-9f3c-813cf10218b5">
+      <message from_port_ID="9703d438-0e82-447c-a7d3-0448f0d476be" reference="f852b39c-0f6b-4929-9838-eb6ef3bd55d4" signal_ID="955f7cd4-4443-4ec6-b2b5-b6f7ea9efa7a" to_port_ID="05913b39-6a45-4091-a1a2-ac0eedd8ee04"/>
+      <message from_port_ID="3e052151-51bd-4f30-a0c5-65b62d695f74" reference="55232825-8cff-407d-862e-246c41670668" signal_ID="0c369bff-a3e4-4fdc-8948-b5413a209b4f" to_port_ID="8eb53cac-a1d3-450a-bae9-a349bb0661be">
+        <parameter>
+          <param name="evFsPdOut" value="0"/>
+          <param name="evPortNum" value="1001"/>
+          <param name="evMCount" value="MCountStart"/>
+          <param name="evSetSD" value="true"/>
+          <param name="evChFAckReq" value="false"/>
+          <param name="evCrc" value="0"/>
+        </parameter>
+      </message>
+      <message from_port_ID="8eb53cac-a1d3-450a-bae9-a349bb0661be" reference="900a1f00-980b-415b-9a9c-b509c319fec1" signal_ID="dcc1e479-66c8-41f4-bc98-b1e162da649f" to_port_ID="3e052151-51bd-4f30-a0c5-65b62d695f74">
+        <parameter>
+          <param name="evFsPdIn" value="0"/>
+          <param name="evPortNum" value="0"/>
+          <param name="evDCountInvMCount" value="false"/>
+          <param name="evSDset" value="false"/>
+          <param name="evDCommError" value="false"/>
+          <param name="evDTimeoutError" value="false"/>
+          <param name="evCrc" value="-1"/>
+        </parameter>
+      </message>
+    </testcase>
+    <testcase name="tc_1" uuid="a391a930-732b-4084-b586-d4d2c50c2a37">
+      <message from_port_ID="9703d438-0e82-447c-a7d3-0448f0d476be" reference="f852b39c-0f6b-4929-9838-eb6ef3bd55d4" signal_ID="955f7cd4-4443-4ec6-b2b5-b6f7ea9efa7a" to_port_ID="05913b39-6a45-4091-a1a2-ac0eedd8ee04"/>
+      <message from_port_ID="3e052151-51bd-4f30-a0c5-65b62d695f74" reference="55232825-8cff-407d-862e-246c41670668" signal_ID="0c369bff-a3e4-4fdc-8948-b5413a209b4f" to_port_ID="8eb53cac-a1d3-450a-bae9-a349bb0661be">
+        <parameter>
+          <param name="evFsPdOut" value="0"/>
+          <param name="evPortNum" value="1001"/>
+          <param name="evMCount" value="MCountStart"/>
+          <param name="evSetSD" value="true"/>
+          <param name="evChFAckReq" value="false"/>
+          <param name="evCrc" value="0"/>
+        </parameter>
+      </message>
+      <message from_port_ID="9703d438-0e82-447c-a7d3-0448f0d476be" reference="02dd4a68-6b0f-421b-8494-0e503c062e9d" signal_ID="c880c3ea-a0c4-4401-9ea3-6e99bd81ed7b" to_port_ID="05913b39-6a45-4091-a1a2-ac0eedd8ee04">
+        <parameter>
+          <param name="evPDout_M" value="0"/>
+          <param name="evSetSD_C" value="true"/>
+          <param name="evChFAck_C" value="false"/>
+        </parameter>
+      </message>
+      <message from_port_ID="8eb53cac-a1d3-450a-bae9-a349bb0661be" reference="f4d701f5-9f0e-4bad-ac27-d95778488dfc" signal_ID="dcc1e479-66c8-41f4-bc98-b1e162da649f" to_port_ID="3e052151-51bd-4f30-a0c5-65b62d695f74">
+        <parameter>
+          <param name="evFsPdIn" value="0"/>
+          <param name="evPortNum" value="1001"/>
+          <param name="evDCountInvMCount" value="true"/>
+          <param name="evSDset" value="false"/>
+          <param name="evDCommError" value="false"/>
+          <param name="evDTimeoutError" value="false"/>
+          <param name="evCrc" value="0"/>
+        </parameter>
+      </message>
+      <message from_port_ID="3e052151-51bd-4f30-a0c5-65b62d695f74" reference="80042f14-a65e-4c83-8073-f17a7259953e" signal_ID="0c369bff-a3e4-4fdc-8948-b5413a209b4f" to_port_ID="8eb53cac-a1d3-450a-bae9-a349bb0661be">
+        <parameter>
+          <param name="evFsPdOut" value="0"/>
+          <param name="evPortNum" value="1001"/>
+          <param name="evMCount" value="MCountIncremented"/>
+          <param name="evSetSD" value="true"/>
+          <param name="evChFAckReq" value="false"/>
+          <param name="evCrc" value="0"/>
+        </parameter>
+      </message>
+      <message from_port_ID="8eb53cac-a1d3-450a-bae9-a349bb0661be" reference="34a1377b-4dc6-4cda-9412-711b46cfe617" signal_ID="dcc1e479-66c8-41f4-bc98-b1e162da649f" to_port_ID="3e052151-51bd-4f30-a0c5-65b62d695f74">
+        <parameter>
+          <param name="evFsPdIn" value="0"/>
+          <param name="evPortNum" value="0"/>
+          <param name="evDCountInvMCount" value="false"/>
+          <param name="evSDset" value="false"/>
+          <param name="evDCommError" value="false"/>
+          <param name="evDTimeoutError" value="false"/>
+          <param name="evCrc" value="-1"/>
+        </parameter>
+      </message>
+    </testcase>
+    <testcase name="tc_2" uuid="98087cf5-7a5b-4a74-865f-842b3710fb0c">
+      <message from_port_ID="9703d438-0e82-447c-a7d3-0448f0d476be" reference="f852b39c-0f6b-4929-9838-eb6ef3bd55d4" signal_ID="955f7cd4-4443-4ec6-b2b5-b6f7ea9efa7a" to_port_ID="05913b39-6a45-4091-a1a2-ac0eedd8ee04"/>
+      <message from_port_ID="3e052151-51bd-4f30-a0c5-65b62d695f74" reference="55232825-8cff-407d-862e-246c41670668" signal_ID="0c369bff-a3e4-4fdc-8948-b5413a209b4f" to_port_ID="8eb53cac-a1d3-450a-bae9-a349bb0661be">
+        <parameter>
+          <param name="evFsPdOut" value="0"/>
+          <param name="evPortNum" value="1001"/>
+          <param name="evMCount" value="MCountStart"/>
+          <param name="evSetSD" value="true"/>
+          <param name="evChFAckReq" value="false"/>
+          <param name="evCrc" value="0"/>
+        </parameter>
+      </message>
+      <message from_port_ID="9703d438-0e82-447c-a7d3-0448f0d476be" reference="02dd4a68-6b0f-421b-8494-0e503c062e9d" signal_ID="c880c3ea-a0c4-4401-9ea3-6e99bd81ed7b" to_port_ID="05913b39-6a45-4091-a1a2-ac0eedd8ee04">
+        <parameter>
+          <param name="evPDout_M" value="0"/>
+          <param name="evSetSD_C" value="false"/>
+          <param name="evChFAck_C" value="false"/>
+        </parameter>
+      </message>
+      <message from_port_ID="8eb53cac-a1d3-450a-bae9-a349bb0661be" reference="f4d701f5-9f0e-4bad-ac27-d95778488dfc" signal_ID="dcc1e479-66c8-41f4-bc98-b1e162da649f" to_port_ID="3e052151-51bd-4f30-a0c5-65b62d695f74">
+        <parameter>
+          <param name="evFsPdIn" value="0"/>
+          <param name="evPortNum" value="1001"/>
+          <param name="evDCountInvMCount" value="true"/>
+          <param name="evSDset" value="false"/>
+          <param name="evDCommError" value="false"/>
+          <param name="evDTimeoutError" value="false"/>
+          <param name="evCrc" value="0"/>
+        </parameter>
+      </message>
+      <message from_port_ID="3e052151-51bd-4f30-a0c5-65b62d695f74" reference="80042f14-a65e-4c83-8073-f17a7259953e" signal_ID="0c369bff-a3e4-4fdc-8948-b5413a209b4f" to_port_ID="8eb53cac-a1d3-450a-bae9-a349bb0661be">
+        <parameter>
+          <param name="evFsPdOut" value="0"/>
+          <param name="evPortNum" value="1001"/>
+          <param name="evMCount" value="MCountIncremented"/>
+          <param name="evSetSD" value="false"/>
+          <param name="evChFAckReq" value="false"/>
+          <param name="evCrc" value="0"/>
+        </parameter>
+      </message>
+      <message from_port_ID="8eb53cac-a1d3-450a-bae9-a349bb0661be" reference="90556fb4-7b00-4063-a734-6399ac5f5aaa" signal_ID="dcc1e479-66c8-41f4-bc98-b1e162da649f" to_port_ID="3e052151-51bd-4f30-a0c5-65b62d695f74">
+        <parameter>
+          <param name="evFsPdIn" value="0"/>
+          <param name="evPortNum" value="1001"/>
+          <param name="evDCountInvMCount" value="true"/>
+          <param name="evSDset" value="true"/>
+          <param name="evDCommError" value="false"/>
+          <param name="evDTimeoutError" value="false"/>
+          <param name="evCrc" value="0"/>
+        </parameter>
+      </message>
+      <message from_port_ID="3e052151-51bd-4f30-a0c5-65b62d695f74" reference="80042f14-a65e-4c83-8073-f17a7259953e" signal_ID="0c369bff-a3e4-4fdc-8948-b5413a209b4f" to_port_ID="8eb53cac-a1d3-450a-bae9-a349bb0661be">
+        <parameter>
+          <param name="evFsPdOut" value="0"/>
+          <param name="evPortNum" value="1001"/>
+          <param name="evMCount" value="MCountStart"/>
+          <param name="evSetSD" value="false"/>
+          <param name="evChFAckReq" value="false"/>
+          <param name="evCrc" value="0"/>
+        </parameter>
+      </message>
+      <message from_port_ID="9703d438-0e82-447c-a7d3-0448f0d476be" reference="5c685c2b-beae-4abf-95d9-7386cdafed25" signal_ID="c880c3ea-a0c4-4401-9ea3-6e99bd81ed7b" to_port_ID="05913b39-6a45-4091-a1a2-ac0eedd8ee04">
+        <parameter>
+          <param name="evPDout_M" value="0"/>
+          <param name="evSetSD_C" value="false"/>
+          <param name="evChFAck_C" value="false"/>
+        </parameter>
+      </message>
+      <message from_port_ID="8eb53cac-a1d3-450a-bae9-a349bb0661be" reference="34a1377b-4dc6-4cda-9412-711b46cfe617" signal_ID="dcc1e479-66c8-41f4-bc98-b1e162da649f" to_port_ID="3e052151-51bd-4f30-a0c5-65b62d695f74">
+        <parameter>
+          <param name="evFsPdIn" value="0"/>
+          <param name="evPortNum" value="0"/>
+          <param name="evDCountInvMCount" value="false"/>
+          <param name="evSDset" value="false"/>
+          <param name="evDCommError" value="false"/>
+          <param name="evDTimeoutError" value="false"/>
+          <param name="evCrc" value="-1"/>
+        </parameter>
+      </message>
+    </testcase>
+  </testcases>
+
+</testsuite>

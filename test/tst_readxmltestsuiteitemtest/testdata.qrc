@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/testdata">
+        <file>tst_testsuite_1.ats</file>
+        <file>tst_testsuite_2.ats</file>
+    </qresource>
+</RCC>

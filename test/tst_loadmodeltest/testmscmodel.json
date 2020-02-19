@@ -1,0 +1,291 @@
+{
+  "components": [
+    {
+      "compType": "ComponentType",
+      "defaultPort": "{f8a898b2-6c59-481e-a729-c63378f94755}",
+      "name": "comp1",
+      "ports": [
+        {
+          "name": "_defaultPort",
+          "uuid": "{f8a898b2-6c59-481e-a729-c63378f94755}"
+        },
+        {
+          "name": "port",
+          "uuid": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}"
+        }
+      ],
+      "uuid": "{1f97e240-7431-4579-bd43-488fd3c19a70}"
+    },
+    {
+      "compType": "ComponentType",
+      "defaultPort": "{2605e7c0-95d6-421b-a0ed-4d39ec61f17c}",
+      "name": "comp2",
+      "ports": [
+        {
+          "name": "_defaultPort",
+          "uuid": "{2605e7c0-95d6-421b-a0ed-4d39ec61f17c}"
+        },
+        {
+          "name": "port",
+          "uuid": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}"
+        }
+      ],
+      "uuid": "{5f06aaa8-fd63-4898-b7dd-c3b0d63b1698}"
+    }
+  ],
+  "dataTypes": [
+    {
+      "name": "MyEnumType",
+      "uuid": "{d79baaff-8f56-4fa2-91bd-248671e95de7}"
+    },
+    {
+      "name": "string",
+      "uuid": "{22f45ce2-b7c2-4257-b4a3-80d409803cf3}"
+    }
+  ],
+  "name": "testMscModel",
+  "sequences": [
+    {
+      "name": "sequ1",
+      "steps": [
+        {
+          "referenceId": "{5a732762-2c89-41ae-a137-ad0e2dc3a8e2}",
+          "sourcePort": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}",
+          "stepType": "MessageStep",
+          "targetPort": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}",
+          "text": "signal_in(x=0)",
+          "uuid": "{dfba77b9-4c68-4404-9bc0-c7524711e072}"
+        },
+        {
+          "paramValues": [
+            {
+              "compOp": 0,
+              "param": "param",
+              "uuid": "{aace4205-65bc-4315-a4d8-820c43c29557}",
+              "value": "lit1"
+            }
+          ],
+          "referenceId": "{ac897e97-3106-47b8-a7c3-12b84c65e710}",
+          "signal": "{c14849c5-8ff6-4e7d-9f1b-cc9ec3f69683}",
+          "sourcePort": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}",
+          "stepType": "MessageStep",
+          "targetPort": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}",
+          "text": "signal()",
+          "uuid": "{c7ba8f9d-72e3-466b-8365-c7595ad3703a}"
+        }
+      ],
+      "uuid": "{9321eb16-0188-45aa-8457-c0911ba4b98a}"
+    },
+    {
+      "name": "sequ2",
+      "steps": [
+        {
+          "referenceId": "{81a692c3-33ef-463f-93e5-173b7b97074d}",
+          "sourcePort": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}",
+          "stepType": "MessageStep",
+          "targetPort": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}",
+          "text": "signal_out(y=25)",
+          "uuid": "{f024b6f0-3589-4b31-9ef3-383ffb87ad7d}"
+        },
+        {
+          "framentType": "alt",
+          "regions": [
+            {
+              "condition": "condition 1",
+              "name": "condition 1",
+              "steps": [
+                {
+                  "paramValues": [
+                    {
+                      "compOp": 0,
+                      "param": "param",
+                      "uuid": "{0aecdbdf-cdcc-4115-8fc2-2e2d18fae014}",
+                      "value": "lit2"
+                    }
+                  ],
+                  "referenceId": "{3501c9ed-804a-4bdf-b1e4-ae8cb7d019a0}",
+                  "signal": "{c14849c5-8ff6-4e7d-9f1b-cc9ec3f69683}",
+                  "sourcePort": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}",
+                  "stepType": "MessageStep",
+                  "targetPort": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}",
+                  "text": "signal()",
+                  "uuid": "{fce8e580-a336-45d2-a5b1-48d5908dbdc3}"
+                }
+              ],
+              "uuid": "{c1567381-9715-4037-8a93-9ff4015b689c}"
+            },
+            {
+              "condition": "condition 2",
+              "name": "condition 2",
+              "steps": [
+                {
+                  "paramValues": [
+                    {
+                      "compOp": 0,
+                      "param": "param",
+                      "uuid": "{68c168a9-f579-4bc5-95c5-de6eb53b16bd}",
+                      "value": "lit1"
+                    }
+                  ],
+                  "referenceId": "{16999dfa-7e23-4c84-aa23-884d9b9afe92}",
+                  "signal": "{c14849c5-8ff6-4e7d-9f1b-cc9ec3f69683}",
+                  "sourcePort": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}",
+                  "stepType": "MessageStep",
+                  "targetPort": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}",
+                  "text": "signal()",
+                  "uuid": "{1d32a7ac-52f8-4009-bf4f-43f9cf4b6aed}"
+                }
+              ],
+              "uuid": "{3c483c7b-ac35-4feb-8164-9fbf42d13479}"
+            }
+          ],
+          "stepType": "FragmentStep",
+          "uuid": "{6857b9e8-90e3-4491-883e-7e2840dd449b}"
+        },
+        {
+          "referenceId": "{9c04529b-9639-4ba9-a03d-30d6865880a9}",
+          "sourcePort": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}",
+          "stepType": "MessageStep",
+          "targetPort": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}",
+          "text": "signal_end(here are the params ...)",
+          "uuid": "{8a93b4af-cc34-41a5-be31-ef8dea788227}"
+        }
+      ],
+      "uuid": "{72303504-ab8b-462f-95b6-6bbf5d7b2fd8}"
+    },
+    {
+      "name": "sequ3",
+      "steps": [
+        {
+          "referenceId": "{82fbf49f-4eeb-4085-bfe9-4247979c09e3}",
+          "sourcePort": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}",
+          "stepType": "MessageStep",
+          "targetPort": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}",
+          "text": "signal_out(y=25)",
+          "uuid": "{96f52856-3228-40cb-90a2-e9770080595e}"
+        },
+        {
+          "framentType": "alt",
+          "regions": [
+            {
+              "condition": "condition 1",
+              "name": "condition 1",
+              "steps": [
+                {
+                  "paramValues": [
+                    {
+                      "compOp": 0,
+                      "param": "param",
+                      "uuid": "{e86419dc-8b56-4b31-89a3-138750273529}",
+                      "value": "lit2"
+                    }
+                  ],
+                  "referenceId": "{065ff676-60d0-4aac-852a-dc37b16e3f53}",
+                  "signal": "{c14849c5-8ff6-4e7d-9f1b-cc9ec3f69683}",
+                  "sourcePort": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}",
+                  "stepType": "MessageStep",
+                  "targetPort": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}",
+                  "text": "signal()",
+                  "uuid": "{2a1d6ad1-a662-4c73-a56e-14b4bcdc3cf9}"
+                }
+              ],
+              "uuid": "{c53b62c9-5e22-49fc-84cd-427323998b79}"
+            },
+            {
+              "condition": "condition 2",
+              "name": "condition 2",
+              "steps": [
+                {
+                  "paramValues": [
+                    {
+                      "compOp": 0,
+                      "param": "param",
+                      "uuid": "{a3a861d8-0859-4ba6-ba78-ce77c67f9fb8}",
+                      "value": "lit1"
+                    }
+                  ],
+                  "referenceId": "{36b14575-2529-45cf-80f3-5c879d9b7759}",
+                  "signal": "{c14849c5-8ff6-4e7d-9f1b-cc9ec3f69683}",
+                  "sourcePort": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}",
+                  "stepType": "MessageStep",
+                  "targetPort": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}",
+                  "text": "signal()",
+                  "uuid": "{8c086e58-af59-44b0-bf9d-296e4b8a84f7}"
+                },
+                {
+                  "framentType": "loop",
+                  "regions": [
+                    {
+                      "condition": "",
+                      "name": "",
+                      "steps": [
+                        {
+                          "referenceId": "{f0a4f4ac-ccc1-4139-baf1-20065d6a65b4}",
+                          "sourcePort": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}",
+                          "stepType": "MessageStep",
+                          "targetPort": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}",
+                          "text": "loop message",
+                          "uuid": "{d7369608-9411-4584-b960-23b12b55afcf}"
+                        },
+                        {
+                          "framentType": "loop",
+                          "regions": [
+                            {
+                              "condition": "loop statement",
+                              "name": "loop statement",
+                              "steps": [
+                                {
+                                  "referenceId": "{b8daba03-4283-4ba9-a549-63ea26c8f116}",
+                                  "sourcePort": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}",
+                                  "stepType": "MessageStep",
+                                  "targetPort": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}",
+                                  "text": "inner loop message",
+                                  "uuid": "{a0acb4b1-017f-44f1-a129-c375755a4b44}"
+                                }
+                              ],
+                              "uuid": "{0b8fe3ed-f40b-4f1d-a5f5-0299bad4fd36}"
+                            }
+                          ],
+                          "stepType": "FragmentStep",
+                          "uuid": "{73d265a3-f1f0-49d4-90a9-6a05b6db8fb1}"
+                        }
+                      ],
+                      "uuid": "{148b3a72-5fc0-4afe-b516-950ac874999f}"
+                    }
+                  ],
+                  "stepType": "FragmentStep",
+                  "uuid": "{cd0ff0ac-a846-4ce4-b8e7-cad29860aea9}"
+                }
+              ],
+              "uuid": "{36846c1a-af8b-44b8-a919-a52620080608}"
+            }
+          ],
+          "stepType": "FragmentStep",
+          "uuid": "{c81a49b0-df9b-4d7b-99a9-d897d4b0a093}"
+        },
+        {
+          "referenceId": "{49901d02-87b1-4ee1-a510-68f2b99d8f51}",
+          "sourcePort": "{76184334-bd7d-4cbb-a2ba-3d68889c21eb}",
+          "stepType": "MessageStep",
+          "targetPort": "{d081b827-bf00-4a6c-b8af-9d89a60762d8}",
+          "text": "signal_end(here are the params ...)",
+          "uuid": "{3206e828-0ba7-4125-9236-6857d0f6daac}"
+        }
+      ],
+      "uuid": "{021856c3-5f04-4e8b-83c2-5d0670bfabd7}"
+    }
+  ],
+  "signals": [
+    {
+      "name": "signal",
+      "params": [
+        {
+          "dataType": "MyEnumType",
+          "name": "param",
+          "uuid": "{b54eab6d-7048-45a7-836a-1f372ca98332}"
+        }
+      ],
+      "uuid": "{c14849c5-8ff6-4e7d-9f1b-cc9ec3f69683}"
+    }
+  ]
+}

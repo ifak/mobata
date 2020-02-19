@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2005/07/scxml https://www.w3.org/2011/04/SCXML/scxml.xsd" datamodel="ecmascript" qt:editorversion="4.7.0" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" initial="s1">
+    <qt:editorinfo initialGeometry="0;-237.30;-20;-20;40;40"/>
+    <datamodel>
+        <data expr="false" id="endLoop"/>
+    </datamodel>
+    <state id="s1">
+        <qt:editorinfo scenegeometry="0;-90;-60;-140;120;100" geometry="0;-90;-60;-50;120;100"/>
+        <onentry>
+            <send delay="2000ms" event="eventHa5F1nishedt14" id="delayHa5F1nishedt14"/>
+            <send delay="4000ms" event="eventHa5F1nishedt13" id="delayHa5F1nishedt13"/>
+            <send delay="3000ms" event="eventHa5F1nishedt12" id="delayHa5F1nishedt12"/>
+        </onentry>
+        <onexit>
+            <cancel sendid="delayHa5F1nishedt14"/>
+            <log label="log_t14" expr="'Logged eventHa5F1nishedt14 expression'"/>
+            <cancel sendid="delayHa5F1nishedt13"/>
+            <log label="log_t13" expr="'Logged eventHa5F1nishedt13 expression'"/>
+            <cancel sendid="delayHa5F1nishedt12"/>
+            <log label="log_t12" expr="'Logged eventHa5F1nishedt12 expression'"/>
+        </onexit>
+        <transition type="internal" target="s4" event="eventHa5F1nishedt14" cond="endLoop == true">
+            <qt:editorinfo movePoint="118.24;34.68" localGeometry="0;126.26"/>
+        </transition>
+        <transition type="internal" target="s3" event="eventHa5F1nishedt13"/>
+        <transition type="internal" target="s2" event="eventHa5F1nishedt12">
+            <qt:editorinfo movePoint="-33.11;113.51" startTargetFactors="22.80;87.77" localGeometry="-0.14;179.43"/>
+        </transition>
+    </state>
+    <state id="s2">
+        <qt:editorinfo scenegeometry="-214.36;127.20;-274.36;77.20;120;100" geometry="-214.36;127.20;-60;-50;120;100"/>
+        <onentry>
+            <assign location="endLoop" expr="true"/>
+            <send delay="1200ms" event="eventHa5F1nishedt21" id="delayHa5F1nishedt21"/>
+        </onentry>
+        <onexit>
+            <cancel sendid="delayHa5F1nishedt21"/>
+            <log label="log_t21" expr="'Logged eventHa5F1nishedt21 expression'"/>
+        </onexit>
+        <transition type="internal" target="s1" event="eventHa5F1nishedt21">
+            <qt:editorinfo movePoint="96.17;-97.74" localGeometry="0;-217.20"/>
+        </transition>
+    </state>
+    <final id="s3">
+        <qt:editorinfo scenegeometry="234.90;-90;214.90;-110;40;40" geometry="234.90;-90;-20;-20;40;40"/>
+    </final>
+    <final id="s4">
+        <qt:editorinfo scenegeometry="234.90;36.26;214.90;16.26;40;40" geometry="234.90;36.26;-20;-20;40;40"/>
+    </final>
+</scxml>

@@ -1,0 +1,43 @@
+TestCase {
+  name:     testcase_3;
+  enabled:  false;
+  
+  Attribute int internAttribute = 0;
+
+  steps:{
+    Timer defaultTimer = 500;
+    this.internAttribute = 10;
+    
+    Message{
+      from: testsystem.ptc_1.sut_port;
+      to: sut.sut_comp_1.ext_port;
+      data: stimuli(x=10, y=20);
+    }
+    Alt{
+      [this.internAttribute<10]{
+        Check{
+          from: sut.sut_comp_2.ext_port;
+          to:   testsystem.ptc_2.sut_port;
+          data: response(result==true,
+                          value>=10
+                          and value<=20)
+                          and (value<=15
+                               or value>=12));
+        }
+
+        this.testResult = Pass;
+      }
+      []{
+        Check{
+          from: sut.sut_comp_2.ext_port;
+          to:   testsystem.ptc_2.sut_port;
+          data: response(result==false);
+        }
+        this.testResult = Pass;
+      }
+      [defaultTimer.timeout()]{
+        this.testResult = Fail;
+      }
+    }
+  }
+}

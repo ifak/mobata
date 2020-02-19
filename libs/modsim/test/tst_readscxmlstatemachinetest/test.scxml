@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2005/07/scxml https://www.w3.org/2011/04/SCXML/scxml.xsd" datamodel="ecmascript" qt:editorversion="4.7.0" initial="s1">
+    <qt:editorinfo initialGeometry="-203.30;-216.37;-20;-20;40;40"/>
+    <datamodel/>
+    <state id="s1">
+        <qt:editorinfo scenegeometry="-160.06;-42.12;-306.54;-126.13;206.48;134.01" geometry="-160.06;-42.12;-146.48;-84.01;206.48;134.01"/>
+        <transition type="internal" event="timesUp" target="s2"/>
+        <onentry>
+            <send event="timesUp" delay="10s"/>
+        </onentry>
+        <onexit>
+            <cancel sendid="timesUp"/>
+        </onexit>
+    </state>
+    <final id="s2">
+        <qt:editorinfo scenegeometry="-203.30;100.19;-223.30;80.19;40;40" geometry="-203.30;100.19;-20;-20;40;40"/>
+    </final>
+</scxml>

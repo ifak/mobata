@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/graphlayout">
+        <file>qml/GraphEdge.qml</file>
+        <file>qml/GraphNode.qml</file>
+        <file>qml/GraphText.qml</file>
+        <file>qml/msc_component.qml</file>
+        <file>qml/msc_compspacer.qml</file>
+        <file>qml/msc_fragment_end.qml</file>
+        <file>qml/msc_fragment_start.qml</file>
+        <file>qml/msc_fragment.qml</file>
+        <file>qml/msc_lifeline.qml</file>
+        <file>qml/msc_main.qml</file>
+        <file>qml/msc_message_arrow.qml</file>
+        <file>qml/msc_message_end.qml</file>
+        <file>qml/msc_message_start.qml</file>
+        <file>qml/msc_message.qml</file>
+        <file>qml/msc_region_end.qml</file>
+        <file>qml/msc_region_start.qml</file>
+        <file>qml/msc_region.qml</file>
+        <file>qml/msc_regionline.qml</file>
+        <file>qml/msc_spacer.qml</file>
+        <file>qml/msc_statement.qml</file>
+        <file>qml/msc_timer.qml</file>
+        <file>qml/qtquickcontrols2.conf</file>
+        <file>qml/graph_main.qml</file>
+        <file>qml/GraphEdge_old.qml</file>
+        <file>qml/GraphNode_old.qml</file>
+        <file>qml/msc_message_loop.qml</file>
+    </qresource>
+</RCC>

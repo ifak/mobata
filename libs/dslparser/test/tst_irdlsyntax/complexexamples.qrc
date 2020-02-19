@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/Examples">
+        <file>example1.testsystem</file>
+        <file>sutExample.sut</file>
+        <file>declaration.decl</file>
+        <file>example_irdl_4.irdl</file>
+        <file>example_irdl_5.irdl</file>
+        <file>example_irdl_6.irdl</file>
+        <file>example_irdl_7.irdl</file>
+        <file>example_irdl_8.irdl</file>
+        <file>example_irdl_9.irdl</file>
+        <file>example_irdl_10.irdl</file>
+        <file>example_irdl_11.irdl</file>
+        <file>example_irdl_12.irdl</file>
+        <file>example_irdl_13.irdl</file>
+        <file>ModSyn/ModSynExample_1.irdl</file>
+        <file>ModSyn/ModSynExample_1.irdldecl</file>
+        <file>ModSyn/ModSynExample_1_2.irdldecl</file>
+        <file>ModSyn/ModSynExample_1_2.irdl</file>
+        <file>ModSyn/ModSynExample_1_3.irdl</file>
+        <file>example_irdl_3.irdl</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="ScxmlRemoteControlStateMachine" qt:editorversion="4.7.0" datamodel="ecmascript" initial="InitState">
+    <qt:editorinfo initialGeometry="1769.35;52.43;-20;-20;40;40"/>
+    <datamodel>
+        <data id="resetRequest" expr="false"/>
+    </datamodel>
+    <state id="IdleState">
+        <qt:editorinfo geometry="1753.85;366.10;-60;-50;151;146" scenegeometry="1753.85;366.10;1693.85;316.10;151;146"/>
+        <onentry>
+            <assign location="resetRequest" expr="false"/>
+        </onentry>
+        <transition type="external" event="remoteSetup" target="WorkingState">
+            <qt:editorinfo startTargetFactors="9.58;37.27" endTargetFactors="98.49;28.50" movePoint="11.15;-15.20"/>
+            <send event="setupControl">
+                <param name="setupArgs" expr="_event.data.setupArgs"/>
+            </send>
+        </transition>
+        <transition type="external" event="remoteReset" target="ResettingState">
+            <qt:editorinfo startTargetFactors="7.78;81.29" endTargetFactors="96.24;22.02" movePoint="31.44;-15.21"/>
+            <send event="resetControl"/>
+        </transition>
+    </state>
+    <state id="InitState">
+        <qt:editorinfo geometry="1769.35;167.29;-60;-50;120;100" scenegeometry="1769.35;167.29;1709.35;117.29;120;100"/>
+        <transition type="external" event="remoteControlOpen" target="IdleState">
+            <qt:editorinfo endTargetFactors="51.80;15.57" movePoint="-78.08;-4.06"/>
+            <send event="remoteControlOpen"/>
+        </transition>
+    </state>
+    <state id="WorkingState">
+        <qt:editorinfo geometry="49.69;110.54;-60;-102.42;1510;1257.42" scenegeometry="49.69;110.54;-10.31;8.12;1510;1257.42"/>
+        <state id="SetuppingState">
+            <qt:editorinfo geometry="35.31;68.45;-60.99;-52.96;513.99;313.03" scenegeometry="85;178.99;24.01;126.03;513.99;313.03"/>
+            <state id="SetupControlRequState">
+                <qt:editorinfo geometry="245.83;55.82;-60;-50;247;100" scenegeometry="330.83;234.81;270.83;184.81;247;100"/>
+                <transition type="external" event="controlSetuped" target="Final_2" cond="_event.data.value==true">
+                    <qt:editorinfo startTargetFactors="78.75;93.10" movePoint="-58.45;18.22"/>
+                    <send event="setuped">
+                        <param name="value" expr="true"/>
+                        <param name="errorMessage" expr="&quot;&quot;"/>
+                    </send>
+                    <raise event="SetuppingStateFinished"/>
+                </transition>
+                <transition type="external" event="controlSetuped" target="SetupErrorState" cond="_event.data.value==false">
+                    <qt:editorinfo startTargetFactors="20.34;87.07" endTargetFactors="91.12;45" movePoint="-58.25;2.04" localGeometry="-0.04;82.92"/>
+                    <send event="setuped">
+                        <param name="value" expr="false"/>
+                        <param expr="_event.data.message" name="errorMessage"/>
+                    </send>
+                </transition>
+                <transition type="external" event="controlSetupedTimeout" target="SetupErrorState">
+                    <qt:editorinfo endTargetFactors="40.84;20.47" movePoint="-47.01;-19.42" localGeometry="-287.83;-0.28"/>
+                    <send event="setuped">
+                        <param name="value" expr="false"/>
+                        <param name="errorMessage" expr="&quot;no controlSetuped event occured!&quot;"/>
+                    </send>
+                </transition>
+                <onentry>
+                    <send event="startControlSetupedTimer"/>
+                </onentry>
+            </state>
+            <final id="Final_2">
+                <qt:editorinfo geometry="380.32;220.07;-20;-20;40;40" scenegeometry="465.32;399.06;445.32;379.06;40;40"/>
+            </final>
+            <state id="SetupErrorState">
+                <qt:editorinfo geometry="19.01;180.81;-60;-50;153;100" scenegeometry="104.01;359.80;44.01;309.80;153;100"/>
+            </state>
+            <transition type="internal" event="SetuppingStateFinished" target="SetupedState">
+                <qt:editorinfo startTargetFactors="46.59;95.75" movePoint="-87.80;3.07"/>
+            </transition>
+            <transition type="external" event="remoteReset" target="ResettingState" cond="_event.data.force==false">
+                <qt:editorinfo startTargetFactors="97.55;82.56" endTargetFactors="5.56;10.37" movePoint="0;5.07"/>
+                <send event="resetControl"/>
+            </transition>
+        </state>
+        <state id="SetupedState">
+            <qt:editorinfo geometry="211.60;455.31;-60;-50;135;100" scenegeometry="261.29;565.85;201.29;515.85;135;100"/>
+            <transition type="external" event="remoteStart" target="StartingState">
+                <qt:editorinfo endTargetFactors="36.82;5.34" movePoint="-50.71;-18.25"/>
+                <send event="startControl"/>
+            </transition>
+            <transition type="external" event="remoteReset" target="ResettingState" cond="_event.data.force==false">
+                <qt:editorinfo endTargetFactors="2.27;56.97" movePoint="-6.08;6.09"/>
+                <send event="resetControl"/>
+            </transition>
+        </state>
+        <state id="StartingState">
+            <qt:editorinfo geometry="66.58;635.84;-76.96;-50;604.96;321.22" scenegeometry="116.27;746.38;39.31;696.38;604.96;321.22"/>
+            <state id="StartControlRequState">
+                <qt:editorinfo geometry="17.23;67.96;-60;-50;238;100" scenegeometry="133.50;814.34;73.50;764.34;238;100"/>
+                <transition type="external" event="controlStartedTimeout" target="StartErrorState">
+                    <qt:editorinfo endTargetFactors="50.14;25.53" localGeometry="323.30;-0.01"/>
+                    <send event="started">
+                        <param name="value" expr="false"/>
+                        <param name="errorMessage" expr="&quot;no controlStarted event occured!&quot;"/>
+                    </send>
+                </transition>
+                <transition type="external" event="controlStarted" target="StartErrorState" cond="_event.data.value==false">
+                    <qt:editorinfo startTargetFactors="83.91;89.66" endTargetFactors="12.41;54.38" movePoint="50.71;27.38" localGeometry="2.41;91.47"/>
+                    <send event="started">
+                        <param name="value" expr="false"/>
+                        <param name="errorMessage" expr="_event.data.message"/>
+                    </send>
+                </transition>
+                <transition type="external" event="controlStarted" target="Final_3" cond="_event.data.value==true">
+                    <qt:editorinfo startTargetFactors="24.36;88.79" movePoint="45.64;0"/>
+                    <send event="started">
+                        <param name="value" expr="true"/>
+                        <param name="errorMessage" expr="&quot;&quot;"/>
+                    </send>
+                    <raise event="StartingStateFinished"/>
+                </transition>
+                <onentry>
+                    <send event="startControlStartedTimer"/>
+                </onentry>
+            </state>
+            <state id="StartErrorState">
+                <qt:editorinfo geometry="381.31;194.71;-60;-50;156;100" scenegeometry="497.58;941.09;437.58;891.09;156;100"/>
+            </state>
+            <final id="Final_3">
+                <qt:editorinfo geometry="12.17;230.21;-20;-20;40;40" scenegeometry="128.44;976.59;108.44;956.59;40;40"/>
+            </final>
+            <transition type="internal" event="StartingStateFinished" target="RunningState">
+                <qt:editorinfo startTargetFactors="34.15;95.85" endTargetFactors="54.12;27.24" movePoint="-82.14;3.04"/>
+            </transition>
+            <transition type="external" event="remoteReset" target="StoppingState" cond="_event.data.force==false">
+                <qt:editorinfo startTargetFactors="98.07;85.31" endTargetFactors="24.59;8.02" movePoint="-2.03;11.15"/>
+                <send event="stopControl"/>
+                <assign location="resetRequest" expr="true"/>
+            </transition>
+        </state>
+        <state id="RunningState">
+            <qt:editorinfo geometry="158.83;1030.03;-60;-50;179;115" scenegeometry="208.52;1140.57;148.52;1090.57;179;115"/>
+            <transition type="external" event="remoteStop" target="StoppingState">
+                <qt:editorinfo startTargetFactors="91.28;22.19" endTargetFactors="3.42;56.83" movePoint="17.34;10.40"/>
+                <send event="stopControl"/>
+            </transition>
+            <transition type="external" event="remoteReset" target="StoppingState" cond="_event.data.force==false">
+                <qt:editorinfo startTargetFactors="90.26;79.29" endTargetFactors="2.34;77.41" movePoint="7.10;38.54"/>
+                <send event="stopControl"/>
+                <assign location="resetRequest" expr="true"/>
+            </transition>
+        </state>
+        <state id="StoppingState">
+            <qt:editorinfo geometry="861.21;913.98;-80;-82.75;539;303.07" scenegeometry="910.90;1024.52;830.90;941.77;539;303.07"/>
+            <state id="StopControlRequState">
+                <qt:editorinfo geometry="0;25.43;-60;-50;239;100" scenegeometry="910.90;1049.95;850.90;999.95;239;100"/>
+                <transition type="external" event="controlStopped" target="Final_4" cond="_event.data.value==true">
+                    <qt:editorinfo startTargetFactors="12.47;83.62" movePoint="48.55;-3.47"/>
+                    <send event="stopped">
+                        <param name="value" expr="true"/>
+                        <param name="errorMessage" expr="&quot;&quot;"/>
+                    </send>
+                    <raise event="StoppingStateFinished"/>
+                </transition>
+                <transition type="external" event="controlStopped" target="StopErrorState" cond="_event.data.value==false">
+                    <qt:editorinfo startTargetFactors="77.86;84.48" endTargetFactors="15.34;65.95" movePoint="49.70;20.80" localGeometry="5;73.94"/>
+                    <send event="stopped">
+                        <param name="value" expr="false"/>
+                        <param name="errorMessage" expr="_event.data.message"/>
+                    </send>
+                </transition>
+                <transition type="external" event="controlStoppedTimeout" target="StopErrorState">
+                    <qt:editorinfo endTargetFactors="55.01;11.21" localGeometry="288.83;-0.26"/>
+                    <send event="stopped">
+                        <param name="value" expr="false"/>
+                        <param name="errorMessage" expr="&quot;no controlStopped event occured!&quot;"/>
+                    </send>
+                </transition>
+                <onentry>
+                    <send event="startControlStoppedTimer"/>
+                </onentry>
+            </state>
+            <state id="StopErrorState">
+                <qt:editorinfo geometry="322.51;117.90;-60;-50;156;100" scenegeometry="1233.41;1142.42;1173.41;1092.42;156;100"/>
+            </state>
+            <final id="Final_4">
+                <qt:editorinfo geometry="-30.06;180.32;-20;-20;40;40" scenegeometry="880.84;1204.84;860.84;1184.84;40;40"/>
+            </final>
+            <transition type="external" event="StoppingStateFinished" target="StoppedState">
+                <qt:editorinfo startTargetFactors="53.49;3.13" endTargetFactors="54.81;87.93" movePoint="102.71;4.77"/>
+            </transition>
+        </state>
+        <state id="ResettingState">
+            <qt:editorinfo geometry="852.95;317.99;-67.47;-78.82;555.47;375.67" scenegeometry="902.64;428.53;835.17;349.71;555.47;375.67"/>
+            <state id="ResetControlRequState">
+                <qt:editorinfo geometry="12.53;39.68;-60;-50;252;108" scenegeometry="915.17;468.21;855.17;418.21;252;108"/>
+                <transition type="external" event="controlResetted" target="Final_5" cond="_event.data.value==true">
+                    <qt:editorinfo movePoint="-7.31;6.26"/>
+                    <send event="resetted">
+                        <param name="value" expr="true"/>
+                        <param name="errorMessage" expr="&quot;&quot;"/>
+                    </send>
+                    <raise event="ResettingStateFinished"/>
+                </transition>
+                <transition type="external" event="controlResetted" target="ResetErrorState" cond="_event.data.value==false">
+                    <qt:editorinfo startTargetFactors="95.52;80.08" endTargetFactors="72.80;13.53" movePoint="107.54;63.69" localGeometry="98.52;0.07"/>
+                    <send event="resetted">
+                        <param name="value" expr="false"/>
+                        <param name="errorMessage" expr="_event.data.message"/>
+                    </send>
+                </transition>
+                <transition type="external" event="controlResettedTimeout" target="ResetErrorState">
+                    <qt:editorinfo endTargetFactors="5.05;33.20" movePoint="-33.41;79.35" localGeometry="0.04;155.01"/>
+                    <send event="resetted">
+                        <param name="value" expr="false"/>
+                        <param name="errorMessage" expr="&quot;no controlResetted event occured!&quot;"/>
+                    </send>
+                </transition>
+                <onentry>
+                    <send event="startControlResettedTimer"/>
+                </onentry>
+            </state>
+            <state id="ResetErrorState">
+                <qt:editorinfo geometry="219.26;209.85;-60;-50;182;117" scenegeometry="1121.90;638.38;1061.90;588.38;182;117"/>
+            </state>
+            <final id="Final_5">
+                <qt:editorinfo geometry="440.60;42.36;-20;-20;40;40" scenegeometry="1343.24;470.89;1323.24;450.89;40;40"/>
+            </final>
+            <transition type="internal" event="ResettingStateFinished" target="Final_6">
+                <qt:editorinfo startTargetFactors="47.09;4.09" movePoint="-57.97;0.78"/>
+                <raise event="WorkingStateFinished"/>
+            </transition>
+        </state>
+        <state id="StoppedState">
+            <qt:editorinfo geometry="1048.16;724.17;-60;-50;144;100" scenegeometry="1097.85;834.71;1037.85;784.71;144;100"/>
+            <transition type="external" event="remoteReset" target="ResettingState" cond="_event.data.force==false">
+                <qt:editorinfo endTargetFactors="49.38;93.97" movePoint="-28.19;9.39"/>
+                <send event="resetControl"/>
+            </transition>
+            <transition type="internal" event="StoppedStateFinished" target="ResettingState" cond="resetRequest===true">
+                <qt:editorinfo endTargetFactors="80.05;96.68" movePoint="139.95;-44.63" localGeometry="170.45;-0.01"/>
+                <send event="resetControl"/>
+            </transition>
+            <onentry>
+                <raise event="StoppedStateFinished"/>
+            </onentry>
+        </state>
+        <final id="Final_6">
+            <qt:editorinfo geometry="1048.60;79.10;-20;-20;40;40" scenegeometry="1098.29;189.64;1078.29;169.64;40;40"/>
+        </final>
+        <transition type="external" event="WorkingStateFinished" target="IdleState">
+            <qt:editorinfo startTargetFactors="99.15;38.64" endTargetFactors="19.15;90.12" localGeometry="233.69;0"/>
+        </transition>
+        <transition type="external" event="remoteControlClose" target="InitState">
+            <qt:editorinfo startTargetFactors="98.49;12.66" movePoint="-8.12;9.13"/>
+            <send event="stopControl"/>
+            <send event="resetControl"/>
+            <send event="remoteControlClose"/>
+        </transition>
+        <transition type="external" event="remoteReset" target="IdleState" cond="_event.data.force==true">
+            <qt:editorinfo startTargetFactors="98.95;43.23" endTargetFactors="42.86;90.12" localGeometry="274.73;0"/>
+        </transition>
+        <transition type="external" event="controlFinished" target="IdleState">
+            <qt:editorinfo startTargetFactors="99.21;45.94" endTargetFactors="85.47;91.98" movePoint="9.13;10.14" localGeometry="335.15;0"/>
+            <send event="finished">
+                <param name="value" expr="_event.data.value"/>
+                <param name="errorMessage" expr="_event.data.message"/>
+            </send>
+        </transition>
+    </state>
+</scxml>

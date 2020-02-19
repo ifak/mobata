@@ -1,0 +1,16 @@
+import <example1.testsystem> as testsystem
+
+TestCase{
+  Declaration {
+    name:     testcase_4;
+    enabled:  false;
+    
+    Component testsystem.car2X.pRseApp as device_1;
+    
+    Signal stimuli (int x, int y);
+    Signal winmodVar(string value);
+    Signal response (bool res, int value);
+
+  }
+
+  Message(

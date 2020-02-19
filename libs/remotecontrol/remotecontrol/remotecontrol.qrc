@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/remotecontrol">
+        <file>remotecontrolstatemachine.qml</file>
+    </qresource>
+</RCC>
