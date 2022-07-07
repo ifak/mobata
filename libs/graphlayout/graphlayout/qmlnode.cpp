@@ -1,5 +1,7 @@
 #include "qmlnode.hpp"
 
+#include <QPainterPath>
+
 QmlNode::QmlNode(QQuickItem* parent)
     : QQuickPaintedItem(parent)
 {

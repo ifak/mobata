@@ -27,6 +27,7 @@
 #include "converttrace.h"
 
 #include <QDebug>
+#include <QFile>
 
 using namespace convert::statemachine;
 using namespace model::statemachine;

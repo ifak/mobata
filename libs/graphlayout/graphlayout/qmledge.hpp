@@ -20,6 +20,7 @@
 #include <QQuickPaintedItem>
 #include <QPen>
 #include <QPainter>
+#include <QPainterPath>
 #include <QColor>
 #include <QUuid>
 #include <QtMath>

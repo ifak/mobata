@@ -31,6 +31,7 @@
 
 #include <QStack>
 #include <QDebug>
+#include <QFile>
 
 #include <mobata/memory_leak_start.hpp>
 
